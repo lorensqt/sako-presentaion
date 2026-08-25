@@ -13,6 +13,21 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/deploy-migrate-seed', function () {
+    if (request('secret') !== 'sako-demo-2026') {
+        return "Access denied.";
+    }
+    try {
+        Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true,
+        ]);
+        return "Database migration and seeding successfully executed!<br><pre>" . Illuminate\Support\Facades\Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
 Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
