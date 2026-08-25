@@ -1,0 +1,96 @@
+Step-by-Step Manual Testing Guide
+
+Here is exactly how you can manually walk through and verify the entire end-to-end flow in the user interface, including custom approval flows, co-maker replacement, and returning a loan due to lacking requirements.
+
+================================================================================
+Phase 1: Configure Custom Loan Product & Approval Flow (New Feature)
+================================================================================
+1. Login as the Sako Admin:
+   - Go to the login page.
+   - Enter Company ID: 10001000 (or Email: admin@mlsako.com) and Password: password.
+   - Click Sign In. You will land on the Admin dashboard.
+2. Configure Custom Pipeline/Stages:
+   - In the sidebar, click on "Loans Management".
+   - Click "Edit Loan Requirements" (Edit icon) next to any product, or click "Create New Loan" to create a new one.
+   - You will see a new section: "Custom Approval Flow Stages".
+   - Check or uncheck stages to configure exactly which path this loan facility must undergo (e.g. check "Co-Makers", "Sako Staff", "HRMD Staff", "Credit Comm.", "Accounting", "Releasing Officer").
+   - Click "Save Configuration".
+   - JavaScript automatically preserves the correct logical chronological sequence regardless of the clicking order!
+
+================================================================================
+Phase 2: Apply for a Loan requiring Co-makers
+================================================================================
+1. Login as the borrower:
+   - Go to your application login page.
+   - Enter Company ID: 20248216 (or Email: member@mlsako.com) and Password: password.
+   - Click Sign In. You will land on the member's dashboard.
+2. Open the Loan Application:
+   - In the sidebar, click on "Loans".
+   - Pull out Accordion Drawer 1: Loan Package and select a package that requires co-makers, such as Petty Cash Loan with an amount of
+     ₱5,000 (requires exactly 2 co-makers).
+3. Select Co-makers:
+   - Pull out Accordion Drawer 3: Cooperative Co-Makers.
+   - Select exactly the number of required co-makers (e.g., select Jane Doe (Co-maker) and John Smith (Co-maker)).
+4. Submit the Loan:
+   - Enter member remarks in Drawer 4, read and accept the Terms Agreement.
+   - Click "File & Submit Loan".
+   - You will be redirected to "My Loans", and you'll see your application at the "Co-Makers" stage with status Pending.
+
+================================================================================
+Phase 3: Co-maker Rejection & Replacement (New Feature)
+================================================================================
+1. Login as Co-maker 1 (Jane Doe):
+   - Sign out, and sign in with Company ID: 20248217 (or Email: jane.comaker@mlsako.com) and Password: password.
+   - Click on "Co-Maker Requests" in the sidebar (marked with a red notification badge).
+   - Click "Evaluate", enter remarks (e.g. "Sorry, I cannot co-sign at the moment") and click "Decline Endorsement".
+2. Login as the borrower to Replace the Co-maker:
+   - Sign out, and sign in back as the borrower (20248216 / password).
+   - Go to "My Loans".
+   - Under the Actions column, you will see a yellow "Replace Rejected Co-maker (Jane Doe)" button.
+   - Click it, select a new co-maker from the dropdown (e.g. John Smith or another member), and click "Submit Replacement".
+   - The old rejected record is archived, a new pending endorsement request is sent to the new co-maker, and the timeline reflects the change!
+
+================================================================================
+Phase 4: Sako Staff & HRMD Return Loan for Lacking Requirements (New Feature)
+================================================================================
+1. Endorse the Loan (John Smith approves):
+   - Login as Co-maker 2 (John Smith): Company ID: 20248218 / password.
+   - Go to "Co-Maker Requests", click "Evaluate", and click "Approve Endorsement".
+   - The application advances to the "Sako Staff Review" stage.
+2. Login as Sako Staff (Maria Santos) or HRMD (John Doe) to Return the Loan:
+   - This corrective return feature is fully supported for BOTH the Sako Staff and HRMD Representative roles!
+   - Sign out, and login as either:
+     - Sako Staff: Maria Santos (Company ID: STAF0001 / password)
+     - HRMD Rep: John Doe (Company ID: HRMD0001 / password) - Note: to test as John Doe, Maria Santos must first approve the loan to advance it to the HRMD stage.
+   - Click "Loans" to view the review queue, and click the application row.
+   - Under the Info Panel / Signatory actions, you will see three actions: "Sign & Approve", "Reject Application", and "Return Application" (New button!).
+   - In Remarks, write what requirement is missing (e.g., "Lacking latest 2-month payslip document. Please upload or describe in remarks.").
+   - Click "Return Application" and confirm. The application is successfully returned to the member!
+3. Check the Email Notifications (New Feature!):
+   - The borrower receives an automated, beautifully styled email notification: "Revision Required: Your Loan Application LN-[ID] Has Been Returned".
+   - It utilizes a warm gold/amber color theme to indicate action required, showing the reviewer's custom remarks, loan product details, requested amount, and a direct CTA link back to the Member Portal.
+
+================================================================================
+Phase 5: Member Modifies & Resubmits (New Feature)
+================================================================================
+1. Login as Borrower to Resubmit:
+   - Sign out, and login back as the borrower (20248216 / password).
+   - Go to "My Loans".
+   - You will see a yellow banner: "Returned (Correction Required)".
+   - Click "Modify & Resubmit" (New button!).
+   - You are taken straight to the Application Wizard, which is dynamically PRE-POPULATED with all your previous selections!
+   - Correct the amount, change terms, or update remarks with the required information, and click "File & Submit Loan".
+   - The application status resets back to "Pending" and goes back to the Sako Staff review queue, completely fresh!
+
+================================================================================
+Phase 6: Visual Timeline Tracker
+================================================================================
+1. View Timeline:
+   - At any point on the member's dashboard, click "View Timeline" on any application.
+   - A modern, graphical timeline tracking all transition states, endorsements, return remarks, and audit activities is displayed!
+
+================================================================================
+Method B: All-in-One Admin Account
+================================================================================
+- Login identifier: 10001000 (or admin@mlsako.com) and Password: password.
+- Because this account has all five cooperative staff roles assigned to it, you can approve or return applications at every successive stage without having to log out and back in as different employees.
