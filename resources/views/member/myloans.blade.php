@@ -102,7 +102,8 @@
                 </div>
             </div>
             
-            <div class="overflow-x-auto">
+            <!-- Desktop Table (Visible on larger screens) -->
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-150 dark:border-slate-700 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -213,6 +214,125 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Mobile Applications Card Stack (Visible on mobile viewports) -->
+            <div class="block lg:hidden space-y-4">
+                @foreach($applications as $app)
+                    <div class="bg-slate-50/40 dark:bg-slate-900/40 border-2 border-slate-100 dark:border-slate-700/60 p-5 rounded-2xl space-y-4 transition-all duration-200">
+                        
+                        <!-- Top header row: Loan Name & Status -->
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="font-bold text-slate-900 dark:text-white block text-sm leading-tight">
+                                    {{ config("loans.{$app->loan_category}.{$app->loan_type}.name", ucwords(str_replace('_', ' ', $app->loan_type))) }}
+                                </span>
+                                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">
+                                    {{ $app->loan_category }} Loan
+                                </span>
+                            </div>
+                            
+                            <!-- Status Badge -->
+                            <div>
+                                @if($app->status === 'approved')
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40 uppercase tracking-wider">Approved</span>
+                                @elseif($app->status === 'rejected')
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-800/40 uppercase tracking-wider">Rejected</span>
+                                @elseif($app->status === 'cancelled')
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider">Cancelled</span>
+                                @else
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/60 dark:border-blue-800/40 uppercase tracking-wider animate-pulse">Pending</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Inner Metadata Card grid (Requested Amount & Submitted Date) -->
+                        <div class="grid grid-cols-2 gap-4 p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
+                            <div>
+                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Requested Amount</span>
+                                <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block">₱{{ number_format($app->requested_amount, 2) }}</span>
+                            </div>
+                            <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
+                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Submitted Date</span>
+                                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $app->created_at->format('M d, Y') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Active Stage bar -->
+                        <div class="flex items-center justify-between gap-3 text-xs">
+                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Active Stage:</span>
+                            <div>
+                                @if($app->status === 'approved')
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Released / Completed
+                                    </span>
+                                @elseif($app->status === 'returned')
+                                    <span class="text-amber-600 dark:text-amber-400 font-extrabold flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-550 animate-pulse"></span>
+                                        Returned (Correction)
+                                    </span>
+                                @elseif($app->status === 'rejected')
+                                    <span class="text-rose-600 dark:text-rose-400 font-bold">Rejected</span>
+                                @elseif($app->status === 'cancelled')
+                                    <span class="text-slate-400 dark:text-slate-500 font-bold">Cancelled</span>
+                                @else
+                                    @if($app->current_stage === 'sako_staff')
+                                        <span class="px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-950/20 text-sky-700 dark:text-sky-400 border border-sky-100/50 dark:border-sky-800/20 font-bold uppercase text-[9px]">Sako Staff Review</span>
+                                    @elseif($app->current_stage === 'hrmd_staff')
+                                        <span class="px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-100/50 dark:border-rose-800/20 font-bold uppercase text-[9px]">HRMD Verification</span>
+                                    @elseif($app->current_stage === 'credit_committee')
+                                        <span class="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-800/20 font-bold uppercase text-[9px]">Credit Comm Review</span>
+                                    @elseif($app->current_stage === 'accounting')
+                                        <span class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border border-amber-100/50 dark:border-amber-800/20 font-bold uppercase text-[9px]">Accounting Computations</span>
+                                    @elseif($app->current_stage === 'releasing_officer')
+                                        <span class="px-2 py-0.5 rounded bg-teal-50 dark:bg-teal-950/20 text-teal-700 dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/20 font-bold uppercase text-[9px]">Awaiting Disbursement</span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-100/50 dark:border-slate-600/50 font-bold uppercase text-[9px]">{{ ucwords(str_replace('_', ' ', $app->current_stage)) }}</span>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Action buttons row -->
+                        <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-2 items-center justify-between">
+                            <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer" 
+                                data-ledger="{{ json_encode($workflowService->getWorkflowDetails($app)) }}"
+                                data-activities="{{ json_encode($app->activities) }}">
+                                View Timeline ➔
+                            </button>
+
+                            @if($app->status === 'returned')
+                                <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1 cursor-pointer">
+                                    ↩️ Modify & Resubmit
+                                </a>
+                            @endif
+                            
+                            @php
+                                $activeComakers = $app->form_data['comakers'] ?? [];
+                                $rejectedComakers = $app->comakers()
+                                    ->where('status', 'rejected')
+                                    ->whereIn('user_id', $activeComakers)
+                                    ->with('user')
+                                    ->get();
+                                $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $rejectedComakers->isNotEmpty();
+                            @endphp
+                            
+                            @if($hasRejectedComaker)
+                                @foreach($rejectedComakers as $rc)
+                                    <button class="btn-replace-comaker px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer" 
+                                        data-app-id="{{ $app->id }}"
+                                        data-old-id="{{ $rc->user_id }}"
+                                        data-old-name="{{ $rc->user->name }}"
+                                        data-active-comakers="{{ json_encode($activeComakers) }}">
+                                        Replace Rejected Co-maker ({{ $rc->user->name }})
+                                    </button>
+                                @endforeach
+                            @endif
+                        </div>
+
+                    </div>
+                @endforeach
+            </div>
         </div>
     @endif
 </div>
@@ -223,10 +343,10 @@
     <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none modal-overlay"></div>
     
     <!-- Modal Container -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 w-full max-w-md sm:max-w-5xl relative z-10 p-6 sm:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 w-full max-w-md sm:max-w-5xl relative z-10 p-4 sm:p-6 lg:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
         <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
-                <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approval Timeline & History</h3>
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approval Timeline & History</h3>
                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Live Workflow Stages and Activity Audit Log</p>
             </div>
             <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200">
@@ -241,6 +361,9 @@
                 <div class="relative min-h-[140px] flex items-center justify-center bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl p-4">
                     <!-- Background connecting line (visible on large screens) -->
                     <div class="hidden sm:block absolute top-[1rem] left-[4.5rem] right-[4.5rem] h-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
+                    
+                    <!-- Vertical connecting line (visible on mobile only) -->
+                    <div class="block sm:hidden absolute top-6 bottom-6 left-[2rem] w-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-2 w-full relative z-10" id="ledger-timeline-container">
                         <!-- Dynamically populated via JS -->
@@ -752,7 +875,7 @@
                             </div>
                             
                             <!-- Info Card -->
-                            <div class="flex-grow sm:flex-grow-0 w-full ${containerClass} p-2 rounded-xl transition-all duration-300 text-left sm:text-center flex flex-col justify-between sm:min-h-[110px] text-2xs ${cardOpacity}">
+                            <div class="flex-1 sm:flex-grow-0 sm:w-full ${containerClass} p-2 rounded-xl transition-all duration-300 text-left sm:text-center flex flex-col justify-between sm:min-h-[110px] text-2xs ${cardOpacity}">
                                 <div class="space-y-0.5">
                                     <h4 class="font-extrabold text-slate-900 dark:text-slate-100 text-[9px] sm:text-[10px] uppercase tracking-wider line-clamp-1 leading-tight">${log.label}</h4>
                                     <div>

@@ -1,9 +1,9 @@
 <!-- MLSAKO Cooperative Terms & Conditions Modal Component -->
 <div id="terms-modal-wrapper" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0">
-    <div id="terms-modal-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-2xl max-w-2xl w-full flex flex-col max-h-[90vh] overflow-hidden transform scale-95 transition-transform duration-300">
+    <div id="terms-modal-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl sm:rounded-[2.5rem] shadow-2xl max-w-2xl w-full flex flex-col max-h-[90vh] overflow-hidden transform scale-95 transition-transform duration-300">
         
         <!-- Header -->
-        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/30">
+        <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/30">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
                     <img src="{{ asset('img/sako-logo-nobg.png') }}" alt="MLSAKO Logo" class="w-6 h-6 object-contain" onerror="this.outerHTML='📜'">
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Scrollable Content Area -->
-        <div id="terms-scroll-box" class="px-8 py-6 overflow-y-auto max-h-[50vh] space-y-5 text-slate-600 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 leading-relaxed scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
+        <div id="terms-scroll-box" class="px-4 sm:px-8 py-5 sm:py-6 overflow-y-auto max-h-[45vh] sm:max-h-[50vh] space-y-5 text-slate-600 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 leading-relaxed scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
             
             <div class="text-center pb-4 border-b border-slate-100 dark:border-slate-800/60">
                 <h5 class="text-xs font-extrabold text-slate-800 dark:text-white uppercase tracking-wider">MEMBERSHIP LOAN CONTRACT &amp; OBLIGATION DEED</h5>
@@ -92,7 +92,7 @@
         </div>
 
         <!-- Warning / Status Indicator Panel -->
-        <div class="px-6 pt-4 pb-1.5">
+        <div class="px-4 sm:px-6 pt-4 pb-1.5">
             <div id="terms-unlock-alert" class="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-250 dark:border-amber-900/50 rounded-xl text-amber-800 dark:text-amber-400 text-2xs font-bold flex items-start gap-2.5 transition-all duration-300">
                 <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m0-6h.01M5.071 19h13.858c1.41 0 2.29-1.53 1.58-2.66l-6.93-11.13c-.71-1.13-2.45-1.13-3.16 0L3.49 16.34c-.71 1.13.17 2.66 1.58 2.66z"/></svg>
                 <span>Please scroll to the very bottom of the Terms &amp; Conditions text inside the box to unlock the agreement button.</span>
@@ -100,7 +100,7 @@
         </div>
 
         <!-- Footer Actions -->
-        <div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-950/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2.5">
+        <div class="px-4 sm:px-6 py-4 bg-slate-50/50 dark:bg-slate-950/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2.5">
             <button type="button" id="btn-decline-terms" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-extrabold text-xs px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:-translate-y-0.5 transition-all shadow-xs">
                 Decline &amp; Cancel
             </button>

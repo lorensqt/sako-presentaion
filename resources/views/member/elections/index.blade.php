@@ -12,7 +12,7 @@
 @section('content')
 <div class="space-y-8">
     @if($elections->isEmpty())
-    <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-[2rem] p-12 text-center">
+    <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl sm:rounded-[2rem] p-6 sm:p-12 text-center">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-400 mb-4 shadow-sm border border-slate-100 dark:border-slate-800">
             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
         </div>
@@ -26,7 +26,7 @@
             $status = $election->computed_status; 
             $hasVoted = $election->has_voted;
         @endphp
-        <div class="bg-white dark:bg-slate-800 border {{ $status === 'active' && !$hasVoted ? 'border-emerald-500/30 shadow-emerald-500/5' : 'border-slate-200/80 dark:border-slate-700/80 shadow-sm' }} rounded-[2rem] p-6 flex flex-col justify-between hover:scale-[1.01] hover:shadow-md transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 border {{ $status === 'active' && !$hasVoted ? 'border-emerald-500/30 shadow-emerald-500/5' : 'border-slate-200/80 dark:border-slate-700/80 shadow-sm' }} rounded-3xl sm:rounded-[2rem] p-5 sm:p-6 flex flex-col justify-between hover:scale-[1.01] hover:shadow-md transition-all duration-300">
             <div>
                 <!-- Status & Timing Row -->
                 <div class="flex items-center justify-between gap-2 mb-4">

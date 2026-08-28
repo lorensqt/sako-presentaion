@@ -71,7 +71,8 @@
             <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed font-bold">Complete history of your savings payouts and real-time verification progress.</p>
         </div>
 
-        <div class="overflow-x-auto flex-grow">
+        <!-- Desktop Table (Visible on larger screens) -->
+        <div class="hidden md:block overflow-x-auto flex-grow">
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-150 dark:border-slate-700 text-[10px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
@@ -136,6 +137,77 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Withdrawal Log List (Visible on mobile viewports) -->
+        <div class="block md:hidden space-y-3.5">
+            @forelse($withdrawals as $w)
+                <div class="bg-slate-50/40 dark:bg-slate-900/40 border-2 border-slate-100 dark:border-slate-700/60 p-4 rounded-2xl space-y-4 transition-all duration-200">
+                    
+                    <!-- Reference ID & Status -->
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <span class="font-mono font-black text-slate-800 dark:text-white block text-sm leading-none">
+                                #WD-{{ str_pad($w->id, 5, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold block mt-1.5 leading-none">
+                                Filed: {{ $w->created_at->format('M d, Y h:i A') }}
+                            </span>
+                        </div>
+                        
+                        <!-- Status Badge -->
+                        <div class="flex items-center gap-2">
+                            @if($w->status === 'pending')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-100/50 dark:border-amber-900/30 uppercase tracking-wider animate-pulse">Pending</span>
+                                <form action="{{ route('member.withdrawals.cancel', $w->id) }}" method="POST" class="inline cancel-withdrawal-form m-0">
+                                    @csrf
+                                    <button type="submit" class="text-[10px] font-extrabold text-rose-600 hover:text-rose-800 hover:underline outline-none focus:outline-none transition-colors cursor-pointer">
+                                        Cancel
+                                    </button>
+                                </form>
+                            @elseif($w->status === 'processing')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border border-blue-100/50 dark:border-blue-900/30 uppercase tracking-wider">Processing</span>
+                            @elseif($w->status === 'released')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100/50 dark:border-emerald-900/30 uppercase tracking-wider">Released</span>
+                            @elseif($w->status === 'cancelled')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider">Cancelled</span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-100/50 dark:border-rose-900/30 uppercase tracking-wider">{{ strtoupper($w->status) }}</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Inner specs grid: Requested Amount & Channel -->
+                    <div class="grid grid-cols-2 gap-4 p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
+                        <div>
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Requested Amount</span>
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block leading-none">₱{{ number_format($w->amount, 2) }}</span>
+                        </div>
+                        <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Disbursement Channel</span>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 mt-1 block leading-tight">{{ $w->channel }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Reason note Block -->
+                    @if($w->reason)
+                        <div class="border-t border-slate-100 dark:border-slate-800/80 pt-2.5">
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Purpose Description</span>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 italic mt-1.5 pl-3 border-l-2 border-emerald-500/40 leading-relaxed bg-slate-100/40 dark:bg-slate-900/40 p-2.5 rounded-r-lg">
+                                "{{ $w->reason }}"
+                            </p>
+                        </div>
+                    @endif
+
+                </div>
+            @empty
+                <div class="p-8 text-center text-slate-400 dark:text-slate-500 font-semibold italic flex flex-col items-center justify-center">
+                    <div class="w-9 h-9 bg-slate-100 dark:bg-slate-900/40 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 mb-2">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    No past or pending withdrawal requests recorded.
+                </div>
+            @endforelse
         </div>
     </div>
 </div>

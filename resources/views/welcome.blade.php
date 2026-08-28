@@ -2,9 +2,23 @@
 
 @section('title', 'SAKO - Empowering Your Financial Future')
 
+@push('styles')
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-none {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+@endpush
+
 @section('content')
     <!-- Hero Section -->
-    <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-12 pb-24 bg-[#FAF9F6]">
+    <section class="relative min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center overflow-hidden pt-8 pb-16 lg:pt-16 lg:pb-24 bg-[#FAF9F6]">
         <!-- Warm alabaster background -->
         <!-- Background Gradient Grids -->
         <div class="absolute inset-0 z-0">
@@ -15,23 +29,23 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 <!-- Text Content -->
-                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
                     <span
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold tracking-wide uppercase border border-emerald-100/50 shadow-sm">
+                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] sm:text-xs font-bold tracking-wide uppercase border border-emerald-100/50 shadow-sm">
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                         Your Trusted Financial Partner Since 2001
                     </span>
 
                     <h1
-                        class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] serif-font">
+                        class="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] serif-font">
                         Empowering Your <span
                             class="bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">Financial
                             Future</span>, Together.
                     </h1>
 
-                    <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                    <p class="text-xs xs:text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
                         Join Sako Cooperative today. Experience secure savings, flexible loan options, and a
                         community-driven ecosystem dedicated to sustainable financial progress for everyone.
                     </p>
@@ -39,7 +53,7 @@
                     <!-- Actions -->
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                         <a href="#membership"
-                            class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base px-8 py-4 rounded-2xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all duration-200">
+                            class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all duration-200">
                             Become a Member Today
                             <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -47,65 +61,64 @@
                             </svg>
                         </a>
                         <a href="#services"
-                            class="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-base px-8 py-4 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200">
+                            class="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm sm:text-base px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200">
                             Explore Our Services
                         </a>
                     </div>
 
                     <!-- Live Milestones Grid -->
-                    <div class="grid grid-cols-3 gap-6 pt-8 border-t border-slate-200/60 max-w-md mx-auto lg:mx-0">
-                        <div>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 serif-font">6,000+</p>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Active Members</p>
+                    <div class="grid grid-cols-3 gap-3 xs:gap-6 pt-6 sm:pt-8 border-t border-slate-200/60 max-w-lg mx-auto lg:mx-0">
+                        <div class="text-center lg:text-left">
+                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">6,000+</p>
+                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Active Members</p>
                         </div>
 
-                        <div>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 serif-font">25+</p>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Years of Service
-                            </p>
+                        <div class="text-center lg:text-left border-x border-slate-200/60 px-2 xs:px-4">
+                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">25+</p>
+                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Years Service</p>
                         </div>
 
-                        <div>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 serif-font">₱250M+</p>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Assets Managed</p>
+                        <div class="text-center lg:text-left">
+                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">₱250M+</p>
+                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Assets Managed</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Visual Graphics Side -->
-                <div class="lg:col-span-5 relative">
+                <div class="lg:col-span-5 relative w-full">
 
                     <!-- Main Glassmorphic Panel (Now Login/Profile Card) -->
                     <div
-                        class="relative bg-gradient-to-tr from-emerald-800 to-teal-950 rounded-[2.5rem] p-8 sm:p-10 text-white shadow-2xl overflow-hidden border border-emerald-800/20 group">
+                        class="relative bg-gradient-to-tr from-emerald-800 to-teal-950 rounded-3xl sm:rounded-[2.5rem] p-5 xs:p-6 sm:p-10 text-white shadow-2xl overflow-hidden border border-emerald-800/20 group">
                         <!-- Overlay Grid Graphic -->
                         <div
                             class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]">
                         </div>
 
-                        <div class="relative z-10 space-y-6">
+                        <div class="relative z-10 space-y-5 sm:space-y-6">
                             @auth
                                 <!-- Logged In Profile View -->
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-300">Active Member Session</span>
+                                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-300">Active Member Session</span>
                                     <div class="flex gap-1.5">
                                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
                                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
                                     </div>
                                 </div>
 
-                                <div class="text-center py-6 space-y-4">
-                                    <div class="w-20 h-20 bg-emerald-500/20 border border-emerald-400/30 rounded-full flex items-center justify-center mx-auto shadow-inner">
-                                        <svg class="w-10 h-10 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="text-center py-4 sm:py-6 space-y-4">
+                                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-500/20 border border-emerald-400/30 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                                        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                     </div>
                                     <div class="space-y-1">
-                                        <h3 class="text-xl font-bold serif-font">{{ Auth::user()->name }}</h3>
-                                        <p class="text-xs text-emerald-300 font-semibold tracking-wider uppercase">{{ strtoupper(Auth::user()->role) }}</p>
+                                        <h3 class="text-lg sm:text-xl font-bold serif-font">{{ Auth::user()->name }}</h3>
+                                        <p class="text-[10px] sm:text-xs text-emerald-300 font-semibold tracking-wider uppercase">{{ strtoupper(Auth::user()->role) }}</p>
                                     </div>
 
-                                    <div class="bg-emerald-900/40 border border-emerald-800/30 p-4 rounded-2xl text-left text-xs space-y-2">
+                                    <div class="bg-emerald-900/40 border border-emerald-800/30 p-3 sm:p-4 rounded-2xl text-left text-xs space-y-2">
                                         <p class="text-emerald-200"><span class="font-bold text-white">Company ID:</span> {{ Auth::user()->company_id ?: 'N/A' }}</p>
                                         <p class="text-emerald-200"><span class="font-bold text-white">Email:</span> {{ Auth::user()->email }}</p>
                                         <p class="text-emerald-200"><span class="font-bold text-white">Contact:</span> {{ Auth::user()->contact_number ?: 'N/A' }}</p>
@@ -114,14 +127,14 @@
 
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="w-full inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-rose-900/30">
+                                    <button type="submit" class="w-full inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-rose-900/30">
                                         Log Out Account
                                     </button>
                                 </form>
                             @else
                                 <!-- Login Card View -->
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-300">Member Gateway</span>
+                                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-300">Member Gateway</span>
                                     <div class="flex gap-1.5">
                                         <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
                                         <span class="w-2.5 h-2.5 bg-amber-500 rounded-full"></span>
@@ -130,8 +143,8 @@
                                 </div>
 
                                 <div class="space-y-1">
-                                    <h3 class="text-2xl font-bold serif-font">Welcome Back</h3>
-                                    <p class="text-xs text-emerald-200 font-medium">Please sign in to access your dashboard.</p>
+                                    <h3 class="text-xl sm:text-2xl font-bold serif-font">Welcome Back</h3>
+                                    <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">Please sign in to access your dashboard.</p>
                                 </div>
 
                                 <!-- Session Alert Feedback -->
@@ -153,7 +166,7 @@
                                         <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Company ID</label>
                                         <input type="text" name="login_identifier" required value="{{ old('login_identifier') }}"
                                             placeholder="e.g. 20248216"
-                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
                                     </div>
 
                                     <div class="space-y-1.5">
@@ -161,7 +174,7 @@
                                             <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Password</label>
                                         </div>
                                         <input type="password" name="password" placeholder="••••••••"
-                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
                                     </div>
 
                                     <div class="flex items-center">
@@ -169,8 +182,8 @@
                                         <label for="remember" class="ml-2 text-xs text-emerald-200 font-medium">Remember me</label>
                                     </div>
 
-                                    <div class="pt-2 space-y-3">
-                                        <button type="submit" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-950/50 hover:-translate-y-0.5">
+                                    <div class="pt-1 space-y-3">
+                                        <button type="submit" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-950/50 hover:-translate-y-0.5">
                                             Sign In Account
                                         </button>
 
@@ -180,7 +193,7 @@
                                             <div class="flex-grow border-t border-emerald-800/40"></div>
                                         </div>
 
-                                        <a href="{{ route('auth.google') }}" class="w-full inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 border border-slate-200 shadow-sm hover:-translate-y-0.5">
+                                        <a href="{{ route('auth.google') }}" class="w-full inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 border border-slate-200 shadow-sm hover:-translate-y-0.5">
                                             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24">
                                                 <path fill="#EA4335" d="M12 5.04c1.5 0 2.85.51 3.91 1.53l2.92-2.92C17.07 1.95 14.73 1 12 1 7.35 1 3.4 3.65 1.51 7.5l3.52 2.73C5.87 6.82 8.69 5.04 12 5.04z"/>
                                                 <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.28 1.48-1.12 2.73-2.38 3.58l3.69 2.85c2.16-1.99 3.72-4.92 3.72-8.58z"/>
@@ -192,7 +205,7 @@
                                     </div>
                                 </form>
 
-                                <div class="text-center pt-2 text-xs text-emerald-300">
+                                <div class="text-center pt-1 text-xs text-emerald-300">
                                     Don't have an account? <button type="button" class="trigger-pmes-modal font-bold text-white hover:underline focus:outline-none">Apply for Membership</button>
                                 </div>
                             @endauth
@@ -407,6 +420,103 @@
     </section>
 
     <!-- Services Section -->
+    @php
+    // Fetch active loans from the database
+    $loans = [];
+    try {
+        $dbLoans = \App\Models\Loan::where('is_active', true)->get();
+        foreach ($dbLoans as $dbLoan) {
+            $category = $dbLoan->category;
+            
+            // Map categories to landing page categories
+            if ($category === 'regular') {
+                $type = $dbLoan->type_key;
+                if (in_array($type, ['instant', 'petty_cash', 'sako_care', 'emergency'])) {
+                    $category = 'cash';
+                } elseif (in_array($type, ['maxi', 'preferential', 'retirement'])) {
+                    $category = 'major';
+                } else {
+                    $category = 'celebration';
+                }
+            } elseif ($category === 'travel') {
+                $category = 'major';
+            }
+            
+            // Badge translation
+            $badge = 'General';
+            switch ($category) {
+                case 'cash': $badge = 'Cash & Emergency'; break;
+                case 'major': $badge = 'Major & Strategic'; break;
+                case 'celebration': $badge = 'Festive & Buyouts'; break;
+                case 'commodity': $badge = 'Commodity'; break;
+            }
+
+            // Loanable amount formatting
+            $maxAmount = $dbLoan->loanable_amount;
+            if (is_numeric($maxAmount)) {
+                $maxAmount = '₱' . number_format((float)$maxAmount);
+            } elseif (empty($maxAmount)) {
+                $maxAmount = 'Varies';
+            }
+
+            // Interest rate formatting
+            $rate = $dbLoan->interest_rate;
+            $rateStr = $rate > 0 ? number_format((float)$rate, 1) . '%' : 'Varies';
+
+            // Select an icon path
+            $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />';
+            $type = strtolower($dbLoan->type_key);
+            if (str_contains($type, 'instant') || str_contains($type, 'fast')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />';
+            } elseif (str_contains($type, 'petty') || str_contains($type, 'cash')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />';
+            } elseif (str_contains($type, 'birthday') || str_contains($type, 'lechon') || str_contains($type, 'celebration') || str_contains($type, 'star')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.381-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />';
+            } elseif (str_contains($type, '13th') || str_contains($type, 'month') || str_contains($type, 'money') || str_contains($type, 'pay')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+            } elseif (str_contains($type, 'appliance') || str_contains($type, 'gadget') || str_contains($type, 'device') || str_contains($type, 'product') || str_contains($type, 'adtel')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />';
+            } elseif (str_contains($type, 'jewelry') || str_contains($type, 'sparkle') || str_contains($type, 'gem')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z" />';
+            } elseif (str_contains($type, 'seasonal') || str_contains($type, 'calendar') || str_contains($type, 'event')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />';
+            } elseif (str_contains($type, 'emergency') || str_contains($type, 'medical') || str_contains($type, 'care') || str_contains($type, 'health') || str_contains($type, 'hospital')) {
+                if (str_contains($type, 'care')) {
+                    $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.318 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />';
+                } else {
+                    $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />';
+                }
+            } elseif (str_contains($type, 'preferential') || str_contains($type, 'special') || str_contains($type, 'star-four')) {
+                $iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />';
+            }
+
+            $termStr = $dbLoan->max_term_months ? $dbLoan->max_term_months . ' Mos' : 'Flexible';
+            
+            // Description extraction
+            $description = $dbLoan->name . ' assistance program tailored for active members.';
+            if (isset($dbLoan->metadata['desc'])) {
+                $description = $dbLoan->metadata['desc'];
+            } elseif (isset($dbLoan->metadata['name'])) {
+                $description = $dbLoan->name . ' product.';
+            }
+
+            $loans[] = [
+                'category' => $category,
+                'title' => $dbLoan->name,
+                'desc' => $description,
+                'rate' => $rateStr,
+                'max' => $maxAmount,
+                'term' => $termStr,
+                'icon' => $iconPath,
+                'badge' => $badge
+            ];
+        }
+    } catch (\Exception $e) {
+        $loans = [];
+    }
+    @endphp
+
+    <!-- Services Section -->
     <section id="services" class="py-24 bg-gradient-to-b from-white to-[#F8FAFC] relative reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -429,7 +539,7 @@
             <div class="flex flex-wrap items-center justify-center gap-2 mb-12">
                 <button id="filter-all" data-filter="all"
                     class="loan-filter-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 bg-emerald-600 text-white border border-emerald-600 shadow-md shadow-emerald-500/10">
-                    All Programs (14)
+                    All Programs ({{ count($loans) }})
                 </button>
                 <button id="filter-cash" data-filter="cash"
                     class="loan-filter-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:shadow-md hover:bg-slate-50">
@@ -450,330 +560,65 @@
             </div>
 
             <!-- Services Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500">
+            <div id="services-grid" class="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 snap-x snap-mandatory scrollbar-none pb-6 md:pb-0 scroll-smooth transition-all duration-500">
 
-                <!-- Card 1: Maxi Loans -->
-                <div data-category="major"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
+                @foreach($loans as $loan)
+                <div data-category="{{ $loan['category'] }}"
+                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300 w-[85vw] sm:w-[380px] md:w-auto flex-shrink-0 snap-start">
                     <div
                         class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
                     </div>
                     <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
+                        class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg mb-5 border border-emerald-100 transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 shadow-sm">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            {!! $loan['icon'] !!}
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Maxi Loans</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Large loan amounts with flexible terms designed
-                        to meet major financial needs of members.</p>
+                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2 group-hover:text-emerald-700 transition-colors duration-200">
+                        {{ $loan['title'] }}
+                    </h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-5 min-h-[40px]">
+                        {{ $loan['desc'] }}
+                    </p>
+                    
+                    <!-- Embedded Financial Terms Grid -->
+                    <div class="bg-slate-50/70 rounded-2xl p-4 mb-5 border border-slate-100/60 grid grid-cols-2 gap-3 text-left">
+                        <div>
+                            <span class="block text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Interest Rate</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-800">{{ $loan['rate'] }} <span class="text-[10px] text-slate-400 font-medium">/ mo</span></span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Max Amount</span>
+                            <span class="text-xs sm:text-sm font-bold text-emerald-600">{{ $loan['max'] }}</span>
+                        </div>
+                        <div class="col-span-2 pt-2 border-t border-slate-100/60">
+                            <div class="flex justify-between items-center text-[11px] font-semibold text-slate-500">
+                                <span>Max Repayment Term:</span>
+                                <span class="text-slate-800 font-bold">{{ $loan['term'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Major & Strategic</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
+                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 transition-colors">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-extrabold text-[9px] tracking-wide uppercase">
+                            {{ $loan['badge'] }}
+                        </span>
+                        <span class="text-slate-500 group-hover:text-emerald-600 flex items-center gap-1 transition-colors">
+                            Apply Now <span class="group-hover:translate-x-1.5 transition-transform duration-200">➔</span>
+                        </span>
                     </div>
                 </div>
+                @endforeach
 
-                <!-- Card 2: Petty Cash Loan -->
-                <div data-category="cash"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Petty Cash Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Quick and small loan assistance for short-term
-                        cash requirements.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Cash & Emergency</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
+            </div>
 
-                <!-- Card 3: A.L.L Birthday Buyout -->
-                <div data-category="celebration"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.381-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">A.L.L Birthday Buyout</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Special buyout program offered to provide
-                        members with financial relief.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Festive & Buyouts</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 4: 13th Month Buyout -->
-                <div data-category="celebration"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">13th Month Buyout</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Convert your 13th month pay into manageable
-                        payments through our buyout program.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Festive & Buyouts</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 5: Commodity Appliance Loan -->
-                <div data-category="commodity"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Commodity Appliance Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Easy financing for home and office appliances at
-                        affordable installment terms.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Commodity</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 6: Commodity Jewelry Loan -->
-                <div data-category="commodity"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Commodity Jewelry Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Accessible loan assistance for purchasing
-                        jewelry and other valuable items.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Commodity</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 7: Instant Loan -->
-                <div data-category="cash"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Instant Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Fast approval loans for urgent financial needs
-                        with minimal requirements.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Cash & Emergency</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 8: Seasonal Loan -->
-                <div data-category="celebration"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Seasonal Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Special loans to cover expenses during holidays,
-                        school openings, or seasonal events.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Festive & Buyouts</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 9: Birthday Loan -->
-                <div data-category="celebration"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M12 6v12m0-12a3 3 0 100-6 3 3 0 000 6z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Birthday Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Celebrate your special day with extra financial
-                        support through our birthday loan.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Festive & Buyouts</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 10: Lechon Loan -->
-                <div data-category="celebration"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Lechon Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Loan designed to support celebrations by
-                        covering lechon or party expenses.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Festive & Buyouts</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 11: Emergency Loan -->
-                <div data-category="cash"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Emergency Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Immediate financial assistance for emergencies
-                        such as medical or family needs.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Cash & Emergency</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 12: Retirement Loan -->
-                <div data-category="major"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Retirement Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Financial support for members preparing for
-                        retirement or transitioning out of employment.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Major & Strategic</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 13: Sako Care Loan -->
-                <div data-category="cash"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.318 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Sako Care Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Healthcare-focused loan program to help members
-                        manage medical expenses.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Cash & Emergency</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Card 14: Preferential Loan -->
-                <div data-category="major"
-                    class="loan-card bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover-card-trigger relative overflow-hidden group transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors">
-                    </div>
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 border border-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 serif-font mb-2">Preferential Loan</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">Exclusive loan program offering lower interest
-                        rates and flexible repayment terms for qualified members.</p>
-                    <div
-                        class="flex items-center justify-between pt-4 border-t border-slate-50 text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
-                        <span>Major & Strategic</span>
-                        <span class="group-hover:translate-x-1 transition-transform duration-200">Details &rarr;</span>
-                    </div>
-                </div>
-
+            <!-- Swipe Indicator Hint (Mobile Only) -->
+            <div class="flex md:hidden items-center justify-center gap-2 mt-6 text-xs font-bold text-slate-400 select-none animate-pulse">
+                <span>Swipe left or right to explore programs</span>
+                <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
             </div>
         </div>
     </section>
@@ -1165,7 +1010,7 @@
 
                 <!-- Right Side: Clean Modern Feedback Contact Form -->
                 <div class="lg:col-span-7">
-                    <div class="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-md border border-slate-100">
+                    <div class="bg-white rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 shadow-md border border-slate-100">
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 serif-font mb-2">Send a Secure Message</h3>
                         <p class="text-xs text-slate-500 mb-8">Fill in your inquiry details below. All submitted
                             communication remains private under absolute administrative encryption.</p>
@@ -1174,7 +1019,7 @@
                             onsubmit="event.preventDefault(); alert('This is a prototype form layout. Functionality is not operational yet.');"
                             class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                            <div class="space-y-1.5 col-span-1">
+                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
                                 <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Your Full
                                     Name</label>
                                 <input type="text" placeholder="John Laurence Castillo"
@@ -1182,7 +1027,7 @@
                                     required>
                             </div>
 
-                            <div class="space-y-1.5 col-span-1">
+                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
                                 <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Email
                                     Address</label>
                                 <input type="email" placeholder="john@example.com"
@@ -1190,7 +1035,7 @@
                                     required>
                             </div>
 
-                            <div class="space-y-1.5 col-span-1">
+                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
                                 <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Phone
                                     Number</label>
                                 <input type="tel" placeholder="+63 912 345 6789"
@@ -1198,7 +1043,7 @@
                                     required>
                             </div>
 
-                            <div class="space-y-1.5 col-span-1">
+                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
                                 <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Subject
                                     Matter</label>
                                 <select
@@ -1211,7 +1056,7 @@
                                 </select>
                             </div>
 
-                            <div class="space-y-1.5 col-span-2">
+                            <div class="space-y-1.5 col-span-1 sm:col-span-2">
                                 <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Inquiry
                                     Message</label>
                                 <textarea rows="5" placeholder="Write down your queries or specifications here..."
@@ -1219,7 +1064,7 @@
                                     required></textarea>
                             </div>
 
-                            <div class="col-span-2 pt-2">
+                            <div class="col-span-1 sm:col-span-2 pt-2">
                                 <button type="submit"
                                     class="w-full sm:w-auto inline-flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm px-8 py-4 rounded-xl shadow-lg transition-all duration-200">
                                     Send Secure Message
@@ -1410,6 +1255,7 @@
                 // Loan Programs filtering system
                 const filterBtns = document.querySelectorAll(".loan-filter-btn");
                 const loanCards = document.querySelectorAll(".loan-card");
+                const servicesGrid = document.getElementById("services-grid");
 
                 filterBtns.forEach(btn => {
                     btn.addEventListener("click", () => {
@@ -1420,6 +1266,11 @@
                         });
                         btn.className =
                             "loan-filter-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 bg-emerald-600 text-white border border-emerald-600 shadow-md shadow-emerald-500/10";
+
+                        // Scroll back to start on mobile carousel when filter changes
+                        if (servicesGrid) {
+                            servicesGrid.scroll({ left: 0, behavior: 'smooth' });
+                        }
 
                         const category = btn.getAttribute("data-filter");
 

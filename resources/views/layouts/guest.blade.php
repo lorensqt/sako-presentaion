@@ -70,8 +70,11 @@
             <div class="flex items-center justify-between h-24">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="flex items-center group">
+                    <a href="#" class="flex items-center gap-2.5 group">
                         <img src="{{ asset('img/sako-logo-nobg.png') }}" alt="ML Sako Logo" class="h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105">
+                        <span class="text-xl sm:text-2xl font-black tracking-widest text-slate-900 uppercase">
+                            ML<span class="text-emerald-600 font-black">Sako</span>
+                        </span>
                     </a>
                 </div>
 
@@ -141,8 +144,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
                 <!-- Branding and Mission -->
                 <div class="lg:col-span-2">
-                    <div class="flex items-center mb-6">
+                    <div class="flex items-center gap-2.5 mb-6">
                         <img src="{{ asset('img/sako-logo-nobg.png') }}" alt="ML Sako Logo" class="h-12 w-auto object-contain brightness-0 invert">
+                        <span class="text-xl sm:text-2xl font-black tracking-widest text-white uppercase">
+                            ML<span class="text-emerald-500 font-black">Sako</span>
+                        </span>
                     </div>
                     <p class="text-slate-300 text-sm mb-6 leading-relaxed max-w-sm">
                         Empowering members and transforming communities through high-yield savings programs, tailored financial solutions, and mutual cooperative support.

@@ -19,7 +19,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-8">
     <!-- Notice -->
-    <div class="p-5 rounded-[2rem] bg-emerald-50 dark:bg-slate-800/60 border border-emerald-100 dark:border-slate-700/80 flex gap-4 text-emerald-800 dark:text-emerald-400">
+    <div class="p-5 rounded-3xl sm:rounded-[2rem] bg-emerald-50 dark:bg-slate-800/60 border border-emerald-100 dark:border-slate-700/80 flex gap-4 text-emerald-800 dark:text-emerald-400">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -32,7 +32,7 @@
     <!-- Tally Grid by Position -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($election->positions as $position)
-        <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-[2rem] overflow-hidden shadow-sm">
+        <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl sm:rounded-[2rem] overflow-hidden shadow-sm">
             <!-- Position Title -->
             <div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
                 <h3 class="text-xs font-extrabold text-slate-800 dark:text-white uppercase tracking-wider">{{ $position->name }}</h3>

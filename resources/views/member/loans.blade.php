@@ -18,7 +18,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         <!-- Left Column: Sticky Real-time Filing Summary Card -->
-        <div class="lg:col-span-1">
+        <div class="lg:col-span-1 order-2 lg:order-1">
             <div class="lg:sticky lg:top-8 space-y-5">
                 <div class="bg-gradient-to-tr from-slate-900 to-emerald-950 text-white rounded-[2rem] border border-slate-800 dark:border-slate-700 shadow-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden flex flex-col justify-between min-h-[480px]">
                     <div class="absolute -bottom-24 -right-24 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl"></div>
@@ -341,7 +341,7 @@
                                 Continue Step &rarr;
                             </button>
                             <button type="submit" id="btn-submit-loan" disabled class="hidden items-center gap-2 px-6 py-3 text-xs font-black text-slate-100 bg-slate-400 rounded-xl cursor-not-allowed opacity-50 transition-all select-none">
-                                📥 File &amp; Submit Loan Application
+                                ✓ Confirm &amp; Submit Application
                             </button>
                         </div>
                     </div>
@@ -426,6 +426,13 @@
                 inputTerm.value = "";
                 inputAmount.max = currentMaxLimit;
                 inputTerm.max = currentMaxTerm;
+
+                // Reset product input wrapper to original text input state to avoid silent HTML5 required blocks
+                const wrapper = document.getElementById("product-input-wrapper");
+                if (wrapper) {
+                    wrapper.innerHTML = '<label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Commodity / Specific Product Name</label>' +
+                        '<input type="text" name="product" id="loan-product" placeholder="Enter product name / specifications" class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-xs">';
+                }
 
                 // Handle Acquisition Partners (optical, jewelry, appliances)
                 const partnerSection = document.getElementById("partner-product-section");
@@ -678,10 +685,12 @@
 
             if (currentStep === totalSteps) {
                 nextBtn.classList.add("hidden");
+                nextBtn.classList.remove("inline-flex");
                 submitBtn.classList.remove("hidden");
                 submitBtn.classList.add("inline-flex");
             } else {
                 nextBtn.classList.remove("hidden");
+                nextBtn.classList.add("inline-flex");
                 submitBtn.classList.add("hidden");
                 submitBtn.classList.remove("inline-flex");
             }

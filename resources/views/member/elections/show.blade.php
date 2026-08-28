@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto space-y-10 pb-16 animate-fade-in">
     
     <!-- Premium Header Hero Card with Gradient Backdrop -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-[2.5rem] p-8 sm:p-10 shadow-xl shadow-emerald-950/10 dark:shadow-emerald-950/30">
+    <div class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-3xl sm:rounded-[2.5rem] p-6 xs:p-8 sm:p-10 shadow-xl shadow-emerald-950/10 dark:shadow-emerald-950/30">
         <!-- Glowing backdrop decorations -->
         <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5 blur-2xl"></div>
         <div class="absolute right-1/4 -bottom-12 w-60 h-60 rounded-full bg-emerald-500/10 blur-3xl"></div>
@@ -60,12 +60,12 @@
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     @foreach($position->candidates as $candidate)
-                    <label class="candidate-card relative flex flex-col items-center justify-between p-6 bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-[2.2rem] cursor-pointer hover:shadow-lg dark:hover:bg-slate-800/80 transition-all duration-300 group text-center select-none shadow-sm">
+                    <label class="candidate-card relative flex flex-col items-center justify-between p-5 xs:p-6 bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-3xl sm:rounded-[2.2rem] cursor-pointer hover:shadow-lg dark:hover:bg-slate-800/80 transition-all duration-300 group text-center select-none shadow-sm">
                         <!-- Hidden radio inputs -->
                         <input type="radio" name="votes[{{ $position->id }}]" value="{{ $candidate->id }}" required class="hidden-radio sr-only" data-pos-id="{{ $position->id }}">
 
                         <!-- Selected Highlight Overlay (Outer border + ring glow) -->
-                        <div class="active-border pointer-events-none absolute inset-0 border-2 border-transparent rounded-[2.2rem] transition-all duration-300"></div>
+                        <div class="active-border pointer-events-none absolute inset-0 border-2 border-transparent rounded-3xl sm:rounded-[2.2rem] transition-all duration-300"></div>
 
                         <div class="flex flex-col items-center w-full">
                             <!-- Premium Avatar frame -->
@@ -99,7 +99,7 @@
         @endforeach
 
         <!-- Modern Action Console Footbar -->
-        <div class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-[2rem] p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 mt-16">
+        <div class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-3xl sm:rounded-[2rem] p-5 xs:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 mt-16">
             <div class="text-center sm:text-left flex items-center gap-3">
                 <div class="flex-shrink-0 w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 flex items-center justify-center" id="validation-icon-container">
                     <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>

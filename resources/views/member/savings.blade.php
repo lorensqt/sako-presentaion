@@ -8,9 +8,9 @@
         <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">My Savings</h1>
         <p class="text-sm text-slate-600 dark:text-slate-400 mt-1 font-semibold">Manage and track your cooperative capital and savings account balances.</p>
     </div>
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
         <!-- Balance Toggle Button -->
-        <button id="toggle-balances-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-sm transition-all duration-200">
+        <button id="toggle-balances-btn" class="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-sm transition-all duration-200">
             <!-- Eye Off Icon (Default: Hidden) -->
             <svg id="eye-off-icon" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.993 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
@@ -23,7 +23,7 @@
             <span id="toggle-btn-text">Show Balances</span>
         </button>
 
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+        <span class="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
             Savings Account: Active
         </span>
@@ -94,19 +94,19 @@
                 </div>
 
                 <!-- High legibility maintain balance & withdrawable metrics -->
-                <div class="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700 shadow-xs">
+                <div class="grid grid-cols-2 gap-2 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700 shadow-xs">
                     <div class="space-y-1">
-                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Maintaining Balance</span>
-                        <p class="text-base font-extrabold text-slate-800 dark:text-slate-200">₱{{ number_format($minBalance, 2) }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-none">Required minimum</p>
+                        <span class="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block leading-tight">Maintaining Balance</span>
+                        <p class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-200">₱{{ number_format($minBalance, 2) }}</p>
+                        <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold leading-none">Required minimum</p>
                     </div>
-                    <div class="space-y-1 border-l border-slate-200/80 dark:border-slate-700 pl-4">
-                        <span class="text-xs font-extrabold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider block">Withdrawable Amount</span>
-                        <p class="text-xl font-black text-emerald-700 dark:text-emerald-300">
+                    <div class="space-y-1 border-l border-slate-200/80 dark:border-slate-700 pl-3 sm:pl-4">
+                        <span class="text-[10px] sm:text-xs font-extrabold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider block leading-tight">Withdrawable Amount</span>
+                        <p class="text-sm xs:text-base sm:text-xl font-black text-emerald-700 dark:text-emerald-300">
                             <span class="balance-masked">₱ ••••••</span>
                             <span class="balance-unmasked hidden">₱{{ number_format($withdrawableAmount, 2) }}</span>
                         </p>
-                        <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold leading-none">Available for payout</p>
+                        <p class="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-bold leading-none">Available for payout</p>
                     </div>
                 </div>
 
@@ -131,8 +131,8 @@
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Historical ledger of deposits, interest bonuses, and dividend postings.</p>
         </div>
 
-        <!-- Table with improved readability -->
-        <div class="overflow-x-auto">
+        <!-- Desktop Table (Visible on larger screens) -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
                     <tr class="text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 uppercase tracking-wider text-[11px] font-extrabold">
@@ -162,6 +162,35 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Transactions List (Visible on mobile screens) -->
+        <div class="block md:hidden space-y-3">
+            @foreach($ledgerEntries as $entry)
+                <div class="bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/60 p-4 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/60">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/20 flex-shrink-0">
+                            <!-- Premium micro-icon -->
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="inline-flex px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-400 text-[10px] font-black uppercase border border-emerald-200/40 dark:border-emerald-800/20 leading-none">
+                                {{ $entry['type'] }}
+                            </span>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-none">{{ $entry['date'] }} • via {{ $entry['channel'] }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right space-y-1">
+                        <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 leading-none">ID: {{ $entry['reference'] }}</p>
+                        <p class="text-xs xs:text-sm font-black text-emerald-700 dark:text-emerald-400 leading-none">
+                            <span class="balance-masked">+₱ ••••••</span>
+                            <span class="balance-unmasked hidden">+₱{{ number_format($entry['amount'], 2) }}</span>
+                        </p>
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
 

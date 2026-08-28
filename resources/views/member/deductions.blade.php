@@ -127,7 +127,8 @@
             <p class="text-[11px] font-semibold text-slate-450 dark:text-slate-500">Historical records and live status updates of your voluntary payroll deduction adjustment filings.</p>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Desktop Table (Visible on larger screens) -->
+        <div class="hidden lg:block overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
                     <tr class="text-slate-400 dark:text-slate-500 font-extrabold border-b border-slate-100 dark:border-slate-700 uppercase tracking-wider text-[10.5px]">
@@ -181,6 +182,69 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Mobile Adjustments Card Stack (Visible on mobile viewports) -->
+        <div class="block lg:hidden space-y-3.5">
+            @forelse($deductionRequests as $req)
+                <div class="bg-slate-50/40 dark:bg-slate-900/40 border-2 border-slate-100 dark:border-slate-700/60 p-4 rounded-2xl space-y-4 transition-all duration-200 hover:bg-slate-50/80">
+                    
+                    <!-- Reference ID & Status -->
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <span class="font-mono font-black text-slate-800 dark:text-white block text-sm leading-none">
+                                #ADJ-{{ str_pad($req->id, 5, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold block mt-1.5 leading-none">
+                                Filed: {{ $req->created_at->format('M d, Y h:i A') }}
+                            </span>
+                        </div>
+                        
+                        <!-- Status Badge -->
+                        <div>
+                            @if($req->status === 'pending')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-100/30 dark:border-amber-900/20 uppercase tracking-wider animate-pulse">Pending</span>
+                            @elseif($req->status === 'approved')
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100/30 dark:border-emerald-900/20 uppercase tracking-wider">Approved</span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-450 border border-rose-100/30 dark:border-rose-900/20 uppercase tracking-wider">Rejected</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Inner specs grid: Savings & Fixed Amounts -->
+                    <div class="grid grid-cols-2 gap-4 p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
+                        <div>
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Savings Amount</span>
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block leading-none">₱{{ number_format($req->savings_amount, 2) }}</span>
+                        </div>
+                        <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Fixed Amount</span>
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block leading-none">₱{{ number_format($req->fixed_amount, 2) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Effectivity Date & Remarks -->
+                    <div class="flex items-center justify-between text-xs gap-3">
+                        <span class="text-[10px] font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Effectivity:</span>
+                        <span class="font-mono font-bold text-slate-800 dark:text-slate-300">{{ $req->effectivity_date->format('M d, Y') }}</span>
+                    </div>
+
+                    @if($req->remarks)
+                        <div class="border-t border-slate-100 dark:border-slate-800/80 pt-2.5">
+                            <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Remarks</span>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 italic mt-1.5 pl-3 border-l-2 border-emerald-500/40 leading-relaxed bg-slate-100/40 dark:bg-slate-900/40 p-2.5 rounded-r-lg">
+                                "{{ $req->remarks }}"
+                            </p>
+                        </div>
+                    @endif
+
+                </div>
+            @empty
+                <div class="p-8 text-center text-slate-400 dark:text-slate-500 font-semibold italic">
+                    No adjustment requests submitted yet.
+                </div>
+            @endforelse
+        </div>
     </div>
 </div>
 
@@ -190,7 +254,7 @@
     <div id="modal-adj-backdrop" class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out cursor-pointer"></div>
 
     <!-- Modal Box -->
-    <div id="modal-adj-box" class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden w-full max-w-lg relative z-10 p-6 sm:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-300 ease-out">
+    <div id="modal-adj-box" class="bg-white dark:bg-slate-900 rounded-3xl sm:rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden w-full max-w-lg relative z-10 p-5 xs:p-6 sm:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-300 ease-out">
         <div class="flex items-center justify-between">
             <div class="space-y-0.5">
                 <h3 class="text-base font-black text-slate-950 dark:text-white serif-font tracking-tight">Request Deduction Change</h3>

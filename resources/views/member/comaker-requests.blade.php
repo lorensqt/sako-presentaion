@@ -44,17 +44,18 @@
         
         <!-- Tab Headers -->
         <div class="flex border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 p-2 gap-2">
-            <button id="tab-inbox" class="tab-btn active px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-200/40 dark:border-slate-700">
-                📥 Pending Co-Signings ({{ $pendingRequests->count() }})
+            <button id="tab-inbox" class="tab-btn active px-3 sm:px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-200/40 dark:border-slate-700">
+                📥 <span class="sm:hidden">Pending</span><span class="hidden sm:inline">Pending Co-Signings</span> ({{ $pendingRequests->count() }})
             </button>
-            <button id="tab-history" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-200">
-                🌐 Historical Sign-offs ({{ $historicalRequests->count() }})
+            <button id="tab-history" class="tab-btn px-3 sm:px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-200">
+                🌐 <span class="sm:hidden">History</span><span class="hidden sm:inline">Historical Sign-offs</span> ({{ $historicalRequests->count() }})
             </button>
         </div>
 
         <!-- TAB 1: PENDING INBOX -->
         <div id="content-inbox" class="tab-panel">
-            <div class="overflow-x-auto">
+            <!-- Desktop Table (Visible on larger screens) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
@@ -90,7 +91,7 @@
                                     {{ $loan->created_at->format('M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <button class="btn-evaluate-comaker bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-[10px] px-3.5 py-2 rounded-xl transition-all shadow-sm shadow-emerald-600/10" 
+                                    <button class="btn-evaluate-comaker bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-[10px] px-3.5 py-2 rounded-xl transition-all shadow-sm shadow-emerald-600/10 cursor-pointer" 
                                             data-loan="{{ json_encode($loan) }}"
                                             data-borrower-name="{{ $loan->borrower->name }}"
                                             data-borrower-id="{{ $loan->borrower->company_id ?: 'N/A' }}"
@@ -109,11 +110,65 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Mobile Card Stack (Visible on mobile viewports) -->
+            <div class="block md:hidden divide-y divide-slate-100 dark:divide-slate-700">
+                @forelse($pendingRequests as $loan)
+                    <div class="p-5 space-y-4">
+                        <!-- Borrower Profile & Request Date -->
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs border border-slate-200/40 dark:border-slate-600/40 flex-shrink-0">
+                                    {{ strtoupper(substr($loan->borrower->name, 0, 1)) }}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-950 dark:text-white text-sm leading-none">{{ $loan->borrower->name }}</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-mono mt-1 leading-none">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1 block">
+                                {{ $loan->created_at->format('M d, Y') }}
+                            </span>
+                        </div>
+
+                        <!-- Loan Details Grid -->
+                        <div class="grid grid-cols-2 gap-4 p-3 bg-slate-50/50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
+                            <div>
+                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Loan Product</span>
+                                <span class="text-xs font-bold text-slate-900 dark:text-white mt-1 block leading-tight">
+                                    {{ config("loans.{$loan->loan_category}.{$loan->loan_type}.name", ucwords(str_replace('_', ' ', $loan->loan_type))) }}
+                                </span>
+                                <span class="text-[9px] text-slate-450 dark:text-slate-500 font-semibold uppercase tracking-wider block mt-0.5">{{ $loan->loan_category }} Loan</span>
+                            </div>
+                            <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
+                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Requested Amount</span>
+                                <span class="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 font-mono mt-1 block leading-none">₱{{ number_format($loan->requested_amount, 2) }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="pt-1 text-right">
+                            <button class="btn-evaluate-comaker w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-sm cursor-pointer" 
+                                    data-loan="{{ json_encode($loan) }}"
+                                    data-borrower-name="{{ $loan->borrower->name }}"
+                                    data-borrower-id="{{ $loan->borrower->company_id ?: 'N/A' }}"
+                                    data-history="{{ json_encode($loan->approvals->map(function($appr) { return ['stage' => ucwords(str_replace('_', ' ', $appr->stage_role_slug)), 'actor' => $appr->actor->name, 'decision' => $appr->decision, 'remarks' => $appr->remarks, 'date' => $appr->created_at->format('M d, Y h:i A')]; })) }}">
+                                ✍️ Review & Sign Request
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-slate-400 dark:text-slate-500 font-semibold italic">
+                        No pending co-maker endorsement requests found. You are all caught up!
+                    </div>
+                @endforelse
+            </div>
         </div>
 
         <!-- TAB 2: HISTORICAL ARCHIVE -->
         <div id="content-history" class="tab-panel hidden">
-            <div class="overflow-x-auto">
+            <!-- Desktop Table (Visible on larger screens) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
