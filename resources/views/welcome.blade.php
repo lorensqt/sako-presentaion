@@ -17,7 +17,7 @@
 @endpush
 
 @section('content')
-    <!-- Hero Section -->
+    <!-- Hero Sectionsss -->
     <section class="relative min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center overflow-hidden pt-8 pb-16 lg:pt-16 lg:pb-24 bg-[#FAF9F6]">
         <!-- Warm alabaster background -->
         <!-- Background Gradient Grids -->
