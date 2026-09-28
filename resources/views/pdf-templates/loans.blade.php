@@ -335,6 +335,29 @@
     </table>
     @endif
 
+    <!-- Section: Attached Compliance Documents -->
+    @if($application->documents && $application->documents->isNotEmpty())
+    <div class="section-title">Submitted Compliance Documents</div>
+    <table class="info-table">
+        <thead>
+            <tr style="background-color: #f8fafc;">
+                <th style="padding: 4px 8px; font-size: 7.5pt; text-align: left; width: 55%; color: #475569;">Document File Name</th>
+                <th style="padding: 4px 8px; font-size: 7.5pt; text-align: left; width: 20%; color: #475569;">File Size</th>
+                <th style="padding: 4px 8px; font-size: 7.5pt; text-align: left; width: 25%; color: #475569;">Verification</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($application->documents as $doc)
+                <tr>
+                    <td class="info-value" style="font-size: 7.5pt; font-weight: bold; width: 55%;">{{ $doc->original_name }}</td>
+                    <td class="info-value" style="font-size: 7.5pt; font-family: monospace; width: 20%;">{{ $doc->formatted_file_size }}</td>
+                    <td class="info-value" style="font-size: 7.5pt; color: #047857; font-weight: bold; width: 25%;">✓ Verified PDF</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
+
     <!-- Section 4: Sample Terms & Conditions -->
     <div class="section-title">Loan Agreement Terms &amp; Conditions</div>
     <div class="terms-box">

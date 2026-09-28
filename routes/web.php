@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/{application}/approve', [LoanApprovalController::class, 'approve'])->name('loans.approve');
     Route::post('/loans/{application}/reject', [LoanApprovalController::class, 'reject'])->name('loans.reject');
     Route::post('/loans/{application}/return', [LoanApprovalController::class, 'returnLoan'])->name('loans.return');
+    Route::get('/loan-documents/{document}', [LoanApprovalController::class, 'viewDocument'])->name('loan.documents.show');
+    Route::get('/loans/{application}/ledger', [LoanApprovalController::class, 'viewLedger'])->name('loans.ledger.show');
+    Route::get('/loans/{application}/schedule', [LoanApprovalController::class, 'viewSchedule'])->name('loans.schedule.show');
 
     // Member Loan Applications
     Route::post('/loans/apply', [MemberController::class, 'applyLoan'])->name('member.loans.apply');

@@ -28,6 +28,8 @@ class LoanApplication extends Model
         'release_date',
         'maturity_date',
         'form_data',
+        'ledger_path',
+        'schedule_path',
         'rejection_reason',
     ];
 
@@ -83,5 +85,29 @@ class LoanApplication extends Model
     public function activities()
     {
         return $this->hasMany(LoanActivity::class)->orderBy('created_at', 'asc');
+    }
+
+    /**
+     * Get all compliance documents attached to this loan application.
+     */
+    public function documents()
+    {
+        return $this->hasMany(LoanDocument::class);
+    }
+
+    /**
+     * Get the streaming URL for the accounting ledger PDF.
+     */
+    public function getLedgerUrlAttribute(): ?string
+    {
+        return $this->ledger_path ? route('loans.ledger.show', $this->id) : null;
+    }
+
+    /**
+     * Get the streaming URL for the payment schedule PDF.
+     */
+    public function getScheduleUrlAttribute(): ?string
+    {
+        return $this->schedule_path ? route('loans.schedule.show', $this->id) : null;
     }
 }

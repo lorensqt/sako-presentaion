@@ -112,6 +112,8 @@
                         <th class="px-6 py-4.5">Borrower Profile</th>
                         <th class="px-6 py-4.5">Loan Details</th>
                         <th class="px-6 py-4.5">Requested Principal</th>
+                        <th class="px-6 py-4.5">Ledger</th>
+                        <th class="px-6 py-4.5">Schedule</th>
                         <th class="px-6 py-4.5">Contract Status</th>
                         <th class="px-6 py-4.5">Filing Date</th>
                         <th class="px-6 py-4.5 text-right">Actions</th>
@@ -146,6 +148,36 @@
                                 <span class="font-bold font-mono text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800/80 px-2.5 py-1 rounded-xl shadow-3xs text-xs">
                                     ₱{{ number_format($loan->requested_amount, 2) }}
                                 </span>
+                            </td>
+
+                            <!-- Ledger Column -->
+                            <td class="px-6 py-4">
+                                @if($loan->ledger_path)
+                                    <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all"
+                                        data-url="{{ $loan->ledger_url }}"
+                                        data-name="Loan_Ledger_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                        data-size="PDF">
+                                        <span class="text-xs">📄</span>
+                                        <span>Ledger</span>
+                                    </button>
+                                @else
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                @endif
+                            </td>
+
+                            <!-- Schedule Column -->
+                            <td class="px-6 py-4">
+                                @if($loan->schedule_path)
+                                    <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all"
+                                        data-url="{{ $loan->schedule_url }}"
+                                        data-name="Amortization_Schedule_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                        data-size="PDF">
+                                        <span class="text-xs">📅</span>
+                                        <span>Schedule</span>
+                                    </button>
+                                @else
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                @endif
                             </td>
 
                             <!-- Status Badge -->
@@ -189,7 +221,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
+                            <td colspan="8" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
                                 <div class="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center mx-auto mb-3 text-slate-400 dark:text-slate-500">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6M12 9v6m9-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -213,11 +245,106 @@
     </div>
 
 </div>
+
+@include('admin.partials.pdf-viewer-modal')
+
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // --- PDF PREVIEW MODAL LOGIC ---
+        const modalPdf = document.getElementById("modal-pdf-viewer");
+        const pdfIframe = document.getElementById("pdf-viewer-frame");
+        const pdfLoader = document.getElementById("pdf-viewer-loader");
+        const pdfTitle = document.getElementById("pdf-viewer-title");
+        const pdfMeta = document.getElementById("pdf-viewer-meta");
+        const pdfExternalLink = document.getElementById("pdf-viewer-external-link");
+        const btnClosePdf = document.getElementById("btn-close-pdf-viewer");
+        const backdropPdf = document.getElementById("pdf-viewer-backdrop");
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            const overlay = modal.querySelector(".modal-overlay");
+            const container = modal.querySelector(".modal-container");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            setTimeout(() => {
+                if (overlay) {
+                    overlay.classList.remove("opacity-0", "pointer-events-none");
+                    overlay.classList.add("opacity-100", "pointer-events-auto");
+                }
+                if (container) {
+                    container.classList.remove("scale-95", "opacity-0");
+                    container.classList.add("scale-100", "opacity-100");
+                }
+            }, 50);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            const overlay = modal.querySelector(".modal-overlay");
+            const container = modal.querySelector(".modal-container");
+            if (overlay) {
+                overlay.classList.add("opacity-0", "pointer-events-none");
+                overlay.classList.remove("opacity-100", "pointer-events-auto");
+            }
+            if (container) {
+                container.classList.add("scale-95", "opacity-0");
+                container.classList.remove("scale-100", "opacity-100");
+            }
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+            }, 300);
+        }
+
+        function openPdfPreview(url, filename, filesize) {
+            if (!modalPdf) return;
+            if (pdfTitle) pdfTitle.textContent = filename || 'Compliance Document';
+            if (pdfMeta) pdfMeta.textContent = (filesize ? filesize + ' • ' : '') + 'Verified PDF Stream';
+            if (pdfExternalLink) pdfExternalLink.href = url;
+
+            if (pdfLoader) pdfLoader.classList.remove("opacity-0", "pointer-events-none");
+            if (pdfIframe) {
+                pdfIframe.src = url + '#toolbar=1&navpanes=0';
+                pdfIframe.onload = function() {
+                    setTimeout(() => {
+                        if (pdfLoader) pdfLoader.classList.add("opacity-0", "pointer-events-none");
+                    }, 250);
+                };
+            }
+            openModal("modal-pdf-viewer");
+        }
+
+        function closePdfPreview() {
+            closeModal("modal-pdf-viewer");
+            setTimeout(() => {
+                if (pdfIframe) pdfIframe.src = "about:blank";
+            }, 300);
+        }
+
+        if (btnClosePdf) btnClosePdf.addEventListener("click", closePdfPreview);
+        if (backdropPdf) backdropPdf.addEventListener("click", closePdfPreview);
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                if (modalPdf && !modalPdf.classList.contains("hidden")) {
+                    closePdfPreview();
+                }
+            }
+        });
+
+        // Attach preview triggers on Ledger and Schedule buttons
+        document.querySelectorAll(".btn-preview-pdf").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                openPdfPreview(this.dataset.url, this.dataset.name, this.dataset.size);
+            });
+        });
+
         // Intercept delete forms to trigger a stunning SweetAlert confirm dialogue
         const deleteForms = document.querySelectorAll(".delete-loan-form");
         deleteForms.forEach(form => {

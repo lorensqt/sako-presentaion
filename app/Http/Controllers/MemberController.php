@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\LoanApplication;
 use App\Models\LoanComaker;
+use App\Models\LoanDocument;
 use App\Models\User;
 use App\Services\LoanWorkflowService;
 use App\Services\AuditLogger;
@@ -112,7 +113,7 @@ class MemberController extends Controller
             ->get(['id', 'name', 'company_id']);
 
         // Retrieve logged-in member's loan applications with their respective audit logs
-        $applications = LoanApplication::with(['approvals.actor', 'activities.actor', 'comakers.user'])
+        $applications = LoanApplication::with(['approvals.actor', 'activities.actor', 'comakers.user', 'documents'])
             ->where('user_id', Auth::id())
             ->latest()
             ->get();
@@ -323,7 +324,8 @@ class MemberController extends Controller
 
         $resubmitApp = null;
         if ($request->has('resubmit_id')) {
-            $resubmitApp = LoanApplication::where('user_id', Auth::id())
+            $resubmitApp = LoanApplication::with('documents')
+                ->where('user_id', Auth::id())
                 ->where('status', 'returned')
                 ->find($request->input('resubmit_id'));
         }
@@ -382,6 +384,23 @@ class MemberController extends Controller
      */
     public function applyLoan(Request $request)
     {
+        $resubmitId = $request->input('resubmit_id');
+        $application = null;
+
+        if ($resubmitId) {
+            $application = LoanApplication::where('user_id', Auth::id())
+                ->where('status', 'returned')
+                ->find($resubmitId);
+
+            if (!$application) {
+                return back()->with('error', 'The returned loan application could not be found.');
+            }
+        }
+
+        $documentRule = ($application && $application->documents()->count() > 0)
+            ? 'nullable|array|max:5'
+            : 'required|array|min:1|max:5';
+
         $validated = $request->validate([
             'category' => 'required|string',
             'type' => 'required|string',
@@ -393,10 +412,22 @@ class MemberController extends Controller
             'product' => 'nullable|string',
             'remarks' => 'nullable|string|max:1000',
             'pin' => 'required|string|size:6',
+            'documents' => $documentRule,
+            'documents.*' => 'file|mimes:pdf|max:10240',
+        ], [
+            'documents.required' => 'Please upload your compliance documents (Company ID back-to-back with 3 signatures and your last 2 months salary payslip in PDF format).',
+            'documents.min' => 'You must upload at least 1 PDF document.',
+            'documents.max' => 'You may upload a maximum of 5 PDF documents.',
+            'documents.*.file' => 'Each uploaded document must be a valid file.',
+            'documents.*.mimes' => 'Only PDF files (.pdf) are permitted for compliance documents.',
+            'documents.*.max' => 'Each PDF document must not exceed 10MB in size.',
         ]);
 
         $user = Auth::user();
         if (is_null($user->pin)) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => 'Security PIN is not configured. Please setup your PIN first.'], 422);
+            }
             return back()->withErrors(['pin' => 'Security PIN is not configured. Please setup your PIN first.'])->withInput();
         }
 
@@ -422,30 +453,29 @@ class MemberController extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'message' => 'Account signed out due to 3 consecutive failed PIN attempts during loan authorization.',
+                        'redirect_url' => url('/')
+                    ], 403);
+                }
+
                 return redirect('/')->withErrors([
                     'login_identifier' => 'Account signed out due to 3 consecutive failed PIN attempts during loan authorization. A security alert email has been sent.'
                 ]);
             }
 
             $remaining = 3 - $user->pin_attempts;
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'message' => "Incorrect security PIN. You have {$remaining} attempts remaining."
+                ], 422);
+            }
             return back()->withErrors(['pin' => "Incorrect security PIN. You have {$remaining} attempts remaining."])->withInput();
         }
 
         // Reset attempts if correct
         $user->update(['pin_attempts' => 0]);
-
-        $resubmitId = $request->input('resubmit_id');
-        $application = null;
-
-        if ($resubmitId) {
-            $application = LoanApplication::where('user_id', Auth::id())
-                ->where('status', 'returned')
-                ->find($resubmitId);
-
-            if (!$application) {
-                return back()->with('error', 'The returned loan application could not be found.');
-            }
-        }
 
         // Find the loan product definition in the database
         $loan = Loan::where('category', $validated['category'])
@@ -545,6 +575,35 @@ class MemberController extends Controller
             AuditLogger::log('loan_applied', "Member " . auth()->user()->name . " filed a new loan application for ₱" . number_format($application->requested_amount, 2) . " (LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . ").", 'info', $application);
         }
 
+        // Process uploaded compliance documents
+        if ($request->hasFile('documents')) {
+            // If resubmitting with new documents, clean up old physical files
+            if ($application->documents()->exists()) {
+                foreach ($application->documents as $oldDoc) {
+                    if (Storage::disk('public')->exists($oldDoc->file_path)) {
+                        Storage::disk('public')->delete($oldDoc->file_path);
+                    }
+                }
+                $application->documents()->delete();
+            }
+
+            foreach ($request->file('documents') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $fileSize = $file->getSize();
+                $mimeType = $file->getMimeType() ?: 'application/pdf';
+
+                $storedPath = $file->store("loans/documents/{$application->id}", 'public');
+
+                LoanDocument::create([
+                    'loan_application_id' => $application->id,
+                    'file_path' => $storedPath,
+                    'original_name' => $originalName,
+                    'file_size' => $fileSize,
+                    'mime_type' => $mimeType,
+                ]);
+            }
+        }
+
         // Create relational co-maker records in the loan_comakers table
         if (!empty($comakerIds)) {
             foreach ($comakerIds as $comakerId) {
@@ -574,9 +633,17 @@ class MemberController extends Controller
                         )
                     );
                 } catch (\Exception $e) {
-                    \Illuminate\Support5\Facades\Log::warning("Failed to send co-maker email to {$comaker->email}: " . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning("Failed to send co-maker email to {$comaker->email}: " . $e->getMessage());
                 }
             }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your loan application was successfully submitted and has entered the approval queue.',
+                'redirect_url' => route('member.loans')
+            ]);
         }
 
         return redirect()->route('member.loans')->with('success', 'Your loan application was successfully submitted and has entered the approval queue.');

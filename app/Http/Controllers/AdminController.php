@@ -333,14 +333,14 @@ class AdminController extends Controller
         $myGroupSlugs = $user->roles->pluck('slug')->toArray();
 
         // 1. Fetch loans sitting at this specific user's active stage
-        $myInboxLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor'])
+        $myInboxLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
             ->where('status', 'pending')
             ->whereIn('current_stage', $myGroupSlugs)
             ->latest()
             ->get();
 
         // 2. Fetch all cooperative loans sitting in the pipeline
-        $allLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor'])
+        $allLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
             ->latest()
             ->paginate(15);
 
@@ -719,7 +719,7 @@ class AdminController extends Controller
      */
     public function exportLoanPdf(LoanApplication $application)
     {
-        $application->load(['borrower', 'approvals.actor']);
+        $application->load(['borrower', 'approvals.actor', 'documents']);
 
         AuditLogger::log('compliance_report_exported', "Admin " . auth()->user()->name . " exported loan application PDF for REF #LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . " (User: {$application->borrower->name}).", 'warning', $application);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
 use App\Models\LoanComaker;
+use App\Models\LoanDocument;
 use App\Services\LoanWorkflowService;
 use App\Services\AuditLogger;
 use App\Mail\CoMakerDeclinedMail;
@@ -55,7 +56,34 @@ class LoanApprovalController extends Controller
             }
         }
 
+        // Accounting Stage Compliance: Ledger & Payment Schedule files are mandatory
+        if ($currentStageRole === 'accounting') {
+            $request->validate([
+                'ledger' => 'required|file|mimes:pdf|max:10240',
+                'schedule' => 'required|file|mimes:pdf|max:10240',
+            ], [
+                'ledger.required' => 'The accounting General Ledger PDF file is required before advancing to the Releasing Officer.',
+                'ledger.mimes' => 'The General Ledger must be a PDF document.',
+                'ledger.max' => 'The General Ledger PDF must not exceed 10MB.',
+                'schedule.required' => 'The Amortization Payment Schedule PDF file is required before advancing to the Releasing Officer.',
+                'schedule.mimes' => 'The Payment Schedule must be a PDF document.',
+                'schedule.max' => 'The Payment Schedule PDF must not exceed 10MB.',
+            ]);
+        }
+
         DB::transaction(function () use ($application, $user, $currentStageRole, $request) {
+            // If in accounting stage, store uploaded Ledger and Schedule files
+            if ($currentStageRole === 'accounting') {
+                if ($request->hasFile('ledger')) {
+                    $ledgerPath = $request->file('ledger')->store("loans/accounting/{$application->id}", 'public');
+                    $application->ledger_path = $ledgerPath;
+                }
+                if ($request->hasFile('schedule')) {
+                    $schedulePath = $request->file('schedule')->store("loans/accounting/{$application->id}", 'public');
+                    $application->schedule_path = $schedulePath;
+                }
+            }
+
             // 1. Record individual action in approval ledger
             $application->approvals()->create([
                 'stage_role_slug' => $currentStageRole,
@@ -411,5 +439,111 @@ class LoanApprovalController extends Controller
 
         $application->release_date = now();
         $application->maturity_date = now()->addMonths($termMonths);
+    }
+
+    /**
+     * Securely stream an attached loan compliance document.
+     */
+    public function viewDocument(LoanDocument $document)
+    {
+        $application = $document->loanApplication;
+        if (!$application) {
+            abort(404, 'Loan application not found.');
+        }
+
+        $this->authorizeDocumentAccess($application);
+
+        // Retrieve full path
+        $path = storage_path('app/public/' . $document->file_path);
+        if (!file_exists($path)) {
+            $altPath = storage_path('app/' . $document->file_path);
+            if (file_exists($altPath)) {
+                $path = $altPath;
+            } else {
+                abort(404, 'The requested document file could not be located on the server.');
+            }
+        }
+
+        return response()->file($path, [
+            'Content-Type' => $document->mime_type ?: 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . addslashes($document->original_name) . '"'
+        ]);
+    }
+
+    /**
+     * Securely stream an attached accounting ledger document.
+     */
+    public function viewLedger(LoanApplication $application)
+    {
+        $this->authorizeDocumentAccess($application);
+
+        if (!$application->ledger_path) {
+            abort(404, 'Accounting ledger has not been uploaded for this loan.');
+        }
+
+        $path = storage_path('app/public/' . $application->ledger_path);
+        if (!file_exists($path)) {
+            $altPath = storage_path('app/' . $application->ledger_path);
+            if (file_exists($altPath)) {
+                $path = $altPath;
+            } else {
+                abort(404, 'Ledger file could not be located on the server.');
+            }
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+        ]);
+    }
+
+    /**
+     * Securely stream an attached payment schedule document.
+     */
+    public function viewSchedule(LoanApplication $application)
+    {
+        $this->authorizeDocumentAccess($application);
+
+        if (!$application->schedule_path) {
+            abort(404, 'Payment schedule has not been uploaded for this loan.');
+        }
+
+        $path = storage_path('app/public/' . $application->schedule_path);
+        if (!file_exists($path)) {
+            $altPath = storage_path('app/' . $application->schedule_path);
+            if (file_exists($altPath)) {
+                $path = $altPath;
+            } else {
+                abort(404, 'Schedule file could not be located on the server.');
+            }
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+        ]);
+    }
+
+    /**
+     * Helper to verify if the authenticated user has rights to view loan compliance files.
+     */
+    protected function authorizeDocumentAccess(LoanApplication $application): void
+    {
+        $user = auth()->user();
+        if (!$user) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $isBorrower = ($application->user_id === $user->id);
+        $isAdmin = in_array($user->role, ['admin', 'super_admin']);
+        $isApprover = method_exists($user, 'roles') && $user->roles()->exists();
+        $isComaker = false;
+        if (!empty($application->form_data['comakers'])) {
+            $isComaker = in_array($user->id, $application->form_data['comakers']) || in_array((string)$user->id, $application->form_data['comakers']);
+        }
+
+        if (!$isBorrower && !$isAdmin && !$isApprover && !$isComaker) {
+            abort(403, 'You do not have permission to view this document.');
+        }
     }
 }

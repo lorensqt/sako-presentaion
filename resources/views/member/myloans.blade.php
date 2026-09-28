@@ -24,7 +24,7 @@
     @if(session('success'))
         <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-emerald-500 rounded-r-xl text-emerald-800 dark:text-emerald-300 text-sm font-semibold flex items-center justify-between shadow-sm">
             <span class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-lg flex-shrink-0"></i>
                 {{ session('success') }}
             </span>
         </div>
@@ -33,7 +33,7 @@
     @if(session('error'))
         <div class="p-4 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 rounded-r-xl text-rose-800 dark:text-rose-300 text-sm font-semibold flex items-center justify-between shadow-sm">
             <span class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-rose-600 dark:text-rose-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400 text-lg flex-shrink-0"></i>
                 {{ session('error') }}
             </span>
         </div>
@@ -109,6 +109,8 @@
                         <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-150 dark:border-slate-700 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             <th class="px-6 py-4.5">Loan Type</th>
                             <th class="px-6 py-4.5">Requested Amount</th>
+                            <th class="px-6 py-4.5">Compliance Docs</th>
+                            <th class="px-6 py-4.5">Accounting Files</th>
                             <th class="px-6 py-4.5">Active Stage</th>
                             <th class="px-6 py-4.5">Status</th>
                             <th class="px-6 py-4.5">Submitted Date</th>
@@ -126,6 +128,51 @@
                                 </td>
                                 <td class="px-6 py-4 font-extrabold font-mono text-slate-900 dark:text-white">
                                     ₱{{ number_format($app->requested_amount, 2) }}
+                                </td>
+                                <!-- Compliance Docs Column -->
+                                <td class="px-6 py-4">
+                                    @if($app->documents->isNotEmpty())
+                                        <div class="flex flex-col gap-1">
+                                            @foreach($app->documents as $doc)
+                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-lg text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all truncate max-w-[150px] cursor-pointer shadow-3xs"
+                                                    data-url="{{ $doc->file_url }}"
+                                                    data-name="{{ $doc->original_name }}"
+                                                    data-size="{{ $doc->formatted_file_size }}"
+                                                    title="{{ $doc->original_name }}">
+                                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
+                                                    <span class="truncate">{{ $doc->original_name }}</span>
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span class="text-[10px] text-slate-400 italic">None</span>
+                                    @endif
+                                </td>
+                                <!-- Accounting Files Column -->
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col gap-1">
+                                        @if($app->ledger_path)
+                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all max-w-[130px]"
+                                                data-url="{{ $app->ledger_url }}"
+                                                data-name="Loan_Ledger_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                                data-size="PDF">
+                                                <i class="fa-solid fa-book text-emerald-600 text-xs"></i>
+                                                <span>Ledger</span>
+                                            </button>
+                                        @endif
+                                        @if($app->schedule_path)
+                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all max-w-[130px]"
+                                                data-url="{{ $app->schedule_url }}"
+                                                data-name="Amortization_Schedule_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                                data-size="PDF">
+                                                <i class="fa-solid fa-calendar-days text-blue-600 text-xs"></i>
+                                                <span>Schedule</span>
+                                            </button>
+                                        @endif
+                                        @if(!$app->ledger_path && !$app->schedule_path)
+                                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">
                                     @if($app->status === 'approved')
@@ -174,15 +221,21 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex flex-col items-end gap-1.5">
-                                        <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer" 
+                                        <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer flex items-center gap-1" 
                                             data-ledger="{{ json_encode($workflowService->getWorkflowDetails($app)) }}"
-                                            data-activities="{{ json_encode($app->activities) }}">
-                                            View Timeline
+                                            data-activities="{{ json_encode($app->activities) }}"
+                                            data-documents="{{ json_encode($app->documents->map(fn($d) => ['name' => $d->original_name, 'size' => $d->formatted_file_size, 'url' => $d->file_url])) }}"
+                                            data-ledger-url="{{ $app->ledger_url }}"
+                                            data-schedule-url="{{ $app->schedule_url }}"
+                                            data-app-id="{{ $app->id }}">
+                                            <span>View Timeline</span>
+                                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                         </button>
 
                                         @if($app->status === 'returned')
-                                            <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="mt-1 px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1 cursor-pointer">
-                                                ↩️ Modify & Resubmit
+                                            <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="mt-1 px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1.5 cursor-pointer">
+                                                <i class="fa-solid fa-rotate-left"></i>
+                                                <span>Modify &amp; Resubmit</span>
                                             </a>
                                         @endif
                                         
@@ -198,12 +251,13 @@
                                         
                                         @if($hasRejectedComaker)
                                             @foreach($rejectedComakers as $rc)
-                                                <button class="btn-replace-comaker mt-1 px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer" 
+                                                <button class="btn-replace-comaker mt-1 px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5" 
                                                     data-app-id="{{ $app->id }}"
                                                     data-old-id="{{ $rc->user_id }}"
                                                     data-old-name="{{ $rc->user->name }}"
                                                     data-active-comakers="{{ json_encode($activeComakers) }}">
-                                                    Replace Rejected Co-maker ({{ $rc->user->name }})
+                                                    <i class="fa-solid fa-user-pen"></i>
+                                                    <span>Replace Co-maker ({{ $rc->user->name }})</span>
                                                 </button>
                                             @endforeach
                                         @endif
@@ -226,9 +280,7 @@
                                 <span class="font-bold text-slate-900 dark:text-white block text-sm leading-tight">
                                     {{ config("loans.{$app->loan_category}.{$app->loan_type}.name", ucwords(str_replace('_', ' ', $app->loan_type))) }}
                                 </span>
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">
-                                    {{ $app->loan_category }} Loan
-                                </span>
+                                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">{{ $app->loan_category }} Loan</span>
                             </div>
                             
                             <!-- Status Badge -->
@@ -262,12 +314,12 @@
                             <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Active Stage:</span>
                             <div>
                                 @if($app->status === 'approved')
-                                    <span class="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                         Released / Completed
                                     </span>
                                 @elseif($app->status === 'returned')
-                                    <span class="text-amber-600 dark:text-amber-400 font-extrabold flex items-center gap-1">
+                                    <span class="text-amber-600 dark:text-amber-400 font-extrabold flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-550 animate-pulse"></span>
                                         Returned (Correction)
                                     </span>
@@ -293,17 +345,76 @@
                             </div>
                         </div>
 
+                        <!-- Attached Documents Deck (Mobile) -->
+                        @if($app->documents->isNotEmpty() || $app->ledger_path || $app->schedule_path)
+                            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                                @if($app->documents->isNotEmpty())
+                                    <div class="space-y-1.5">
+                                        <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none flex items-center gap-1.5">
+                                            <i class="fa-solid fa-paperclip text-slate-400"></i> Compliance Documents ({{ $app->documents->count() }})
+                                        </span>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            @foreach($app->documents as $doc)
+                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-lg text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all truncate max-w-[220px] cursor-pointer shadow-3xs"
+                                                    data-url="{{ $doc->file_url }}"
+                                                    data-name="{{ $doc->original_name }}"
+                                                    data-size="{{ $doc->formatted_file_size }}"
+                                                    title="{{ $doc->original_name }}">
+                                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
+                                                    <span class="truncate">{{ $doc->original_name }}</span>
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($app->ledger_path || $app->schedule_path)
+                                    <div class="space-y-1.5 pt-1">
+                                        <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none flex items-center gap-1.5">
+                                            <i class="fa-solid fa-file-invoice text-emerald-500"></i> Accounting Official Files
+                                        </span>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            @if($app->ledger_path)
+                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all"
+                                                    data-url="{{ $app->ledger_url }}"
+                                                    data-name="Loan_Ledger_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                                    data-size="PDF">
+                                                    <i class="fa-solid fa-book text-emerald-600"></i>
+                                                    <span>Official Ledger</span>
+                                                </button>
+                                            @endif
+                                            @if($app->schedule_path)
+                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all"
+                                                    data-url="{{ $app->schedule_url }}"
+                                                    data-name="Amortization_Schedule_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                                    data-size="PDF">
+                                                    <i class="fa-solid fa-calendar-days text-blue-600"></i>
+                                                    <span>Payment Schedule</span>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
                         <!-- Action buttons row -->
                         <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-2 items-center justify-between">
-                            <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer" 
+                            <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer flex items-center gap-1" 
                                 data-ledger="{{ json_encode($workflowService->getWorkflowDetails($app)) }}"
-                                data-activities="{{ json_encode($app->activities) }}">
-                                View Timeline ➔
+                                data-activities="{{ json_encode($app->activities) }}"
+                                data-documents="{{ json_encode($app->documents->map(fn($d) => ['name' => $d->original_name, 'size' => $d->formatted_file_size, 'url' => $d->file_url])) }}"
+                                data-ledger-url="{{ $app->ledger_url }}"
+                                data-schedule-url="{{ $app->schedule_url }}"
+                                data-app-id="{{ $app->id }}">
+                                <span>View Timeline</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </button>
 
                             @if($app->status === 'returned')
-                                <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1 cursor-pointer">
-                                    ↩️ Modify & Resubmit
+                                <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    <span>Modify &amp; Resubmit</span>
                                 </a>
                             @endif
                             
@@ -319,12 +430,13 @@
                             
                             @if($hasRejectedComaker)
                                 @foreach($rejectedComakers as $rc)
-                                    <button class="btn-replace-comaker px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer" 
+                                    <button class="btn-replace-comaker px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5" 
                                         data-app-id="{{ $app->id }}"
                                         data-old-id="{{ $rc->user_id }}"
                                         data-old-name="{{ $rc->user->name }}"
                                         data-active-comakers="{{ json_encode($activeComakers) }}">
-                                        Replace Rejected Co-maker ({{ $rc->user->name }})
+                                        <i class="fa-solid fa-user-pen"></i>
+                                        <span>Replace Co-maker ({{ $rc->user->name }})</span>
                                     </button>
                                 @endforeach
                             @endif
@@ -346,18 +458,21 @@
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 w-full max-w-md sm:max-w-5xl relative z-10 p-4 sm:p-6 lg:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
         <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
-                <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approval Timeline & History</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Live Workflow Stages and Activity Audit Log</p>
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approval Timeline &amp; History</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Live Workflow Stages, Activity Audit Log, and Compliance Documents</p>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
 
         <div class="space-y-6">
             <!-- PART 1: Workflow Steps -->
             <div class="space-y-3">
-                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Workflow Stages</h4>
+                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-list-check text-emerald-500"></i>
+                    Workflow Stages
+                </h4>
                 <div class="relative min-h-[140px] flex items-center justify-center bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl p-4">
                     <!-- Background connecting line (visible on large screens) -->
                     <div class="hidden sm:block absolute top-[1rem] left-[4.5rem] right-[4.5rem] h-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
@@ -373,17 +488,55 @@
 
             <!-- PART 2: Activity Log Timeline -->
             <div class="space-y-3">
-                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Activity Log Timeline</h4>
-                <div class="bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl pl-6 pr-4 py-6 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
+                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-blue-500"></i>
+                    Activity Log Timeline
+                </h4>
+                <div class="bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl pl-6 pr-4 py-6 max-h-[260px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
                     <div id="activity-timeline-log" class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 space-y-6">
                         <!-- Dynamically populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART 3: Attached Loan Documents (Compliance & Accounting) -->
+            <div class="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open text-emerald-500"></i>
+                        Attached Loan Documents
+                    </h4>
+                    <span id="modal-docs-count-badge" class="text-[10px] font-mono text-slate-400 font-bold"></span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Column A: Compliance Documents -->
+                    <div class="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 space-y-3">
+                        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-id-card text-emerald-500"></i>
+                            Compliance Documents (Company ID &amp; Payslips)
+                        </span>
+                        <div id="modal-compliance-docs-list" class="space-y-2">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Column B: Accounting Documents -->
+                    <div class="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 space-y-3">
+                        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-invoice text-blue-500"></i>
+                            Accounting Official Files
+                        </span>
+                        <div id="modal-accounting-docs-list" class="space-y-2">
+                            <!-- Populated dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
-            <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">Close</button>
+            <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer">Close</button>
         </div>
     </div>
 </div>
@@ -400,8 +553,8 @@
                 <h3 class="text-lg font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Replace Co-maker</h3>
                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Designate a new co-maker for your loan application</p>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
 
@@ -412,7 +565,7 @@
             
             <div class="space-y-4">
                 <div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/40 rounded-xl p-3 text-xs text-amber-800 dark:text-amber-400 leading-normal">
-                    <span class="font-extrabold block mb-0.5">⚠️ Replaced Co-maker:</span>
+                    <span class="font-extrabold block mb-0.5"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Replaced Co-maker:</span>
                     <span id="replace-old-name" class="font-semibold"></span> has declined your request. Please select a replacement below.
                 </div>
 
@@ -420,11 +573,9 @@
                     <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Select New Co-maker</label>
                     
                     <!-- Selected Value Trigger Button -->
-                    <button type="button" id="comaker-select-trigger" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                    <button type="button" id="comaker-select-trigger" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all text-slate-700 dark:text-slate-300 flex items-center justify-between cursor-pointer">
                         <span id="comaker-select-label" class="text-slate-400 dark:text-slate-500">Select a member...</span>
-                        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                        <i class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
                     </button>
 
                     <!-- Hidden Input for Form Submission -->
@@ -433,8 +584,9 @@
                     <!-- Searchable Dropdown List Panel -->
                     <div id="comaker-select-dropdown" class="hidden absolute left-0 right-0 z-20 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden flex flex-col max-h-60">
                         <!-- Search Box -->
-                        <div class="p-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
-                            <input type="text" id="comaker-search-input" placeholder="Search by name or member ID..." class="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 outline-none focus:border-emerald-500 transition-all text-slate-900 dark:text-slate-100">
+                        <div class="p-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs pl-2"></i>
+                            <input type="text" id="comaker-search-input" placeholder="Search by name or member ID..." class="w-full px-2 py-1.5 text-xs border-0 bg-transparent outline-none text-slate-900 dark:text-slate-100">
                         </div>
                         
                         <!-- Options Scroll Area -->
@@ -453,12 +605,14 @@
             </div>
 
             <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 mt-6">
-                <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-500/10 hover:shadow-emerald-600/20 transition-all">Submit Replacement</button>
+                <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-500/10 hover:shadow-emerald-600/20 transition-all cursor-pointer">Submit Replacement</button>
             </div>
         </form>
     </div>
 </div>
+
+@include('admin.partials.pdf-viewer-modal')
 
 @endsection
 
@@ -890,7 +1044,10 @@
                                 
                                 ${log.remarks ? `
                                     <div class="mt-1.5 pt-1 border-t border-slate-150 dark:border-slate-800/80 group relative">
-                                        <span class="text-[8.5px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer block sm:text-center">💬 Remarks</span>
+                                        <span class="text-[8.5px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer flex items-center justify-center gap-1 sm:text-center">
+                                            <i class="fa-solid fa-comment-dots text-[10px]"></i>
+                                            <span>Remarks</span>
+                                        </span>
                                         <!-- Hover Tooltip -->
                                         <div class="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-48 bg-slate-950 text-white dark:bg-slate-900 dark:border dark:border-slate-800 p-2.5 rounded-xl text-[9px] leading-relaxed shadow-xl z-50">
                                             "${log.remarks}"
@@ -937,7 +1094,162 @@
                     });
                 }
 
+                // Render Attached Documents (Compliance & Accounting)
+                const documents = JSON.parse(this.getAttribute("data-documents") || "[]");
+                const ledgerUrl = this.getAttribute("data-ledger-url");
+                const scheduleUrl = this.getAttribute("data-schedule-url");
+                const appId = this.getAttribute("data-app-id");
+
+                const complianceContainer = document.getElementById("modal-compliance-docs-list");
+                const accountingContainer = document.getElementById("modal-accounting-docs-list");
+                const docsCountBadge = document.getElementById("modal-docs-count-badge");
+
+                let totalCount = documents.length + (ledgerUrl ? 1 : 0) + (scheduleUrl ? 1 : 0);
+                if (docsCountBadge) {
+                    docsCountBadge.textContent = `${totalCount} File${totalCount === 1 ? '' : 's'}`;
+                }
+
+                if (complianceContainer) {
+                    complianceContainer.innerHTML = "";
+                    if (documents.length > 0) {
+                        documents.forEach(doc => {
+                            const docEl = document.createElement("div");
+                            docEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                            docEl.innerHTML = `
+                                <div class="flex items-center gap-2 truncate pr-2">
+                                    <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
+                                    <span class="font-bold text-slate-800 dark:text-slate-200 truncate" title="${doc.name}">${doc.name}</span>
+                                    <span class="text-[9.5px] font-mono text-slate-400">(${doc.size})</span>
+                                </div>
+                                <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                                    data-url="${doc.url}" data-name="${doc.name}" data-size="${doc.size}">
+                                    <i class="fa-solid fa-eye text-2xs"></i>
+                                    <span>Preview</span>
+                                </button>
+                            `;
+                            complianceContainer.appendChild(docEl);
+                        });
+                    } else {
+                        complianceContainer.innerHTML = '<p class="text-xs text-slate-400 italic">No compliance documents attached</p>';
+                    }
+                }
+
+                if (accountingContainer) {
+                    accountingContainer.innerHTML = "";
+                    let hasAccounting = false;
+
+                    if (ledgerUrl) {
+                        hasAccounting = true;
+                        const ledgerEl = document.createElement("div");
+                        ledgerEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                        ledgerEl.innerHTML = `
+                            <div class="flex items-center gap-2 truncate pr-2">
+                                <i class="fa-solid fa-book text-emerald-600 text-sm"></i>
+                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate">General Ledger</span>
+                            </div>
+                            <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                                data-url="${ledgerUrl}" data-name="Loan_Ledger_LN-${appId}.pdf" data-size="PDF">
+                                <i class="fa-solid fa-eye text-2xs"></i>
+                                <span>Preview</span>
+                            </button>
+                        `;
+                        accountingContainer.appendChild(ledgerEl);
+                    }
+
+                    if (scheduleUrl) {
+                        hasAccounting = true;
+                        const schedEl = document.createElement("div");
+                        schedEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                        schedEl.innerHTML = `
+                            <div class="flex items-center gap-2 truncate pr-2">
+                                <i class="fa-solid fa-calendar-days text-blue-600 text-sm"></i>
+                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate">Payment Schedule</span>
+                            </div>
+                            <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                                data-url="${scheduleUrl}" data-name="Amortization_Schedule_LN-${appId}.pdf" data-size="PDF">
+                                <i class="fa-solid fa-eye text-2xs"></i>
+                                <span>Preview</span>
+                            </button>
+                        `;
+                        accountingContainer.appendChild(schedEl);
+                    }
+
+                    if (!hasAccounting) {
+                        accountingContainer.innerHTML = '<p class="text-xs text-slate-400 italic">Awaiting Accounting stage upload</p>';
+                    }
+                }
+
+                // Re-bind preview triggers
+                document.querySelectorAll(".btn-preview-pdf").forEach(pBtn => {
+                    pBtn.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openPdfPreview(this.dataset.url, this.dataset.name, this.dataset.size);
+                    };
+                });
+
                 openDrawer("modal-ledger");
+            });
+        });
+
+        // --- PDF PREVIEW MODAL LOGIC ---
+        const modalPdf = document.getElementById("modal-pdf-viewer");
+        const pdfIframe = document.getElementById("pdf-viewer-frame");
+        const pdfLoader = document.getElementById("pdf-viewer-loader");
+        const pdfTitle = document.getElementById("pdf-viewer-title");
+        const pdfMeta = document.getElementById("pdf-viewer-meta");
+        const pdfExternalLink = document.getElementById("pdf-viewer-external-link");
+        const btnClosePdf = document.getElementById("btn-close-pdf-viewer");
+        const backdropPdf = document.getElementById("pdf-viewer-backdrop");
+
+        function openPdfPreview(url, filename, filesize) {
+            if (!modalPdf) return;
+            if (pdfTitle) pdfTitle.textContent = filename || 'Compliance Document';
+            if (pdfMeta) pdfMeta.textContent = (filesize ? filesize + ' • ' : '') + 'Verified PDF Stream';
+            if (pdfExternalLink) pdfExternalLink.href = url;
+
+            if (pdfLoader) pdfLoader.classList.remove("opacity-0", "pointer-events-none");
+            if (pdfIframe) {
+                pdfIframe.src = url + '#toolbar=1&navpanes=0';
+                pdfIframe.onload = function() {
+                    setTimeout(() => {
+                        if (pdfLoader) pdfLoader.classList.add("opacity-0", "pointer-events-none");
+                    }, 250);
+                };
+            }
+            openDrawer("modal-pdf-viewer");
+        }
+
+        function closePdfPreview() {
+            closeDrawer("modal-pdf-viewer");
+            setTimeout(() => {
+                if (pdfIframe) pdfIframe.src = "about:blank";
+            }, 300);
+        }
+
+        if (btnClosePdf) btnClosePdf.addEventListener("click", closePdfPreview);
+        if (backdropPdf) backdropPdf.addEventListener("click", closePdfPreview);
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                if (modalPdf && !modalPdf.classList.contains("hidden")) {
+                    closePdfPreview();
+                    e.stopPropagation();
+                    return;
+                }
+                const ledgerModal = document.getElementById("modal-ledger");
+                if (ledgerModal && !ledgerModal.classList.contains("hidden")) {
+                    closeDrawer("modal-ledger");
+                }
+            }
+        });
+
+        // Global preview listeners
+        document.querySelectorAll(".btn-preview-pdf").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openPdfPreview(this.dataset.url, this.dataset.name, this.dataset.size);
             });
         });
 

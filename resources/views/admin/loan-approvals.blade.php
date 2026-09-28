@@ -124,6 +124,8 @@
                             <th class="px-6 py-4.5">Borrower Profile</th>
                             <th class="px-6 py-4.5">Loan Type</th>
                             <th class="px-6 py-4.5">Requested Amount</th>
+                            <th class="px-6 py-4.5">Ledger</th>
+                            <th class="px-6 py-4.5">Schedule</th>
                             <th class="px-6 py-4.5">Awaiting Verification</th>
                             <th class="px-6 py-4.5">Submitted Date</th>
                             <th class="px-6 py-4.5 text-right">Evaluation</th>
@@ -153,6 +155,32 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
+                                    @if($loan->ledger_path)
+                                        <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all"
+                                            data-url="{{ $loan->ledger_url }}"
+                                            data-name="Loan_Ledger_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                            data-size="PDF">
+                                            <span class="text-xs">📄</span>
+                                            <span>Ledger</span>
+                                        </button>
+                                    @else
+                                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($loan->schedule_path)
+                                        <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all"
+                                            data-url="{{ $loan->schedule_url }}"
+                                            data-name="Amortization_Schedule_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                            data-size="PDF">
+                                            <span class="text-xs">📅</span>
+                                            <span>Schedule</span>
+                                        </button>
+                                    @else
+                                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
                                     <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/40 dark:border-blue-900/30 uppercase tracking-wider">
                                         {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }}
                                     </span>
@@ -174,7 +202,15 @@
                                             'term' => ($loan->form_data['term_months'] ?? $loan->term_months ?? 'N/A') . ' Months',
                                             'current_stage' => $loan->current_stage,
                                             'form_data' => $loan->form_data,
-                                            'workflow_steps' => $loan->workflow_steps
+                                            'workflow_steps' => $loan->workflow_steps,
+                                            'ledger_url' => $loan->ledger_url,
+                                            'schedule_url' => $loan->schedule_url,
+                                            'documents' => $loan->documents->map(fn($d) => [
+                                                'id' => $d->id,
+                                                'original_name' => $d->original_name,
+                                                'file_size' => $d->formatted_file_size,
+                                                'file_url' => $d->file_url,
+                                            ])->values()
                                         ]) }}">
                                             Review Application
                                         </button>
@@ -183,7 +219,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
+                                <td colspan="8" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
                                     <div class="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center mx-auto mb-3 text-slate-400 dark:text-slate-500">
                                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -208,6 +244,8 @@
                             <th class="px-6 py-4.5">Borrower Profile</th>
                             <th class="px-6 py-4.5">Loan Type</th>
                             <th class="px-6 py-4.5">Requested Amount</th>
+                            <th class="px-6 py-4.5">Ledger</th>
+                            <th class="px-6 py-4.5">Schedule</th>
                             <th class="px-6 py-4.5">Current Stage</th>
                             <th class="px-6 py-4.5">Status</th>
                             <th class="px-6 py-4.5">Submitted Date</th>
@@ -236,6 +274,32 @@
                                     <span class="font-bold font-mono text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-2.5 py-1 rounded-xl text-xs shadow-sm">
                                         ₱{{ number_format($loan->requested_amount, 2) }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($loan->ledger_path)
+                                        <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all"
+                                            data-url="{{ $loan->ledger_url }}"
+                                            data-name="Loan_Ledger_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                            data-size="PDF">
+                                            <span class="text-xs">📄</span>
+                                            <span>Ledger</span>
+                                        </button>
+                                    @else
+                                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($loan->schedule_path)
+                                        <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all"
+                                            data-url="{{ $loan->schedule_url }}"
+                                            data-name="Amortization_Schedule_LN-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                            data-size="PDF">
+                                            <span class="text-xs">📅</span>
+                                            <span>Schedule</span>
+                                        </button>
+                                    @else
+                                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($loan->status === 'approved' || $loan->status === 'released')
@@ -280,7 +344,15 @@
                                             'term' => ($loan->form_data['term_months'] ?? $loan->term_months ?? 'N/A') . ' Months',
                                             'current_stage' => $loan->current_stage,
                                             'form_data' => $loan->form_data,
-                                            'workflow_steps' => $loan->workflow_steps
+                                            'workflow_steps' => $loan->workflow_steps,
+                                            'ledger_url' => $loan->ledger_url,
+                                            'schedule_url' => $loan->schedule_url,
+                                            'documents' => $loan->documents->map(fn($d) => [
+                                                'id' => $d->id,
+                                                'original_name' => $d->original_name,
+                                                'file_size' => $d->formatted_file_size,
+                                                'file_url' => $d->file_url,
+                                            ])->values()
                                         ]) }}">
                                             View Full Ledger
                                         </button>
@@ -289,7 +361,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
+                                <td colspan="9" class="px-6 py-16 text-center text-slate-400 dark:text-slate-500">
                                     <p class="text-xs font-bold">No applications found.</p>
                                     <p class="text-2xs text-slate-400 dark:text-slate-500 mt-1 font-semibold">No loan files exist in the cooperative database yet.</p>
                                 </td>
@@ -311,6 +383,7 @@
 </div>
 
 @include('admin.partials.review-loan-modal')
+@include('admin.partials.pdf-viewer-modal')
 
 @endsection
 
@@ -406,6 +479,68 @@
             });
         });
 
+        // --- PDF PREVIEW MODAL LOGIC ---
+        const modalPdf = document.getElementById("modal-pdf-viewer");
+        const pdfIframe = document.getElementById("pdf-viewer-frame");
+        const pdfLoader = document.getElementById("pdf-viewer-loader");
+        const pdfTitle = document.getElementById("pdf-viewer-title");
+        const pdfMeta = document.getElementById("pdf-viewer-meta");
+        const pdfExternalLink = document.getElementById("pdf-viewer-external-link");
+        const btnClosePdf = document.getElementById("btn-close-pdf-viewer");
+        const backdropPdf = document.getElementById("pdf-viewer-backdrop");
+
+        function openPdfPreview(url, filename, filesize) {
+            if (!modalPdf) return;
+            if (pdfTitle) pdfTitle.textContent = filename || 'Compliance Document';
+            if (pdfMeta) pdfMeta.textContent = (filesize ? filesize + ' • ' : '') + 'Verified PDF Stream';
+            if (pdfExternalLink) pdfExternalLink.href = url;
+
+            // Show loader
+            if (pdfLoader) pdfLoader.classList.remove("opacity-0", "pointer-events-none");
+            
+            // Set source
+            if (pdfIframe) {
+                pdfIframe.src = url + '#toolbar=1&navpanes=0';
+                pdfIframe.onload = function() {
+                    setTimeout(() => {
+                        if (pdfLoader) pdfLoader.classList.add("opacity-0", "pointer-events-none");
+                    }, 250);
+                };
+            }
+
+            openModal("modal-pdf-viewer");
+        }
+
+        function closePdfPreview() {
+            closeModal("modal-pdf-viewer");
+            setTimeout(() => {
+                if (pdfIframe) pdfIframe.src = "about:blank";
+            }, 300);
+        }
+
+        if (btnClosePdf) {
+            btnClosePdf.addEventListener("click", closePdfPreview);
+        }
+
+        if (backdropPdf) {
+            backdropPdf.addEventListener("click", closePdfPreview);
+        }
+
+        // ESC Key handling for stacked modals
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                if (modalPdf && !modalPdf.classList.contains("hidden")) {
+                    closePdfPreview();
+                    e.stopPropagation();
+                    return;
+                }
+                const reviewModal = document.getElementById("modal-review");
+                if (reviewModal && !reviewModal.classList.contains("hidden")) {
+                    closeModal("modal-review");
+                }
+            }
+        });
+
         // Review Button Trigger
         document.querySelectorAll(".btn-review-loan").forEach(btn => {
             btn.addEventListener("click", function() {
@@ -424,6 +559,62 @@
                 document.getElementById("view-type-name").textContent = loan.type_name + " (" + loan.category + ")";
                 document.getElementById("view-term").textContent = loan.term;
                 document.getElementById("view-member-remarks").textContent = loan.form_data.member_remarks || 'No special remarks provided.';
+
+                // Populate Submitted Documents
+                const docsContainer = document.getElementById("view-documents-container");
+                const docsCountBadge = document.getElementById("view-docs-count-badge");
+                const docs = loan.documents || [];
+
+                if (docsCountBadge) {
+                    docsCountBadge.textContent = `${docs.length} File${docs.length === 1 ? '' : 's'}`;
+                }
+
+                if (docsContainer) {
+                    docsContainer.innerHTML = "";
+                    if (docs.length > 0) {
+                        docs.forEach(doc => {
+                            const docDiv = document.createElement("div");
+                            docDiv.className = "flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-3xs hover:border-emerald-300 dark:hover:border-emerald-800 transition-all";
+                            docDiv.innerHTML = `
+                                <div class="flex items-center gap-2.5 min-w-0 pr-2">
+                                    <div class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0 text-[10px] font-black">
+                                        PDF
+                                    </div>
+                                    <div class="min-w-0 truncate">
+                                        <span class="block text-xs font-bold text-slate-800 dark:text-slate-200 truncate" title="${doc.original_name}">${doc.original_name}</span>
+                                        <span class="text-[9.5px] text-slate-400 font-mono">${doc.file_size}</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold flex-shrink-0 transition-all cursor-pointer shadow-3xs"
+                                    data-url="${doc.file_url}" 
+                                    data-name="${doc.original_name}" 
+                                    data-size="${doc.file_size}">
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>Preview</span>
+                                </button>
+                            `;
+                            docsContainer.appendChild(docDiv);
+                        });
+
+                        // Attach preview click listeners
+                        docsContainer.querySelectorAll(".btn-preview-pdf").forEach(pBtn => {
+                            pBtn.addEventListener("click", function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openPdfPreview(this.dataset.url, this.dataset.name, this.dataset.size);
+                            });
+                        });
+                    } else {
+                        docsContainer.innerHTML = `
+                            <div class="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/50 rounded-xl text-center">
+                                <p class="text-[10.5px] text-slate-400 italic">No attached compliance documents</p>
+                            </div>
+                        `;
+                    }
+                }
 
                 // Build Complete Dynamic Stepper Vertical Timeline
                 const timelineContainer = document.getElementById("view-history-timeline");
@@ -552,6 +743,75 @@
                     infoCurrentStage.textContent = activeStageLabel;
                 }
 
+                // Handle Accounting Compliance Files (Ledger & Schedule)
+                const accountingDocsBlock = document.getElementById("view-accounting-docs-block");
+                const ledgerItem = document.getElementById("view-ledger-item");
+                const scheduleItem = document.getElementById("view-schedule-item");
+                const btnPreviewLedger = document.getElementById("btn-preview-ledger");
+                const btnPreviewSchedule = document.getElementById("btn-preview-schedule");
+
+                let hasAccountingDocs = false;
+                if (loan.ledger_url) {
+                    hasAccountingDocs = true;
+                    if (ledgerItem) ledgerItem.classList.remove("hidden");
+                    if (btnPreviewLedger) {
+                        btnPreviewLedger.onclick = () => openPdfPreview(loan.ledger_url, `Loan_Ledger_LN-${loan.id}.pdf`, 'PDF');
+                    }
+                } else {
+                    if (ledgerItem) ledgerItem.classList.add("hidden");
+                }
+
+                if (loan.schedule_url) {
+                    hasAccountingDocs = true;
+                    if (scheduleItem) scheduleItem.classList.remove("hidden");
+                    if (btnPreviewSchedule) {
+                        btnPreviewSchedule.onclick = () => openPdfPreview(loan.schedule_url, `Amortization_Schedule_LN-${loan.id}.pdf`, 'PDF');
+                    }
+                } else {
+                    if (scheduleItem) scheduleItem.classList.add("hidden");
+                }
+
+                if (accountingDocsBlock) {
+                    if (hasAccountingDocs) {
+                        accountingDocsBlock.classList.remove("hidden");
+                    } else {
+                        accountingDocsBlock.classList.add("hidden");
+                    }
+                }
+
+                // Handle Accounting Upload Dock inside Signatory Decision Panel
+                const accountingUploadSection = document.getElementById("accounting-upload-section");
+                const inputLedger = document.getElementById("input-accounting-ledger");
+                const inputSchedule = document.getElementById("input-accounting-schedule");
+                const statusLedger = document.getElementById("ledger-file-status");
+                const statusSchedule = document.getElementById("schedule-file-status");
+
+                if (accountingUploadSection) {
+                    if (loan.current_stage === 'accounting') {
+                        accountingUploadSection.classList.remove("hidden");
+                        if (inputLedger) {
+                            inputLedger.value = "";
+                            inputLedger.required = true;
+                            if (statusLedger) {
+                                statusLedger.textContent = "Required";
+                                statusLedger.className = "text-[9px] font-semibold text-slate-400";
+                            }
+                        }
+                        if (inputSchedule) {
+                            inputSchedule.value = "";
+                            inputSchedule.required = true;
+                            if (statusSchedule) {
+                                statusSchedule.textContent = "Required";
+                                statusSchedule.className = "text-[9px] font-semibold text-slate-400";
+                            }
+                        }
+                    } else {
+                        accountingUploadSection.classList.add("hidden");
+                        if (inputLedger) inputLedger.required = false;
+                        if (inputSchedule) inputSchedule.required = false;
+                    }
+                }
+
                 if (myGroupSlugs.includes(loan.current_stage)) {
                     actionPanel.classList.remove("hidden");
                     if (infoPanel) infoPanel.classList.add("hidden");
@@ -572,6 +832,34 @@
                         e.preventDefault();
                         const alertInstance = window.MLSAKOAlert || Swal;
 
+                        // Validation: If Accounting stage, Ledger and Schedule are mandatory
+                        if (loan.current_stage === 'accounting') {
+                            const ledgerFile = inputLedger ? inputLedger.files[0] : null;
+                            const scheduleFile = inputSchedule ? inputSchedule.files[0] : null;
+
+                            if (!ledgerFile) {
+                                alertInstance.fire({
+                                    icon: 'warning',
+                                    title: 'General Ledger Required',
+                                    text: 'Accounting staff must attach the General Ledger PDF file before forwarding to the Releasing Officer.',
+                                    iconColor: '#f59e0b',
+                                    confirmButtonText: 'Select Ledger File'
+                                });
+                                return;
+                            }
+
+                            if (!scheduleFile) {
+                                alertInstance.fire({
+                                    icon: 'warning',
+                                    title: 'Payment Schedule Required',
+                                    text: 'Accounting staff must attach the Payment Schedule PDF file before forwarding to the Releasing Officer.',
+                                    iconColor: '#f59e0b',
+                                    confirmButtonText: 'Select Schedule File'
+                                });
+                                return;
+                            }
+                        }
+
                         if (!txtRemarks.value.trim()) {
                             alertInstance.fire({
                                 icon: 'warning',
@@ -586,9 +874,11 @@
                         alertInstance.fire({
                             icon: 'question',
                             title: 'Confirm Signature',
-                            text: 'Are you sure you want to sign and approve this loan facility application?',
+                            text: loan.current_stage === 'accounting' 
+                                ? 'Are you sure you want to sign off and forward this loan with the attached Ledger & Schedule to the Releasing Officer?' 
+                                : 'Are you sure you want to sign and approve this loan facility application?',
                             showCancelButton: true,
-                            confirmButtonText: 'Yes, Sign & Approve',
+                            confirmButtonText: loan.current_stage === 'accounting' ? 'Yes, Sign & Forward' : 'Yes, Sign & Approve',
                             cancelButtonText: 'Cancel',
                             iconColor: '#10b981'
                         }).then((result) => {
@@ -669,6 +959,32 @@
             });
         });
 
-    });
-</script>
-@endpush
+        // Global file input change listeners for accounting files
+        const inputLedgerGlobal = document.getElementById("input-accounting-ledger");
+        const inputScheduleGlobal = document.getElementById("input-accounting-schedule");
+        const statusLedgerGlobal = document.getElementById("ledger-file-status");
+        const statusScheduleGlobal = document.getElementById("schedule-file-status");
+
+        if (inputLedgerGlobal && statusLedgerGlobal) {
+            inputLedgerGlobal.addEventListener("change", function() {
+                if (this.files && this.files[0]) {
+                    statusLedgerGlobal.textContent = "✓ " + this.files[0].name;
+                    statusLedgerGlobal.className = "text-[9px] font-bold text-emerald-600 dark:text-emerald-400 truncate max-w-[120px]";
+                } else {
+                    statusLedgerGlobal.textContent = "Required";
+                    statusLedgerGlobal.className = "text-[9px] font-semibold text-slate-400";
+                }
+            });
+        }
+
+        if (inputScheduleGlobal && statusScheduleGlobal) {
+            inputScheduleGlobal.addEventListener("change", function() {
+                if (this.files && this.files[0]) {
+                    statusScheduleGlobal.textContent = "✓ " + this.files[0].name;
+                    statusScheduleGlobal.className = "text-[9px] font-bold text-blue-600 dark:text-blue-400 truncate max-w-[120px]";
+                } else {
+                    statusScheduleGlobal.textContent = "Required";
+                    statusScheduleGlobal.className = "text-[9px] font-semibold text-slate-400";
+                }
+            });
+        }

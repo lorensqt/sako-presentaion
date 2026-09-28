@@ -723,13 +723,47 @@
 
             // Check and trigger Laravel Session Alerts
             @if(session('success'))
-                MLSAKOAlert.fire({
-                    icon: 'success',
-                    title: {!! json_encode(session('success_title') ?? 'Success') !!},
-                    text: {!! json_encode(session('success')) !!},
-                    iconColor: '#10b981',
-                    confirmButtonText: 'Great, Thank You'
-                });
+                @if(str_contains(session('success'), 'loan application was successfully submitted'))
+                    MLSAKOAlert.fire({
+                        title: 'Finalizing Submission...',
+                        html: `
+                            <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                <div class="relative w-14 h-14 flex items-center justify-center">
+                                    <div class="w-14 h-14 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+                                    <span class="absolute text-lg">📄</span>
+                                </div>
+                                <div class="space-y-1 text-center">
+                                    <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                        Synchronizing cooperative loan registry...
+                                    </p>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                        Updating pipeline queues and notifying co-makers.
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1300,
+                        timerProgressBar: true
+                    }).then(() => {
+                        MLSAKOAlert.fire({
+                            icon: 'success',
+                            title: {!! json_encode(session('success_title') ?? 'Success') !!},
+                            text: {!! json_encode(session('success')) !!},
+                            iconColor: '#10b981',
+                            confirmButtonText: 'Great, Thank You'
+                        });
+                    });
+                @else
+                    MLSAKOAlert.fire({
+                        icon: 'success',
+                        title: {!! json_encode(session('success_title') ?? 'Success') !!},
+                        text: {!! json_encode(session('success')) !!},
+                        iconColor: '#10b981',
+                        confirmButtonText: 'Great, Thank You'
+                    });
+                @endif
             @endif
 
             @if(session('error'))

@@ -79,12 +79,17 @@
                                 <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">Co-Makers Endorsements</span>
                                 <p id="summary-comakers" class="text-xs font-bold text-slate-200">None Required</p>
                             </div>
+
+                            <div class="space-y-1 border-t border-slate-800/50 pt-3">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">Documents (PDF)</span>
+                                <p id="summary-documents" class="text-xs font-bold text-slate-200">0 / 5 Attached</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="pt-6 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold font-mono">
                         <span>WIZARD STATUS</span>
-                        <span id="summary-step-indicator" class="text-emerald-500 font-bold">STEP 1 OF 4</span>
+                        <span id="summary-step-indicator" class="text-emerald-500 font-bold">STEP 1 OF 5</span>
                     </div>
                 </div>
             </div>
@@ -92,7 +97,7 @@
 
         <!-- Right Column: Horizontal Step-by-Step Wizard Form -->
         <div class="lg:col-span-2">
-            <form action="{{ route('member.loans.apply') }}" method="POST" id="loan-wizard-form" class="space-y-6">
+            <form action="{{ route('member.loans.apply') }}" method="POST" id="loan-wizard-form" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="pin" id="loan-pin-input">
                 @if(isset($resubmitApp))
@@ -138,6 +143,14 @@
                             <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="4">
                                 <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                     4
+                                </div>
+                                <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Documents</span>
+                            </button>
+
+                            <!-- Step 5 Node -->
+                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="5">
+                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                    5
                                 </div>
                                 <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Filing</span>
                             </button>
@@ -291,8 +304,131 @@
                             </div>
                         </div>
 
-                        <!-- PANEL 4: REMARKS & FILE DECK -->
-                        <div class="wizard-panel space-y-5 transition-all duration-300 ease-out hidden" id="panel-step-4">
+                        <!-- PANEL 4: REQUIRED COMPLIANCE DOCUMENTS -->
+                        <div class="wizard-panel space-y-6 transition-all duration-300 ease-out hidden" id="panel-step-4">
+                            <div>
+                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Required Compliance Documents</h3>
+                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Please upload your digital compliance documents in PDF format to complete your loan application.</p>
+                            </div>
+
+                            <!-- INSTRUCTION CARDS (SPECIFYING COMPANY ID AND LAST 2 MONTHS SALARY PAYSLIP) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Document 1: Company ID Card -->
+                                <div class="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-black shadow-sm">1</span>
+                                        <h4 class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Company ID</h4>
+                                    </div>
+                                    <ul class="text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1">
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-emerald-500 font-bold">✓</span>
+                                            <span>Clear copy of <strong>Company ID</strong> (front and back / back-to-back)</span>
+                                        </li>
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-emerald-500 font-bold">✓</span>
+                                            <span>Must include <strong>3 specimen signatures and signature</strong></span>
+                                        </li>
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-emerald-500 font-bold">✓</span>
+                                            <span>Must be saved or scanned into a legible PDF file</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Document 2: Last 2 Months Payslips Card -->
+                                <div class="p-4 bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs font-black shadow-sm">2</span>
+                                        <h4 class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Last 2 Months Salary Payslips</h4>
+                                    </div>
+                                    <ul class="text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1">
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-blue-500 font-bold">✓</span>
+                                            <span>Official payslips covering the <strong>last 2 consecutive months</strong></span>
+                                        </li>
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-blue-500 font-bold">✓</span>
+                                            <span>Showing complete compensation breakdown &amp; deductions</span>
+                                        </li>
+                                        <li class="flex items-start gap-1.5">
+                                            <span class="text-blue-500 font-bold">✓</span>
+                                            <span>Official employer payslip format in PDF</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- RESUBMISSION EXISTING DOCUMENTS PREVIEW (IF RETURNING) -->
+                            @if(isset($resubmitApp) && $resubmitApp->documents->isNotEmpty())
+                                <div class="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-extrabold text-amber-800 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                                            <span>📁</span> Previously Submitted Documents ({{ $resubmitApp->documents->count() }})
+                                        </span>
+                                        <span class="text-[10px] text-amber-700 dark:text-amber-400 font-semibold">You may keep these or upload new replacement PDFs below</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                        @foreach($resubmitApp->documents as $prevDoc)
+                                            <div class="flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 rounded-xl text-xs">
+                                                <div class="flex items-center gap-2 truncate">
+                                                    <span class="text-rose-500 font-bold text-sm">📄</span>
+                                                    <span class="font-bold text-slate-800 dark:text-slate-200 truncate">{{ $prevDoc->original_name }}</span>
+                                                    <span class="text-[10px] font-mono text-slate-400">({{ $prevDoc->formatted_file_size }})</span>
+                                                </div>
+                                                <a href="{{ $prevDoc->file_url }}" target="_blank" class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex-shrink-0 ml-2">Preview</a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- INTERACTIVE DRAG & DROP DROPZONE -->
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
+                                        Upload PDF Documents <span class="text-rose-500">*</span>
+                                    </label>
+                                    <span id="doc-counter-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                        0 / 5 Files
+                                    </span>
+                                </div>
+
+                                <div id="dropzone-area" class="relative group cursor-pointer border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-2xl p-6 sm:p-8 text-center bg-slate-50/50 dark:bg-slate-900/50 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/10 transition-all duration-200">
+                                    <!-- Hidden native file input handled via JS DataTransfer -->
+                                    <input type="file" id="loan-documents-input" name="documents[]" multiple accept=".pdf,application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+
+                                    <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl transition-transform duration-200 group-hover:scale-110">
+                                            📤
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                                <span class="text-emerald-600 dark:text-emerald-400 underline">Click to browse</span> or drag and drop your PDF files here
+                                            </p>
+                                            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                                                PDF format only &bull; Maximum 5 files &bull; Up to 10MB per file
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CLIENT-SIDE VERIFIER ALERTS -->
+                                <div id="doc-verifier-alert" class="hidden p-3 rounded-xl text-xs font-bold flex items-center gap-2"></div>
+
+                                <!-- ATTACHED DOCUMENTS QUEUE LIST -->
+                                <div id="documents-queue-container" class="space-y-2 hidden">
+                                    <h5 class="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 pt-2">
+                                        Attached Files Queue
+                                    </h5>
+                                    <div id="documents-list" class="space-y-2">
+                                        <!-- Dynamically generated PDF file cards -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 5: REMARKS & FILE DECK -->
+                        <div class="wizard-panel space-y-5 transition-all duration-300 ease-out hidden" id="panel-step-5">
                             <div>
                                 <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Final Filing &amp; Remarks</h3>
                                 <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Write support notes and finalize terms agreements to complete your submission.</p>
@@ -615,6 +751,187 @@
             });
         }
 
+        // --- STEP 4: COMPLIANCE DOCUMENTS UPLOAD & VERIFIER ---
+        const docInput = document.getElementById("loan-documents-input");
+        const dropzoneArea = document.getElementById("dropzone-area");
+        const docCounterBadge = document.getElementById("doc-counter-badge");
+        const docAlert = document.getElementById("doc-verifier-alert");
+        const queueContainer = document.getElementById("documents-queue-container");
+        const docList = document.getElementById("documents-list");
+        const MAX_DOCS = 5;
+        const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+        let docDataTransfer = new DataTransfer();
+        const hasExistingDocs = {{ (isset($resubmitApp) && $resubmitApp->documents->isNotEmpty()) ? 'true' : 'false' }};
+
+        function formatBytes(bytes) {
+            if (bytes >= 1048576) {
+                return (bytes / 1048576).toFixed(2) + ' MB';
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).toFixed(1) + ' KB';
+            }
+            return bytes + ' B';
+        }
+
+        function showDocAlert(message, type = 'error') {
+            if (!docAlert) return;
+            docAlert.classList.remove("hidden", "bg-rose-50", "text-rose-700", "border", "border-rose-200", "dark:bg-rose-950/40", "dark:text-rose-300", "dark:border-rose-900/50", "bg-amber-50", "text-amber-700", "border-amber-200");
+            
+            if (type === 'error') {
+                docAlert.className = "p-3 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/50";
+                docAlert.innerHTML = `<span>⚠️</span> <span>${message}</span>`;
+            } else if (type === 'warning') {
+                docAlert.className = "p-3 rounded-xl text-xs font-bold flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/50";
+                docAlert.innerHTML = `<span>⚠️</span> <span>${message}</span>`;
+            }
+            setTimeout(() => {
+                docAlert.classList.add("hidden");
+            }, 6000);
+        }
+
+        function handleIncomingFiles(fileList) {
+            let errorOccurred = false;
+
+            Array.from(fileList).forEach(file => {
+                // Check 1: Maximum 5 files
+                if (docDataTransfer.items.length >= MAX_DOCS) {
+                    showDocAlert(`Maximum ${MAX_DOCS} PDF files permitted. "${file.name}" was not added.`, 'warning');
+                    errorOccurred = true;
+                    return;
+                }
+
+                // Check 2: Strictly PDF format
+                const isPdf = file.name.toLowerCase().endsWith(".pdf") || file.type === "application/pdf";
+                if (!isPdf) {
+                    showDocAlert(`"${file.name}" is not a PDF file. Please upload Company ID and payslips in PDF format only.`, 'error');
+                    errorOccurred = true;
+                    return;
+                }
+
+                // Check 3: File size <= 10MB
+                if (file.size > MAX_FILE_SIZE_BYTES) {
+                    showDocAlert(`"${file.name}" exceeds the maximum allowed file size of 10MB (${formatBytes(file.size)}).`, 'error');
+                    errorOccurred = true;
+                    return;
+                }
+
+                // Check 4: Duplicate file
+                const isDuplicate = Array.from(docDataTransfer.files).some(existing => 
+                    existing.name === file.name && existing.size === file.size
+                );
+                if (isDuplicate) {
+                    return; // Skip identical duplicate
+                }
+
+                // Add valid file to DataTransfer
+                docDataTransfer.items.add(file);
+            });
+
+            // Sync with actual native file input element
+            if (docInput) {
+                docInput.files = docDataTransfer.files;
+            }
+
+            renderDocumentsQueue();
+            updateFilingSummary();
+        }
+
+        function renderDocumentsQueue() {
+            const count = docDataTransfer.files.length;
+            if (docCounterBadge) {
+                docCounterBadge.textContent = `${count} / ${MAX_DOCS} Files`;
+                if (count > 0) {
+                    docCounterBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800";
+                } else {
+                    docCounterBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700";
+                }
+            }
+
+            if (count > 0) {
+                queueContainer.classList.remove("hidden");
+            } else {
+                queueContainer.classList.add("hidden");
+            }
+
+            docList.innerHTML = "";
+            Array.from(docDataTransfer.files).forEach((file, index) => {
+                const itemDiv = document.createElement("div");
+                itemDiv.className = "flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-3xs transition-all hover:border-slate-300 dark:hover:border-slate-700";
+                itemDiv.innerHTML = `
+                    <div class="flex items-center gap-3 min-w-0 pr-2">
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0 text-xs font-black">
+                            PDF
+                        </div>
+                        <div class="min-w-0 truncate">
+                            <span class="block text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${file.name}</span>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="text-[10px] text-slate-400 font-mono">${formatBytes(file.size)}</span>
+                                <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.2 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 rounded">✓ Verified PDF</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-remove-doc flex-shrink-0 p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-all" data-index="${index}" title="Remove file">
+                        <svg class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                `;
+                docList.appendChild(itemDiv);
+            });
+
+            // Attach remove file listeners
+            docList.querySelectorAll(".btn-remove-doc").forEach(btn => {
+                btn.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    const removeIdx = parseInt(this.getAttribute("data-index"));
+                    const newDT = new DataTransfer();
+                    Array.from(docDataTransfer.files).forEach((f, i) => {
+                        if (i !== removeIdx) {
+                            newDT.items.add(f);
+                        }
+                    });
+                    docDataTransfer = newDT;
+                    if (docInput) {
+                        docInput.files = docDataTransfer.files;
+                    }
+                    renderDocumentsQueue();
+                    updateFilingSummary();
+                });
+            });
+        }
+
+        if (docInput) {
+            docInput.addEventListener("change", function(e) {
+                handleIncomingFiles(this.files);
+            });
+        }
+
+        // Drag and drop events on dropzone
+        if (dropzoneArea) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzoneArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzoneArea.classList.add("border-emerald-500", "bg-emerald-50/30", "dark:bg-emerald-950/20");
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzoneArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzoneArea.classList.remove("border-emerald-500", "bg-emerald-50/30", "dark:bg-emerald-950/20");
+                }, false);
+            });
+
+            dropzoneArea.addEventListener("drop", (e) => {
+                const dt = e.dataTransfer;
+                if (dt && dt.files && dt.files.length > 0) {
+                    handleIncomingFiles(dt.files);
+                }
+            }, false);
+        }
+
         function resetInteractiveWizard() {
             document.getElementById("package-info-card").classList.add("hidden");
             document.getElementById("calculator-preview").classList.add("hidden");
@@ -646,11 +963,16 @@
             
             document.querySelectorAll(".comaker-checkbox").forEach(cb => cb.checked = false);
             updateComakerCheckedCounter();
+
+            // Reset documents
+            docDataTransfer = new DataTransfer();
+            if (docInput) docInput.files = docDataTransfer.files;
+            renderDocumentsQueue();
         }
 
         // --- STEP WIZARD REGISTRATION CONTROL SYSTEM ---
         let currentStep = 1;
-        const totalSteps = 4;
+        const totalSteps = 5;
         const wizardForm = document.getElementById("loan-wizard-form");
 
         // UI references
@@ -784,6 +1106,19 @@
             } else {
                 summaryComakersEl.textContent = "None Required";
             }
+
+            // 7. Compliance Documents status
+            const summaryDocsEl = document.getElementById("summary-documents");
+            if (summaryDocsEl) {
+                const count = docDataTransfer.files.length;
+                if (count > 0) {
+                    summaryDocsEl.innerHTML = `<span class="text-emerald-400 font-bold">${count} / 5 Attached</span>`;
+                } else if (hasExistingDocs) {
+                    summaryDocsEl.innerHTML = `<span class="text-amber-400 font-semibold">Kept Existing</span>`;
+                } else {
+                    summaryDocsEl.textContent = "0 / 5 Attached";
+                }
+            }
         }
 
         // Validate individual steps to allow forward progression
@@ -869,6 +1204,37 @@
                         }
                         return false;
                     }
+                }
+            }
+
+            if (stepNum === 4) {
+                const count = docDataTransfer.files.length;
+                if (count === 0 && !hasExistingDocs) {
+                    if (window.MLSAKOAlert) {
+                        MLSAKOAlert.fire({
+                            icon: 'warning',
+                            title: 'Compliance Documents Required',
+                            text: "Please upload your Company ID (back-to-back with 3 specimen signatures and signature) and your last 2 months salary payslip in PDF format before proceeding.",
+                            confirmButtonText: 'Upload Documents'
+                        });
+                    } else {
+                        alert("Please upload your Company ID (back-to-back with 3 specimen signatures and signature) and your last 2 months salary payslip in PDF format before proceeding.");
+                    }
+                    return false;
+                }
+
+                if (count > MAX_DOCS) {
+                    if (window.MLSAKOAlert) {
+                        MLSAKOAlert.fire({
+                            icon: 'warning',
+                            title: 'File Limit Exceeded',
+                            text: `You have attached ${count} files. The maximum permitted is ${MAX_DOCS} PDF files. Please remove extra files before continuing.`,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert(`You have attached ${count} files. The maximum permitted is ${MAX_DOCS} PDF files.`);
+                    }
+                    return false;
                 }
             }
 
@@ -1003,6 +1369,26 @@
                 return;
             }
 
+            // Validate Documents upload before PIN authorization
+            const docCount = docDataTransfer.files.length;
+            if (docCount === 0 && !hasExistingDocs) {
+                e.preventDefault();
+                if (window.MLSAKOAlert) {
+                    MLSAKOAlert.fire({
+                        icon: 'warning',
+                        title: 'Compliance Documents Required',
+                        text: "Please upload your Company ID (back-to-back with 3 specimen signatures and signature) and your last 2 months salary payslip in PDF format before submitting.",
+                        confirmButtonText: 'Upload Documents'
+                    });
+                } else {
+                    alert("Please upload your Company ID (back-to-back with 3 specimen signatures and signature) and your last 2 months salary payslip in PDF format before submitting.");
+                }
+                currentStep = 4;
+                updateWizardUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
             // If we get here, validation is successful! We ask for the 6-digit PIN before submitting!
             e.preventDefault();
 
@@ -1102,7 +1488,71 @@
                     if (result.isConfirmed) {
                         document.getElementById('loan-pin-input').value = result.value;
                         loanForm.dataset.confirmed = "true";
-                        loanForm.submit();
+
+                        // Trigger loading effect while documents and loan application are uploaded and processed
+                        MLSAKOAlert.fire({
+                            title: 'Processing Loan Application...',
+                            html: `
+                                <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                    <div class="relative w-16 h-16 flex items-center justify-center">
+                                        <div class="w-16 h-16 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+                                        <span class="absolute text-xl">📄</span>
+                                    </div>
+                                    <div class="space-y-1 text-center">
+                                        <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                            Uploading compliance documents &amp; encrypting submission...
+                                        </p>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                                            Registering your application in the cooperative queue. Please wait a moment.
+                                        </p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                const formData = new FormData(loanForm);
+                                
+                                fetch(loanForm.action, {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(async (response) => {
+                                    const data = await response.json();
+                                    if (!response.ok) {
+                                        throw new Error(data.message || data.error || (data.errors ? Object.values(data.errors).flat().join('\n') : 'Submission failed.'));
+                                    }
+                                    
+                                    // Smooth transition: brief pause to allow loading animation to settle
+                                    setTimeout(() => {
+                                        MLSAKOAlert.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: data.message || 'Your loan application was successfully submitted and has entered the approval queue.',
+                                            iconColor: '#10b981',
+                                            confirmButtonText: 'Great, View My Loans',
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false
+                                        }).then(() => {
+                                            window.location.href = data.redirect_url || "{{ route('member.loans') }}";
+                                        });
+                                    }, 900);
+                                })
+                                .catch((err) => {
+                                    MLSAKOAlert.fire({
+                                        icon: 'error',
+                                        title: 'Submission Failed',
+                                        text: err.message || 'An unexpected error occurred during submission. Please try again.',
+                                        confirmButtonText: 'Review Form'
+                                    });
+                                });
+                            }
+                        });
                     }
                 });
             } else {

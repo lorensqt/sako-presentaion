@@ -78,11 +78,6 @@
             padding-left: 0 !important;
             padding-right: 0 !important;
         }
-        #sidebar.collapsed .bg-white\/60,
-        #sidebar.collapsed .bg-slate-900\/40 {
-            justify-content: center !important;
-            padding: 0.5rem !important;
-        }
         
         /* Tooltip implementation */
         .sidebar-tooltip {
@@ -175,19 +170,6 @@
                     </span>
                     <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-black tracking-wider uppercase border border-emerald-500/20 sidebar-text">Admin</span>
                 </a>
-            </div>
-
-            <!-- Admin Profile Mini-Card -->
-            <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60">
-                <div class="bg-white/60 dark:bg-slate-800/60 rounded-xl p-3 border border-slate-200/80 dark:border-slate-700/80 flex items-center gap-3 shadow-sm transition-all duration-200">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-emerald-500/10 flex-shrink-0">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
-                    </div>
-                    <div class="min-w-0 flex-1 sidebar-text">
-                        <p class="text-[10px] text-emerald-600 font-extrabold tracking-wider uppercase">{{ Auth::user()->role === 'super_admin' ? 'System Root' : 'Administrator' }}</p>
-                        <p class="text-xs text-slate-800 dark:text-slate-200 font-bold truncate max-w-[130px]" title="{{ Auth::user()->name ?? 'Admin Executive' }}">{{ Auth::user()->name ?? 'Admin Executive' }}</p>
-                    </div>
-                </div>
             </div>
 
             <!-- Sidebar Navigation -->
@@ -377,18 +359,6 @@
                     <button id="mobile-sidebar-close" class="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 transition-all">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
-                </div>
-                
-                <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60">
-                    <div class="bg-white/60 dark:bg-slate-800/60 rounded-xl p-3 border border-slate-200/80 dark:border-slate-700/80 flex items-center gap-3 shadow-sm">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                            {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <p class="text-[10px] text-emerald-600 font-extrabold tracking-wider uppercase">{{ Auth::user()->role === 'super_admin' ? 'System Root' : 'Administrator' }}</p>
-                            <p class="text-xs text-slate-800 dark:text-slate-200 font-bold truncate max-w-[130px]">{{ Auth::user()->name ?? 'Admin Executive' }}</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">

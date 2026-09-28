@@ -127,6 +127,52 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Compliance Documents Block -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                            Submitted Documents
+                        </h4>
+                        <span id="view-docs-count-badge" class="px-2 py-0.5 rounded-full text-[9px] font-black tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">0 Files</span>
+                    </div>
+
+                    <div id="view-documents-container" class="space-y-2">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Accounting Documents Block (Ledger & Schedule) -->
+                <div id="view-accounting-docs-block" class="hidden space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Accounting Compliance Files
+                        </h4>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-black tracking-wider bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-mono">Attached</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div id="view-ledger-item" class="hidden flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs">
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="w-6 h-6 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-black">📄</span>
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">Loan Ledger</span>
+                            </div>
+                            <button type="button" id="btn-preview-ledger" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[9.5px] font-extrabold flex-shrink-0 transition-all cursor-pointer">Preview</button>
+                        </div>
+                        <div id="view-schedule-item" class="hidden flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs">
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="w-6 h-6 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-[10px] font-black">📅</span>
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">Payment Schedule</span>
+                            </div>
+                            <button type="button" id="btn-preview-schedule" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[9.5px] font-extrabold flex-shrink-0 transition-all cursor-pointer">Preview</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- COLUMN 2: Interactive Vertical Flowline (Middle Column) -->
@@ -168,8 +214,37 @@
                         </svg>
                         Signatory Decision Desk
                     </h4>
-                    <form id="form-action" method="POST" class="space-y-4">
+                    <form id="form-action" method="POST" class="space-y-4" enctype="multipart/form-data">
                         @csrf
+                        <!-- ACCOUNTING REQUIREMENTS UPLOAD DOCK -->
+                        <div id="accounting-upload-section" class="hidden space-y-3 p-3.5 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-xl">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs">⚠️</span>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Accounting Files Required</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Both the General Ledger and Payment Schedule must be attached in PDF format before forwarding to the Releasing Officer.</p>
+                            
+                            <div class="space-y-2.5 pt-1">
+                                <!-- File 1: Ledger -->
+                                <div class="space-y-1">
+                                    <label class="text-[9.5px] font-bold uppercase text-slate-600 dark:text-slate-300 tracking-wider flex items-center justify-between">
+                                        <span>General Ledger (PDF) <span class="text-rose-500">*</span></span>
+                                        <span id="ledger-file-status" class="text-[9px] font-semibold text-slate-400">Required</span>
+                                    </label>
+                                    <input type="file" name="ledger" id="input-accounting-ledger" accept=".pdf,application/pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10.5px] file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                                </div>
+
+                                <!-- File 2: Schedule -->
+                                <div class="space-y-1">
+                                    <label class="text-[9.5px] font-bold uppercase text-slate-600 dark:text-slate-300 tracking-wider flex items-center justify-between">
+                                        <span>Payment Schedule (PDF) <span class="text-rose-500">*</span></span>
+                                        <span id="schedule-file-status" class="text-[9px] font-semibold text-slate-400">Required</span>
+                                    </label>
+                                    <input type="file" name="schedule" id="input-accounting-schedule" accept=".pdf,application/pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10.5px] file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="space-y-2">
                             <label class="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center justify-between">
                                 <span>Evaluation Remarks / Audit Details</span>
