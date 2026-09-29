@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('channel');
             $table->text('reason')->nullable();
             $table->string('status')->default('pending'); // pending, processing, released, rejected
+            $table->string('transaction_id')->nullable();
             $table->timestamps();
         });
     }

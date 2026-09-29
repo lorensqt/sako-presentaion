@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->string('pin', 255)->nullable();
+            $table->integer('pin_attempts')->default(0);
             $table->string('role')->default('member'); // admin, member, super_admin
             $table->string('company_id')->nullable()->unique();
             $table->text('address')->nullable();
@@ -47,8 +49,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

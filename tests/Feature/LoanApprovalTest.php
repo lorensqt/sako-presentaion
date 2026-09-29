@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\LoanApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class LoanApprovalTest extends TestCase
@@ -16,6 +18,7 @@ class LoanApprovalTest extends TestCase
     {
         parent::setUp();
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+        Storage::fake('public');
     }
 
     /**
@@ -39,6 +42,7 @@ class LoanApprovalTest extends TestCase
     public function test_apply_loan_without_comakers_routes_straight_to_sako_staff(): void
     {
         $borrower = $this->createUser('John Borrower');
+        $file = UploadedFile::fake()->create('compliance_docs.pdf', 100, 'application/pdf');
 
         $response = $this->actingAs($borrower)->post('/loans/apply', [
             'category' => 'travel',
@@ -47,6 +51,7 @@ class LoanApprovalTest extends TestCase
             'term' => 12,
             'remarks' => 'Vacation trip',
             'pin' => '123456',
+            'documents' => [$file],
         ]);
 
         $response->assertRedirect('/myloans');
@@ -68,6 +73,7 @@ class LoanApprovalTest extends TestCase
     {
         $borrower = $this->createUser('John Borrower');
         $comaker1 = $this->createUser('Comaker One');
+        $file = UploadedFile::fake()->create('compliance_docs.pdf', 100, 'application/pdf');
 
         $response = $this->actingAs($borrower)->post('/loans/apply', [
             'category' => 'special',
@@ -77,6 +83,7 @@ class LoanApprovalTest extends TestCase
             'comakers' => [$comaker1->id],
             'remarks' => 'Birthday cash',
             'pin' => '123456',
+            'documents' => [$file],
         ]);
 
         $response->assertRedirect('/myloans');
@@ -391,6 +398,8 @@ class LoanApprovalTest extends TestCase
             ]
         ]);
 
+        $file = UploadedFile::fake()->create('compliance_docs.pdf', 100, 'application/pdf');
+
         // Submit resubmission with corrected details
         $response = $this->actingAs($borrower)->post('/loans/apply', [
             'resubmit_id' => $application->id,
@@ -400,6 +409,7 @@ class LoanApprovalTest extends TestCase
             'term' => 12,
             'remarks' => 'Vacation trip - updated with attachment description',
             'pin' => '123456',
+            'documents' => [$file],
         ]);
 
         $response->assertRedirect('/myloans');

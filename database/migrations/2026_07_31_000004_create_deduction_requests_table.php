@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('effectivity_date');
             $table->text('remarks')->nullable();
             $table->string('status')->default('pending'); // pending, approved, rejected
+            $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
