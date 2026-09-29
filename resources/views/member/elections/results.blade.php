@@ -2,22 +2,29 @@
 
 @section('title', 'Election Results - ML Sako')
 
-@section('header')
-<div class="flex items-center gap-3">
-    <a href="{{ route('member.elections.index') }}" class="inline-flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-    </a>
-    <div>
-        <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-500/10 text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-wider mb-1">
-            Concluded Election
-        </span>
-        <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">{{ $election->name }} Results</h1>
-    </div>
-</div>
-@endsection
+@section('navbar_title', $election->name . ' - Results')
+@section('navbar_subtitle', 'Certified final standing and official tallies of votes cast.')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-8">
+<div class="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex items-center gap-2">
+            <a href="{{ route('member.elections.index') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                <span>Back to Elections</span>
+            </a>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                Concluded
+            </span>
+        </div>
+
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+            ID: {{ Auth::user()->company_id ?: 'N/A' }}
+        </span>
+    </div>
+
     <!-- Notice -->
     <div class="p-5 rounded-3xl sm:rounded-[2rem] bg-emerald-50 dark:bg-slate-800/60 border border-emerald-100 dark:border-slate-700/80 flex gap-4 text-emerald-800 dark:text-emerald-400">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0">

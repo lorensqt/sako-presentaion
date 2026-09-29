@@ -2,19 +2,43 @@
 
 @section('title', 'My Withdrawals - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">My Withdrawals</h1>
-        <p class="text-xs text-slate-700 dark:text-slate-300 mt-1 font-bold">Initiate savings payout requests or track your pending withdrawal disbursements.</p>
-    </div>
-</div>
-@endsection
+@section('navbar_title', 'My Withdrawals')
+@section('navbar_subtitle', 'Initiate savings payout requests or track your pending withdrawal disbursements.')
 
 @section('content')
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
-    <!-- Left Column: Smaller Compact Form -->
-    <div class="lg:col-span-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm p-6 space-y-6 h-fit">
+<div class="space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            @php
+                $pendingWithdrawalsCount = $withdrawals->where('status', 'pending')->count();
+            @endphp
+            @if($pendingWithdrawalsCount > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-100 dark:border-amber-800/40">
+                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                    {{ $pendingWithdrawalsCount }} Pending Payout{{ $pendingWithdrawalsCount > 1 ? 's' : '' }}
+                </span>
+            @endif
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                Withdrawable: ₱{{ number_format($withdrawableAmount, 2) }}
+            </span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Total Requests: <strong class="text-slate-800 dark:text-slate-200">{{ $withdrawals->count() }}</strong>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column: Smaller Compact Form -->
+        <div class="lg:col-span-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm p-6 space-y-6 h-fit">
         <div>
             <h3 class="text-base font-extrabold text-slate-900 dark:text-white serif-font">File Request</h3>
             <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed font-bold">Submit a secure payout request from your savings deposit balance.</p>

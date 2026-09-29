@@ -2,15 +2,39 @@
 
 @section('title', 'Coop Elections & Polls - ML Sako')
 
-@section('header')
-<div>
-    <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">Cooperative Elections</h1>
-    <p class="mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">Participate in cooperative decision-making. Cast your vote securely and view election results.</p>
-</div>
-@endsection
+@section('navbar_title', 'Cooperative Elections')
+@section('navbar_subtitle', 'Participate in cooperative decision-making. Cast your vote securely and view election results.')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            @php
+                $activeElectionsCount = $elections->where('computed_status', 'active')->count();
+            @endphp
+            @if($activeElectionsCount > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    {{ $activeElectionsCount }} Active Poll{{ $activeElectionsCount > 1 ? 's' : '' }} Ongoing
+                </span>
+            @else
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                    No Active Polls
+                </span>
+            @endif
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Total Elections: <strong class="text-slate-800 dark:text-slate-200">{{ $elections->count() }}</strong>
+            </span>
+        </div>
+    </div>
     @if($elections->isEmpty())
     <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl sm:rounded-[2rem] p-6 sm:p-12 text-center">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-400 mb-4 shadow-sm border border-slate-100 dark:border-slate-800">

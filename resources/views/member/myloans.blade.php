@@ -3,22 +3,50 @@
 
 @section('title', 'My Loans - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">My Loans</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1 font-semibold">Track your active loan applications, amortization schedules, and payment histories.</p>
-    </div>
-    <div class="flex items-center gap-2.5">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-100 dark:border-amber-800/40">
-            Active Loans: 1 Outstanding
-        </span>
-    </div>
-</div>
-@endsection
+@section('navbar_title', 'My Loans')
+@section('navbar_subtitle', 'Track your active loan applications, amortization schedules, and payment histories.')
 
 @section('content')
-<div class="space-y-8 animate-fade-in">
+<div class="space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            @php
+                $approvedCount = $applications->where('status', 'approved')->count();
+                $pendingCount = $applications->where('status', 'pending')->count();
+            @endphp
+            @if($approvedCount > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Active Loans: {{ $approvedCount }} Released
+                </span>
+            @endif
+            @if($pendingCount > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-100 dark:border-amber-800/40">
+                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                    {{ $pendingCount }} Pending Application{{ $pendingCount > 1 ? 's' : '' }}
+                </span>
+            @endif
+            @if($approvedCount === 0 && $pendingCount === 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                    No Active Loans
+                </span>
+            @endif
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ route('member.forms') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/10 transition-all duration-200">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Apply for a Loan</span>
+            </a>
+        </div>
+    </div>
 
     <!-- Flash Alert Feedbacks -->
     @if(session('success'))

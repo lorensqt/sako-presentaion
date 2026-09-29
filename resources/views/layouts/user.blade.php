@@ -439,11 +439,11 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Topbar Header -->
             <header
-                class="h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between px-4 sm:px-6 flex-shrink-0 z-10 no-print">
-                <div class="flex items-center gap-3">
+                class="h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 flex-shrink-0 z-10 no-print">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 sm:flex-initial">
                     <!-- Hamburger button for mobile -->
                     <button id="mobile-sidebar-toggle"
-                        class="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-700 md:hidden transition-all">
+                        class="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-700 md:hidden transition-all flex-shrink-0">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -452,7 +452,7 @@
 
                     <!-- Sidebar collapse button for desktop -->
                     <button id="desktop-sidebar-toggle"
-                        class="hidden md:flex p-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+                        class="hidden md:flex p-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex-shrink-0"
                         title="Toggle Sidebar">
                         <!-- Modern Panel Collapse Icon -->
                         <svg class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -461,10 +461,24 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 4v16" />
                         </svg>
                     </button>
+
+                    @hasSection('navbar_title')
+                        <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block flex-shrink-0"></div>
+                        <div class="flex flex-col justify-center min-w-0">
+                            <h1 class="text-xs xs:text-sm sm:text-base font-bold sm:font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight truncate">
+                                @yield('navbar_title')
+                            </h1>
+                            @hasSection('navbar_subtitle')
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block truncate max-w-xs md:max-w-md lg:max-w-xl">
+                                    @yield('navbar_subtitle')
+                                </p>
+                            @endif
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right Toolbar -->
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     <!-- Theme Switcher Button (80% Size) -->
                     <button id="theme-toggle" type="button"
                         class="relative inline-flex h-6.5 w-11 flex-shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-sky-400 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-black dark:focus:ring-offset-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]"

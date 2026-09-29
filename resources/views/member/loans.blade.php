@@ -2,17 +2,33 @@
 
 @section('title', 'Loans Portal - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">Cooperative Loans Hub</h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Digitally submit cooperative application files and simulate repayment amortizations.</p>
-    </div>
-</div>
-@endsection
+@section('navbar_title', 'Cooperative Loans Hub')
+@section('navbar_subtitle', 'Digitally submit cooperative application files and simulate repayment amortizations.')
 
 @section('content')
-<div class="space-y-8 animate-fade-in pb-12">
+<div class="space-y-6 sm:space-y-8 animate-fade-in pb-12">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                Application Portal: Online
+            </span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ route('member.loans') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all duration-200">
+                <svg class="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span>View My Active Loans</span>
+            </a>
+        </div>
+    </div>
 
     <!-- MAIN TWO-COLUMN LAYOUT -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

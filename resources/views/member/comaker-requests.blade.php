@@ -2,17 +2,39 @@
 
 @section('title', 'Co-Maker Endorsements - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">Co-Maker Endorsements</h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Review, digitally authorize, and manage loan co-signing requests from fellow cooperative members.</p>
-    </div>
-</div>
+@section('navbar_title')
+<span class="sm:hidden">Co-Maker Requests</span><span class="hidden sm:inline">Co-Maker Endorsements</span>
 @endsection
+@section('navbar_subtitle', 'Review, digitally authorize, and manage loan co-signing requests from fellow cooperative members.')
 
 @section('content')
 <div class="space-y-6 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            @if($pendingRequests->count() > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    {{ $pendingRequests->count() }} Action{{ $pendingRequests->count() > 1 ? 's' : '' }} Required
+                </span>
+            @else
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                    Inbox Up to Date
+                </span>
+            @endif
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Total Historical Endorsements: <strong class="text-slate-800 dark:text-slate-200">{{ $historicalRequests->count() }}</strong>
+            </span>
+        </div>
+    </div>
 
     <!-- Metrics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

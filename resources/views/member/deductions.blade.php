@@ -2,22 +2,8 @@
 
 @section('title', 'Payroll Deductions - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight serif-font">Payroll Deductions</h1>
-        <p class="text-xs text-slate-550 dark:text-slate-400 mt-1 font-semibold">Monitor auto-deducted cooperative contributions and submit voluntary adjustment requests.</p>
-    </div>
-    <div class="flex items-center">
-        <button id="btn-trigger-adjustment" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[10px] uppercase tracking-widest px-5 py-3.5 rounded-2xl shadow-sm hover:shadow-xl transition-all cursor-pointer flex items-center gap-2">
-            <svg class="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            Request Deduction Change
-        </button>
-    </div>
-</div>
-@endsection
+@section('navbar_title', 'Payroll Deductions')
+@section('navbar_subtitle', 'Monitor auto-deducted cooperative contributions and submit voluntary adjustment requests.')
 
 @section('content')
 @php
@@ -60,7 +46,39 @@
     
     $aggregateSavings = $activeSavings + $activeFixed;
 @endphp
-<div class="space-y-8 animate-fade-in">
+<div class="space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            @php
+                $pendingDeductionsCount = $deductionRequests->where('status', 'pending')->count();
+            @endphp
+            @if($pendingDeductionsCount > 0)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-100 dark:border-amber-800/40">
+                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                    {{ $pendingDeductionsCount }} Pending Change Request{{ $pendingDeductionsCount > 1 ? 's' : '' }}
+                </span>
+            @else
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Auto-Deduction: Active
+                </span>
+            @endif
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button id="btn-trigger-adjustment" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/10 transition-all duration-200 cursor-pointer">
+                <svg class="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Request Deduction Change</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Active contribution summary alert if validation errors occurred -->
     @if($errors->any())

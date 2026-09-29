@@ -2,37 +2,40 @@
 
 @section('title', 'My Savings - ML Sako')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">My Savings</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1 font-semibold">Manage and track your cooperative capital and savings account balances.</p>
-    </div>
-    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-        <!-- Balance Toggle Button -->
-        <button id="toggle-balances-btn" class="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-sm transition-all duration-200">
-            <!-- Eye Off Icon (Default: Hidden) -->
-            <svg id="eye-off-icon" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.993 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-            </svg>
-            <!-- Eye Icon (Shown) -->
-            <svg id="eye-icon" class="w-4 h-4 flex-shrink-0" hidden="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.478 0 6.561 1.767 8.543 4.542m-17.086 0A11.026 11.026 0 001.054 12c1.378 4.057 5.168 7 9.636 7 3.478 0 6.561-1.767 8.543-4.542"/>
-            </svg>
-            <span id="toggle-btn-text">Show Balances</span>
-        </button>
-
-        <span class="flex-grow sm:flex-grow-0 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
-            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-            Savings Account: Active
-        </span>
-    </div>
-</div>
-@endsection
+@section('navbar_title', 'My Savings')
+@section('navbar_subtitle', 'Manage and track your cooperative capital and savings account balances.')
 
 @section('content')
-<div class="space-y-8 animate-fade-in">
+<div class="space-y-6 sm:space-y-8 animate-fade-in">
+
+    <!-- Top Action Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+        <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                Savings Account: Active
+            </span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Balance Toggle Button -->
+            <button id="toggle-balances-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-sm transition-all duration-200">
+                <!-- Eye Off Icon (Default: Hidden) -->
+                <svg id="eye-off-icon" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.993 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+                <!-- Eye Icon (Shown) -->
+                <svg id="eye-icon" class="w-4 h-4 flex-shrink-0" hidden="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.478 0 6.561 1.767 8.543 4.542m-17.086 0A11.026 11.026 0 001.054 12c1.378 4.057 5.168 7 9.636 7 3.478 0 6.561-1.767 8.543-4.542"/>
+                </svg>
+                <span id="toggle-btn-text">Show Balances</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Savings Cards Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">

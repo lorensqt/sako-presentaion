@@ -2,6 +2,9 @@
 
 @section('title', 'Cast Your Ballot - ML Sako')
 
+@section('navbar_title', 'Cast Your Ballot')
+@section('navbar_subtitle', $election->name)
+
 @section('content')
 <div class="max-w-4xl mx-auto space-y-10 pb-16 animate-fade-in">
     
