@@ -886,10 +886,18 @@
             if (amount > 0 && term > 0) {
                 if (calcPreview) calcPreview.classList.remove("hidden");
                 
+                // Resolve specific interest rate for the chosen term
+                let appliedRate = config ? (config.interest_rate || 5.0) : 5.0;
+                if (config && config.available_terms && config.available_terms.length > 0) {
+                    const matched = config.available_terms.find(t => t.months === term);
+                    if (matched) {
+                        appliedRate = matched.interest_rate;
+                    }
+                }
+
                 // Amortization formulas
                 const principalMonthly = amount / term;
-                // Interest: 5% per annum = 0.05 / 12 monthly interest factor
-                const interestMonthly = (amount * 0.05) / 12;
+                const interestMonthly = (amount * (appliedRate / 100)) / 12;
                 const totalMonthly = principalMonthly + interestMonthly;
 
                 const princEl = document.getElementById("calc-monthly-principal");

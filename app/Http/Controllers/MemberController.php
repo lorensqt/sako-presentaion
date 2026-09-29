@@ -43,6 +43,8 @@ class MemberController extends Controller
                 'fixed_deposit' => (float) $loan->fixed_deposit,
                 'comakers' => $loan->comakers, // cast as array/json or integer
                 'interest_rate' => (float) $loan->interest_rate,
+                'available_terms' => $loan->getSortedTerms(),
+                'has_custom_terms' => $loan->hasCustomTerms(),
                 'max_term_months' => $loan->max_term_months,
                 'minimum_membership_months' => $loan->minimum_membership_months,
                 'hrmd_approval' => (bool) $loan->hrmd_approval,
@@ -52,6 +54,10 @@ class MemberController extends Controller
             if ($loan->metadata && is_array($loan->metadata)) {
                 $config[$category][$typeKey] = array_merge($loan->metadata, $config[$category][$typeKey]);
             }
+
+            // Guarantee available_terms from the loan model column takes precedence
+            $config[$category][$typeKey]['available_terms'] = $loan->getSortedTerms();
+            $config[$category][$typeKey]['has_custom_terms'] = $loan->hasCustomTerms();
         }
 
         return $config;
@@ -508,10 +514,36 @@ class MemberController extends Controller
             return back()->with('error', 'Selected loan package is invalid or inactive.');
         }
 
+        // Validate that requested term is permitted by the loan facility
+        $requestedTerm = (int) $validated['term'];
+        if (!$loan->isTermAllowed($requestedTerm)) {
+            $errorMessage = 'The selected repayment term is not permitted for this loan facility.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => $errorMessage], 422);
+            }
+            return back()->withErrors(['term' => $errorMessage])->withInput();
+        }
+
+        // Validate maximum loanable amount if numeric limit is defined
+        if (is_numeric($loan->loanable_amount) && (float) $validated['amount'] > (float) $loan->loanable_amount) {
+            $errorMessage = 'The requested amount exceeds the maximum limit of ₱' . number_format((float) $loan->loanable_amount, 2) . ' for this facility.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => $errorMessage], 422);
+            }
+            return back()->withErrors(['amount' => $errorMessage])->withInput();
+        }
+
+        // Resolve exact tiered interest rate for the requested term
+        $effectiveInterestRate = $loan->getInterestRateForTerm($requestedTerm);
+
         // Build structured form data payload
         $comakerIds = $validated['comakers'] ?? [];
+        if (!empty($comakerIds)) {
+            $comakerIds = array_values(array_filter(array_unique($comakerIds), fn($id) => (int)$id !== (int)Auth::id()));
+        }
+
         $formData = [
-            'term_months' => $validated['term'],
+            'term_months' => $requestedTerm,
             'partner' => $validated['partner'] ?? null,
             'product' => $validated['product'] ?? null,
             'comakers' => $comakerIds,
@@ -527,7 +559,7 @@ class MemberController extends Controller
             $application->loan_category = $validated['category'];
             $application->loan_type = $validated['type'];
             $application->requested_amount = $validated['amount'];
-            $application->interest_rate = $loan->interest_rate;
+            $application->interest_rate = $effectiveInterestRate;
             $application->status = 'pending';
             $application->form_data = $formData;
             $application->rejection_reason = null; // Clear returned remarks
@@ -556,7 +588,7 @@ class MemberController extends Controller
                 'loan_category' => $validated['category'],
                 'loan_type' => $validated['type'],
                 'requested_amount' => $validated['amount'],
-                'interest_rate' => $loan->interest_rate, // Lock rate at application time
+                'interest_rate' => $effectiveInterestRate, // Lock exact tiered rate at application time
                 'status' => 'pending',
                 'form_data' => $formData,
             ]);

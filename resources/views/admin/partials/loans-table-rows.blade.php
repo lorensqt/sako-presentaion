@@ -20,14 +20,41 @@
         <td class="px-6 py-4 font-bold text-slate-900 dark:text-white text-xs">
             {{ is_numeric($product->loanable_amount) ? '₱' . number_format($product->loanable_amount, 2) : ($product->loanable_amount ?: 'N/A') }}
         </td>
-        <td class="px-6 py-4 font-black text-emerald-600 dark:text-emerald-400 font-mono text-xs">
-            {{ number_format($product->interest_rate, 2) }}%
+        <td class="px-6 py-4 font-mono text-xs">
+            @if($product->hasCustomTerms())
+                @php $sortedTerms = $product->getSortedTerms(); @endphp
+                <div class="flex flex-col">
+                    <span class="inline-flex items-center gap-1 font-black text-emerald-600 dark:text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span>Tiered Rates</span>
+                    </span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-sans font-semibold">
+                        {{ number_format($sortedTerms[0]['interest_rate'], 2) }}% – {{ number_format(end($sortedTerms)['interest_rate'], 2) }}%
+                    </span>
+                </div>
+            @else
+                <span class="font-black text-emerald-600 dark:text-emerald-400">
+                    {{ number_format($product->interest_rate, 2) }}%
+                </span>
+            @endif
         </td>
         <td class="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400 text-xs">
             ₱{{ number_format($product->fixed_deposit, 2) }}
         </td>
-        <td class="px-6 py-4 text-slate-500 dark:text-slate-400 font-bold text-xs">
-            {{ $product->max_term_months ? $product->max_term_months . ' Mos' : 'N/A' }}
+        <td class="px-6 py-4 text-xs font-bold">
+            @if($product->hasCustomTerms())
+                @php $sortedTerms = $product->getSortedTerms(); @endphp
+                <div class="flex flex-col">
+                    <span class="text-slate-900 dark:text-white font-bold">{{ count($sortedTerms) }} Tenures</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
+                        {{ implode(', ', array_map(fn($t) => $t['months'] . 'm', $sortedTerms)) }}
+                    </span>
+                </div>
+            @else
+                <span class="text-slate-500 dark:text-slate-400">
+                    {{ $product->max_term_months ? $product->max_term_months . ' Mos' : 'N/A' }}
+                </span>
+            @endif
         </td>
         <td class="px-6 py-4 text-xs">
             <div class="flex flex-wrap gap-1">

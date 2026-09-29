@@ -407,15 +407,19 @@ class LoanApprovalController extends Controller
         $approvedAmount = (float) $application->requested_amount;
         $application->approved_amount = $approvedAmount;
 
-        // Fetch interest rate (from application columns, or fallback to the product, or fallback to default 5%)
-        $rate = $application->interest_rate ?? 5.00;
-        if ($application->loan) {
-            $rate = $application->loan->interest_rate;
-        }
-        $application->interest_rate = $rate;
-
         $termMonths = (int) ($application->form_data['term_months'] ?? 12);
         $application->term_months = $termMonths;
+
+        // Fetch interest rate (prioritize locked application rate, or loan product rate for the term, or fallback 5%)
+        $rate = $application->interest_rate;
+        if ($rate === null || (float)$rate === 0.0) {
+            if ($application->loan) {
+                $rate = $application->loan->getInterestRateForTerm($termMonths);
+            } else {
+                $rate = 5.00;
+            }
+        }
+        $application->interest_rate = (float) $rate;
 
         // Flat Rate Interest Formula: Total Interest = Principal * (Rate/100) * (Months / 12)
         $totalInterest = $approvedAmount * ($rate / 100) * ($termMonths / 12);

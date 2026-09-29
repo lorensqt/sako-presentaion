@@ -82,7 +82,7 @@
 
                             <div class="space-y-1 border-t border-slate-800/50 pt-3">
                                 <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">Documents (PDF)</span>
-                                <p id="summary-documents" class="text-xs font-bold text-slate-200">0 / 5 Attached</p>
+                                <p id="summary-documents" class="text-xs font-bold text-slate-200">0 / 5 Max Attachments</p>
                             </div>
                         </div>
                     </div>
@@ -108,51 +108,66 @@
                 <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-slate-100 dark:border-slate-700 shadow-sm p-5 sm:p-8 space-y-8 flex flex-col justify-between min-h-[500px]">
                     
                     <!-- DYNAMIC HORIZONTAL TIMELINE -->
-                    <div class="bg-slate-50/50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100/80 dark:border-slate-800/80">
+                    <div class="bg-slate-50/50 dark:bg-slate-900/60 p-3 sm:p-4 rounded-2xl border border-slate-100/80 dark:border-slate-800/80">
                         <div class="relative flex items-center justify-between w-full max-w-xl mx-auto">
                             <!-- Background connecting line -->
-                            <div class="absolute left-0 right-0 top-[18px] h-0.5 bg-slate-200 dark:bg-slate-700 z-0 rounded-full"></div>
+                            <div class="absolute left-0 right-0 top-[16px] sm:top-[18px] h-0.5 bg-slate-200 dark:bg-slate-700 z-0 rounded-full"></div>
                             <!-- Active tracking line -->
-                            <div id="timeline-progress-line" class="absolute left-0 top-[18px] h-0.5 bg-emerald-500 z-0 rounded-full transition-all duration-500 ease-in-out" style="width: 0%;"></div>
+                            <div id="timeline-progress-line" class="absolute left-0 top-[16px] sm:top-[18px] h-0.5 bg-emerald-500 z-0 rounded-full transition-all duration-500 ease-in-out" style="width: 0%;"></div>
 
                             <!-- Step 1 Node -->
-                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="1">
-                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 ring-4 ring-emerald-500/10">
+                            <button type="button" class="step-node relative flex flex-col items-center gap-1.5 sm:gap-2 z-10 focus:outline-none" data-step="1">
+                                <div class="step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 ring-4 ring-emerald-500/10">
                                     1
                                 </div>
-                                <span class="step-label text-[10px] font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">Package</span>
+                                <span class="step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 transition-colors" title="Package Selection">
+                                    <i class="fa-solid fa-layer-group text-xs sm:text-[10px]"></i>
+                                    <span class="hidden sm:inline">Package</span>
+                                </span>
                             </button>
 
                             <!-- Step 2 Node -->
-                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="2">
-                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                            <button type="button" class="step-node relative flex flex-col items-center gap-1.5 sm:gap-2 z-10 focus:outline-none" data-step="2">
+                                <div class="step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                     2
                                 </div>
-                                <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Repayment</span>
+                                <span class="step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-colors" title="Repayment Simulation">
+                                    <i class="fa-solid fa-calculator text-xs sm:text-[10px]"></i>
+                                    <span class="hidden sm:inline">Repayment</span>
+                                </span>
                             </button>
 
                             <!-- Step 3 Node -->
-                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="3">
-                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                            <button type="button" class="step-node relative flex flex-col items-center gap-1.5 sm:gap-2 z-10 focus:outline-none" data-step="3">
+                                <div class="step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                     3
                                 </div>
-                                <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Co-Makers</span>
+                                <span class="step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-colors" title="Co-Makers Endorsements">
+                                    <i class="fa-solid fa-user-group text-xs sm:text-[10px]"></i>
+                                    <span class="hidden sm:inline">Co-Makers</span>
+                                </span>
                             </button>
 
                             <!-- Step 4 Node -->
-                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="4">
-                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                            <button type="button" class="step-node relative flex flex-col items-center gap-1.5 sm:gap-2 z-10 focus:outline-none" data-step="4">
+                                <div class="step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                     4
                                 </div>
-                                <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Documents</span>
+                                <span class="step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-colors" title="Compliance Documents">
+                                    <i class="fa-solid fa-file-lines text-xs sm:text-[10px]"></i>
+                                    <span class="hidden sm:inline">Documents</span>
+                                </span>
                             </button>
 
                             <!-- Step 5 Node -->
-                            <button type="button" class="step-node relative flex flex-col items-center gap-2 z-10 focus:outline-none" data-step="5">
-                                <div class="step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                            <button type="button" class="step-node relative flex flex-col items-center gap-1.5 sm:gap-2 z-10 focus:outline-none" data-step="5">
+                                <div class="step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                     5
                                 </div>
-                                <span class="step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Filing</span>
+                                <span class="step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-colors" title="Final Filing & Remarks">
+                                    <i class="fa-solid fa-clipboard-check text-xs sm:text-[10px]"></i>
+                                    <span class="hidden sm:inline">Filing</span>
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -163,36 +178,97 @@
                         <!-- PANEL 1: FACILITY SELECTION -->
                         <div class="wizard-panel space-y-5 transition-all duration-300 ease-out" id="panel-step-1">
                             <div>
-                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Loan Facility Package Selection</h3>
-                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Select your desired cooperative loan product facility to configure your package.</p>
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Loan Facility Package Selection</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-snug">Select your desired cooperative loan product facility to configure your package.</p>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Loan Category</label>
-                                    <select name="category" id="loan-category" required class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-xs">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                                <!-- Category Custom Dropdown -->
+                                <div class="space-y-1.5 custom-select-container relative" id="container-category">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider flex items-center justify-between">
+                                        <span>Loan Category</span>
+                                        <span class="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-extrabold" id="category-count-badge">{{ count($loanConfig) }} facilities</span>
+                                    </label>
+                                    
+                                    <!-- Native Hidden Select for FormData & Validation -->
+                                    <select name="category" id="loan-category" required class="hidden">
                                         <option value="" disabled selected>Select category...</option>
                                         @foreach($loanConfig as $catSlug => $packages)
-                                            <option value="{{ $catSlug }}">{{ ucwords($catSlug) }} Loan</option>
+                                            <option value="{{ $catSlug }}">{{ ucwords(str_replace('_', ' ', $catSlug)) }} Loan</option>
                                         @endforeach
                                     </select>
+
+                                    <!-- Custom Trigger Button -->
+                                    <button type="button" id="custom-category-trigger" aria-haspopup="listbox" aria-expanded="false" class="w-full flex items-center justify-between px-3.5 py-3 text-xs border border-slate-200 dark:border-slate-700/80 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 hover:border-emerald-500/60 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-xs text-left cursor-pointer group">
+                                        <div class="flex items-center gap-2.5 truncate">
+                                            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                            </div>
+                                            <div class="truncate">
+                                                <span id="custom-category-label" class="font-bold text-slate-800 dark:text-slate-200 block truncate">Select category...</span>
+                                                <span id="custom-category-sublabel" class="text-[10px] text-slate-400 block truncate font-medium">Choose loan facility category</span>
+                                            </div>
+                                        </div>
+                                        <svg id="custom-category-chevron" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+
+                                    <!-- Custom Popover Menu -->
+                                    <div id="custom-category-menu" role="listbox" class="hidden absolute left-0 right-0 top-full mt-1.5 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 space-y-1 max-h-64 overflow-y-auto">
+                                        @foreach($loanConfig as $catSlug => $packages)
+                                            <button type="button" role="option" data-value="{{ $catSlug }}" class="custom-category-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer group">
+                                                <div class="flex items-center gap-2 truncate">
+                                                    <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition-colors"></span>
+                                                    <span class="font-bold">{{ ucwords(str_replace('_', ' ', $catSlug)) }} Loan</span>
+                                                </div>
+                                                <span class="text-[9px] sm:text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors shrink-0">
+                                                    {{ count($packages) }} {{ count($packages) === 1 ? 'pkg' : 'pkgs' }}
+                                                </span>
+                                            </button>
+                                        @endforeach
+                                    </div>
                                 </div>
                                 
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Loan Product Package</label>
-                                    <select name="type" id="loan-type" required disabled class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all disabled:opacity-50 shadow-xs">
+                                <!-- Package Custom Dropdown -->
+                                <div class="space-y-1.5 custom-select-container relative" id="container-type">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider flex items-center justify-between">
+                                        <span>Loan Product Package</span>
+                                        <span class="text-[9px] sm:text-[10px] text-slate-400 font-semibold" id="type-count-badge">Step 1.2</span>
+                                    </label>
+
+                                    <!-- Native Hidden Select for FormData & Validation -->
+                                    <select name="type" id="loan-type" required disabled class="hidden">
                                         <option value="" disabled selected>Select package...</option>
                                     </select>
+
+                                    <!-- Custom Trigger Button -->
+                                    <button type="button" id="custom-type-trigger" disabled aria-haspopup="listbox" aria-expanded="false" class="w-full flex items-center justify-between px-3.5 py-3 text-xs border border-slate-200 dark:border-slate-700/80 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 hover:border-emerald-500/60 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-xs text-left cursor-not-allowed opacity-50 group">
+                                        <div class="flex items-center gap-2.5 truncate">
+                                            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                            </div>
+                                            <div class="truncate">
+                                                <span id="custom-type-label" class="font-bold text-slate-800 dark:text-slate-200 block truncate">Select category first</span>
+                                                <span id="custom-type-sublabel" class="text-[10px] text-slate-400 block truncate font-medium">Specific loan facility</span>
+                                            </div>
+                                        </div>
+                                        <svg id="custom-type-chevron" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+
+                                    <!-- Custom Popover Menu -->
+                                    <div id="custom-type-menu" role="listbox" class="hidden absolute left-0 right-0 top-full mt-1.5 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 space-y-1 max-h-64 overflow-y-auto">
+                                        <!-- Dynamically populated via JS based on selected category -->
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Package Details Cards -->
-                            <div id="package-info-card" class="hidden bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800 p-5 rounded-2xl text-xs space-y-3 shadow-2xs">
-                                <p class="font-extrabold text-emerald-600 dark:text-emerald-400 uppercase text-[10px] tracking-widest border-b border-slate-150 dark:border-slate-800 pb-2 flex items-center gap-1.5" id="info-package-name"></p>
-                                <div class="grid grid-cols-2 gap-y-3 gap-x-6 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                                    <div>Limit: <span class="font-bold text-slate-850 dark:text-white block mt-0.5" id="info-limit"></span></div>
-                                    <div>Max Term: <span class="font-bold text-slate-850 dark:text-white block mt-0.5" id="info-max-term"></span></div>
-                                    <div>Fixed Deposit: <span class="font-bold text-slate-850 dark:text-white block mt-0.5" id="info-deposit"></span></div>
+                            <div id="package-info-card" class="hidden bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 rounded-2xl text-xs space-y-3 shadow-xs">
+                                <p class="font-extrabold text-emerald-600 dark:text-emerald-400 uppercase text-[10px] sm:text-[11px] tracking-wider border-b border-slate-200/80 dark:border-slate-800 pb-2 flex items-center gap-1.5" id="info-package-name"></p>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-2.5 sm:gap-y-3 gap-x-4 sm:gap-x-6 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                                    <div>Limit: <span class="font-bold text-slate-800 dark:text-slate-100 block mt-0.5" id="info-limit"></span></div>
+                                    <div>Max Term: <span class="font-bold text-slate-800 dark:text-slate-100 block mt-0.5" id="info-max-term"></span></div>
+                                    <div>Interest Rate: <span class="font-extrabold text-emerald-600 dark:text-emerald-400 block mt-0.5" id="info-rate"></span></div>
+                                    <div>Fixed Deposit: <span class="font-bold text-slate-800 dark:text-slate-100 block mt-0.5" id="info-deposit"></span></div>
                                     <div>Comakers Needed: <span class="font-extrabold text-emerald-600 dark:text-emerald-400 block mt-0.5" id="info-comakers"></span></div>
                                 </div>
                             </div>
@@ -201,55 +277,93 @@
                         <!-- PANEL 2: REPAYMENT SIMULATOR -->
                         <div class="wizard-panel space-y-5 transition-all duration-300 ease-out hidden" id="panel-step-2">
                             <div>
-                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Repayment Amortization Simulator</h3>
-                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Simulate your repayments based on your desired loan amount and term.</p>
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Repayment Amortization Simulator</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-snug">Simulate your repayments based on your desired loan amount and term.</p>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Requested Amount</label>
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">Requested Amount</label>
                                     <div class="relative">
-                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">₱</span>
-                                        <input type="number" name="amount" id="loan-amount" required disabled min="1" step="any" placeholder="0.00" class="w-full pl-7 pr-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-850 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold shadow-xs">
+                                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">₱</span>
+                                        <input type="number" name="amount" id="loan-amount" required disabled min="1" step="any" placeholder="0.00" class="w-full pl-8 pr-3.5 py-3 text-xs sm:text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-white outline-none focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-500 transition-all font-bold shadow-xs">
                                     </div>
                                 </div>
                                 
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Repayment Term (Months)</label>
-                                    <input type="number" name="term" id="loan-term" required disabled min="1" placeholder="Months" class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-850 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold shadow-xs">
+                                <!-- Repayment Term Custom Dropdown -->
+                                <div class="space-y-1.5 custom-select-container relative" id="container-term">
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">Repayment Term</label>
+                                        <span id="term-rate-badge" class="hidden text-[9px] sm:text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/60"></span>
+                                    </div>
+                                    
+                                    <!-- Underlying synced input for term -->
+                                    <input type="hidden" name="term" id="loan-term" required disabled value="">
+
+                                    <!-- Custom Trigger Button -->
+                                    <button type="button" id="custom-term-trigger" disabled aria-haspopup="listbox" aria-expanded="false" class="w-full flex items-center justify-between px-3.5 py-3 text-xs border border-slate-200 dark:border-slate-700/80 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 hover:border-emerald-500/60 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-xs text-left cursor-not-allowed opacity-50 group">
+                                        <div class="flex items-center gap-2.5 truncate">
+                                            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            </div>
+                                            <div class="truncate">
+                                                <span id="custom-term-label" class="font-bold text-slate-800 dark:text-slate-200 block truncate">Select package first</span>
+                                                <span id="custom-term-sublabel" class="text-[10px] text-slate-400 block truncate font-medium">Repayment tenure &amp; interest rate</span>
+                                            </div>
+                                        </div>
+                                        <svg id="custom-term-chevron" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+
+                                    <!-- Custom Popover Menu -->
+                                    <div id="custom-term-menu" role="listbox" class="hidden absolute left-0 right-0 top-full mt-1.5 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 space-y-1 max-h-64 overflow-y-auto">
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Live Calculator Preview -->
-                            <div id="calculator-preview" class="hidden bg-emerald-50/40 dark:bg-emerald-950/25 border border-emerald-100/80 dark:border-emerald-900/40 p-5 rounded-2xl space-y-4">
-                                <h4 class="text-2xs font-extrabold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">Amortization Details</h4>
+                            <div id="calculator-preview" class="hidden bg-emerald-50/40 dark:bg-emerald-950/25 border border-emerald-100/80 dark:border-emerald-900/40 p-4 sm:p-5 rounded-2xl space-y-3.5 shadow-xs">
+                                <h4 class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Amortization Details</h4>
                                 <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 font-semibold">
-                                    <div class="flex justify-between">
+                                    <div class="flex justify-between items-center">
                                         <span>Monthly Principal Payment:</span>
-                                        <span id="calc-monthly-principal" class="font-bold text-slate-800 dark:text-white">₱0.00</span>
+                                        <span id="calc-monthly-principal" class="font-bold text-slate-800 dark:text-white font-mono">₱0.00</span>
                                     </div>
-                                    <div class="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5">
-                                        <span>Est. Monthly Interest (5% p.a.):</span>
-                                        <span id="calc-monthly-interest" class="font-bold text-slate-800 dark:text-white">₱0.00</span>
+                                    <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2.5">
+                                        <span id="calc-interest-label">Est. Monthly Interest (5% p.a.):</span>
+                                        <span id="calc-monthly-interest" class="font-bold text-slate-800 dark:text-white font-mono">₱0.00</span>
                                     </div>
-                                    <div class="flex justify-between text-sm text-slate-800 dark:text-white font-black pt-1">
+                                    <div class="flex justify-between items-center text-xs sm:text-sm text-slate-800 dark:text-white font-black pt-1">
                                         <span>Estimated Monthly Deduction:</span>
-                                        <span id="calc-monthly-total" class="text-emerald-600 dark:text-emerald-400 font-black">₱0.00</span>
+                                        <span id="calc-monthly-total" class="text-sm sm:text-base text-emerald-600 dark:text-emerald-400 font-black font-mono">₱0.00</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Partner/Product selection fields -->
                             <div id="partner-product-section" class="hidden space-y-4 pt-3 border-t border-slate-100 dark:border-slate-800">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Acquisition Partner / Supplier</label>
-                                    <select name="partner" id="loan-partner" class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-xs">
+                                <div class="space-y-1.5 custom-select-container relative" id="container-partner">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">Acquisition Partner / Supplier</label>
+                                    <select name="partner" id="loan-partner" class="hidden">
                                         <option value="" selected>Select partner...</option>
                                     </select>
+                                    <button type="button" id="custom-partner-trigger" aria-haspopup="listbox" aria-expanded="false" class="w-full flex items-center justify-between px-3.5 py-3 text-xs border border-slate-200 dark:border-slate-700/80 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 hover:border-emerald-500/60 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all shadow-xs text-left cursor-pointer group">
+                                        <div class="flex items-center gap-2.5 truncate">
+                                            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                            </div>
+                                            <div class="truncate">
+                                                <span id="custom-partner-label" class="font-bold text-slate-800 dark:text-slate-200 block truncate">Select partner...</span>
+                                                <span class="text-[10px] text-slate-400 block truncate font-medium">Authorized merchant</span>
+                                            </div>
+                                        </div>
+                                        <svg id="custom-partner-chevron" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+                                    <div id="custom-partner-menu" role="listbox" class="hidden absolute left-0 right-0 top-full mt-1.5 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 space-y-1 max-h-60 overflow-y-auto">
+                                    </div>
                                 </div>
                                 <div class="space-y-1.5" id="product-input-wrapper">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Commodity / Specific Product Name</label>
-                                    <input type="text" name="product" id="loan-product" placeholder="Enter product name / specifications" class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-xs">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">Commodity / Specific Product Name</label>
+                                    <input type="text" name="product" id="loan-product" placeholder="Enter product name / specifications" class="w-full px-3.5 py-3 text-xs sm:text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-white outline-none focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-500 transition-all shadow-xs">
                                 </div>
                             </div>
                         </div>
@@ -257,19 +371,19 @@
                         <!-- PANEL 3: CO-MAKERS SEARCH & PICKER -->
                         <div class="wizard-panel space-y-5 transition-all duration-300 ease-out hidden" id="panel-step-3">
                             <div>
-                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Cooperative Co-Makers Endorsements</h3>
-                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Select mandatory co-makers from active cooperative members to back your filing.</p>
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Cooperative Co-Makers Endorsements</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-snug">Select mandatory co-makers from active cooperative members to back your filing.</p>
                             </div>
 
-                            <div id="comaker-zero-required" class="text-xs text-slate-500 dark:text-slate-400 italic p-5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xs">
+                            <div id="comaker-zero-required" class="text-xs text-slate-500 dark:text-slate-400 italic p-4 sm:p-5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-xs">
                                 Selected loan package does not require any co-makers. You may proceed to the next step!
                             </div>
 
                             <div id="comakers-selection-section" class="hidden space-y-4">
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
                                     <div>
-                                        <h5 class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Personnel Endorsement Picker</h5>
-                                        <p class="text-2xs text-slate-500 dark:text-slate-400 mt-0.5">Designate exactly <span class="text-slate-800 dark:text-white font-extrabold font-mono" id="required-comaker-count">0</span> co-makers.</p>
+                                        <h5 class="text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Personnel Endorsement Picker</h5>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Designate exactly <span class="text-slate-800 dark:text-white font-extrabold font-mono" id="required-comaker-count">0</span> co-makers.</p>
                                     </div>
                                     
                                     <!-- Search Input -->
@@ -278,26 +392,26 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-4 rounded-2xl space-y-3 shadow-2xs">
+                                <div class="bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 rounded-2xl space-y-3 shadow-xs">
                                     <!-- Selection Counter Status -->
-                                    <div class="flex items-center justify-between text-2xs text-slate-500 dark:text-slate-400 border-b border-slate-150 dark:border-slate-800 pb-2.5">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-b border-slate-200/70 dark:border-slate-800 pb-2.5">
                                         <span class="font-semibold">Cooperative Directory Select:</span>
-                                        <span class="font-black text-slate-600 dark:text-slate-300">Selected: <span id="selected-comaker-count" class="text-emerald-600 dark:text-emerald-400">0</span> / <span id="required-comaker-count-val" class="text-slate-850 dark:text-slate-200 font-mono">0</span></span>
+                                        <span class="font-black text-slate-600 dark:text-slate-300">Selected: <span id="selected-comaker-count" class="text-emerald-600 dark:text-emerald-400 font-bold">0</span> / <span id="required-comaker-count-val" class="text-slate-800 dark:text-slate-100 font-mono">0</span></span>
                                     </div>
 
-                                    <div id="comakers-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[180px] overflow-y-auto pr-1">
+                                    <div id="comakers-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 max-h-[220px] overflow-y-auto pr-1">
                                         @foreach($members as $m)
-                                            <label class="comaker-item flex items-center gap-3 cursor-pointer select-none p-2.5 bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 rounded-xl transition-all shadow-3xs" data-name="{{ strtolower($m->name) }}" data-cid="{{ strtolower($m->company_id) }}">
-                                                <input type="checkbox" name="comakers[]" value="{{ $m->id }}" class="comaker-checkbox rounded text-emerald-600 focus:ring-emerald-500/20 w-4 h-4 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950">
-                                                <div class="text-[11px] text-slate-600 dark:text-slate-300 font-semibold leading-tight">
-                                                    <span class="comaker-name block text-slate-850 dark:text-slate-100 font-bold">{{ $m->name }}</span>
-                                                    <span class="comaker-cid font-mono text-[9px] text-slate-400 dark:text-slate-500">ID: {{ $m->company_id }}</span>
+                                            <label class="comaker-item flex items-center gap-3 cursor-pointer select-none p-2.5 sm:p-3 bg-white dark:bg-slate-900 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 border border-slate-200/80 dark:border-slate-800 rounded-xl transition-all shadow-xs" data-name="{{ strtolower($m->name) }}" data-cid="{{ strtolower($m->company_id) }}">
+                                                <input type="checkbox" name="comakers[]" value="{{ $m->id }}" class="comaker-checkbox rounded text-emerald-600 focus:ring-emerald-500/20 w-4 h-4 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950">
+                                                <div class="text-[11px] text-slate-600 dark:text-slate-300 font-semibold leading-tight min-w-0">
+                                                    <span class="comaker-name block text-slate-800 dark:text-slate-100 font-bold truncate">{{ $m->name }}</span>
+                                                    <span class="comaker-cid font-mono text-[9.5px] text-slate-400 dark:text-slate-500">ID: {{ $m->company_id }}</span>
                                                 </div>
                                             </label>
                                         @endforeach
                                     </div>
                                     
-                                    <div id="comaker-warning" class="text-2xs text-rose-500 dark:text-rose-400 font-extrabold hidden flex items-center gap-1.5 pt-2 border-t border-slate-150 dark:border-slate-800">
+                                    <div id="comaker-warning" class="text-[11px] text-rose-500 dark:text-rose-400 font-extrabold hidden flex items-center gap-1.5 pt-2 border-t border-slate-200/80 dark:border-slate-800">
                                         <span>⚠️ Please select exactly <span id="required-comaker-count-warn"></span> co-makers before proceeding.</span>
                                     </div>
                                 </div>
@@ -305,21 +419,21 @@
                         </div>
 
                         <!-- PANEL 4: REQUIRED COMPLIANCE DOCUMENTS -->
-                        <div class="wizard-panel space-y-6 transition-all duration-300 ease-out hidden" id="panel-step-4">
+                        <div class="wizard-panel space-y-5 sm:space-y-6 transition-all duration-300 ease-out hidden" id="panel-step-4">
                             <div>
-                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Required Compliance Documents</h3>
-                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Please upload your digital compliance documents in PDF format to complete your loan application.</p>
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Required Compliance Documents</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-snug">Please upload your digital compliance documents in PDF format to complete your loan application.</p>
                             </div>
 
                             <!-- INSTRUCTION CARDS (SPECIFYING COMPANY ID AND LAST 2 MONTHS SALARY PAYSLIP) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <!-- Document 1: Company ID Card -->
-                                <div class="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl space-y-2">
+                                <div class="p-3.5 sm:p-4 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl space-y-2">
                                     <div class="flex items-center gap-2">
-                                        <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-black shadow-sm">1</span>
+                                        <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">1</span>
                                         <h4 class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Company ID</h4>
                                     </div>
-                                    <ul class="text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1">
+                                    <ul class="text-[10.5px] sm:text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1 leading-snug">
                                         <li class="flex items-start gap-1.5">
                                             <span class="text-emerald-500 font-bold">✓</span>
                                             <span>Clear copy of <strong>Company ID</strong> (front and back / back-to-back)</span>
@@ -336,12 +450,12 @@
                                 </div>
 
                                 <!-- Document 2: Last 2 Months Payslips Card -->
-                                <div class="p-4 bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl space-y-2">
+                                <div class="p-3.5 sm:p-4 bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl space-y-2">
                                     <div class="flex items-center gap-2">
-                                        <span class="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs font-black shadow-sm">2</span>
-                                        <h4 class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Last 2 Months Salary Payslips</h4>
+                                        <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">2</span>
+                                        <h4 class="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Last 2 Months Payslips</h4>
                                     </div>
-                                    <ul class="text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1">
+                                    <ul class="text-[10.5px] sm:text-[11px] text-slate-600 dark:text-slate-400 space-y-1 font-medium pl-1 leading-snug">
                                         <li class="flex items-start gap-1.5">
                                             <span class="text-blue-500 font-bold">✓</span>
                                             <span>Official payslips covering the <strong>last 2 consecutive months</strong></span>
@@ -360,8 +474,8 @@
 
                             <!-- RESUBMISSION EXISTING DOCUMENTS PREVIEW (IF RETURNING) -->
                             @if(isset($resubmitApp) && $resubmitApp->documents->isNotEmpty())
-                                <div class="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl space-y-2">
-                                    <div class="flex items-center justify-between">
+                                <div class="p-3.5 sm:p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl space-y-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                                         <span class="text-xs font-extrabold text-amber-800 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                                             <span>📁</span> Previously Submitted Documents ({{ $resubmitApp->documents->count() }})
                                         </span>
@@ -385,7 +499,7 @@
                             <!-- INTERACTIVE DRAG & DROP DROPZONE -->
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between">
-                                    <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">
                                         Upload PDF Documents <span class="text-rose-500">*</span>
                                     </label>
                                     <span id="doc-counter-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
@@ -393,19 +507,19 @@
                                     </span>
                                 </div>
 
-                                <div id="dropzone-area" class="relative group cursor-pointer border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-2xl p-6 sm:p-8 text-center bg-slate-50/50 dark:bg-slate-900/50 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/10 transition-all duration-200">
+                                <div id="dropzone-area" class="relative group cursor-pointer border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-2xl p-5 sm:p-8 text-center bg-slate-50/50 dark:bg-slate-900/50 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/10 transition-all duration-200">
                                     <!-- Hidden native file input handled via JS DataTransfer -->
                                     <input type="file" id="loan-documents-input" name="documents[]" multiple accept=".pdf,application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
 
                                     <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-                                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl transition-transform duration-200 group-hover:scale-110">
-                                            📤
+                                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg sm:text-xl transition-transform duration-200 group-hover:scale-110">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                            <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                                                 <span class="text-emerald-600 dark:text-emerald-400 underline">Click to browse</span> or drag and drop your PDF files here
                                             </p>
-                                            <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                                            <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
                                                 PDF format only &bull; Maximum 5 files &bull; Up to 10MB per file
                                             </p>
                                         </div>
@@ -417,7 +531,7 @@
 
                                 <!-- ATTACHED DOCUMENTS QUEUE LIST -->
                                 <div id="documents-queue-container" class="space-y-2 hidden">
-                                    <h5 class="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 pt-2">
+                                    <h5 class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 pt-2">
                                         Attached Files Queue
                                     </h5>
                                     <div id="documents-list" class="space-y-2">
@@ -428,38 +542,135 @@
                         </div>
 
                         <!-- PANEL 5: REMARKS & FILE DECK -->
-                        <div class="wizard-panel space-y-5 transition-all duration-300 ease-out hidden" id="panel-step-5">
-                            <div>
-                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Final Filing &amp; Remarks</h3>
-                                <p class="text-2xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Write support notes and finalize terms agreements to complete your submission.</p>
+                        <div class="wizard-panel space-y-5 sm:space-y-6 transition-all duration-300 ease-out hidden" id="panel-step-5">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                                <div class="flex items-center gap-2.5 sm:gap-3">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm sm:text-base shrink-0 shadow-xs">
+                                        <i class="fa-solid fa-clipboard-check"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Final Filing &amp; Remarks</h3>
+                                        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5 leading-snug">Review filing summary, add support notes, and authorize agreement.</p>
+                                    </div>
+                                </div>
+                                <span class="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs shrink-0">
+                                    <i class="fa-solid fa-flag-checkered text-emerald-500"></i> Step 5 of 5
+                                </span>
                             </div>
 
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Support Remarks</label>
-                                <textarea name="remarks" rows="3" placeholder="Briefly state the purpose of this loan facility, or add supporting digital documentation notes..." class="w-full px-4 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none leading-relaxed placeholder-slate-400 dark:placeholder-slate-500 shadow-xs"></textarea>
+                            <!-- Dynamic Filing Confirmation Snapshot -->
+                            <div class="p-3.5 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-50 via-slate-50 to-emerald-50/40 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-950/20 border border-slate-200/80 dark:border-slate-800 space-y-2.5 sm:space-y-3 shadow-xs">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5 truncate">
+                                        <i class="fa-solid fa-file-invoice text-emerald-500 shrink-0"></i> Application Parameters Verification
+                                    </span>
+                                    <span class="hidden sm:inline-block text-[10px] text-slate-400 font-medium shrink-0">Verify parameters before filing</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                                    <div class="group p-2.5 sm:p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-emerald-500/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200">
+                                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5 sm:mb-1 truncate">
+                                            <i class="fa-solid fa-layer-group text-emerald-500 mr-0.5 sm:mr-1"></i> Loan Package
+                                        </span>
+                                        <span id="step5-overview-package" class="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 truncate block">--</span>
+                                    </div>
+                                    
+                                    <div class="group p-2.5 sm:p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-emerald-500/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200">
+                                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5 sm:mb-1 truncate">
+                                            <i class="fa-solid fa-coins text-amber-500 mr-0.5 sm:mr-1"></i> Requested Amount
+                                        </span>
+                                        <span id="step5-overview-amount" class="text-xs sm:text-[13px] font-black text-emerald-600 dark:text-emerald-400 truncate block font-mono">₱0.00</span>
+                                    </div>
+                                    
+                                    <div class="group p-2.5 sm:p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-emerald-500/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200">
+                                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5 sm:mb-1 truncate">
+                                            <i class="fa-solid fa-calendar-check text-blue-500 mr-0.5 sm:mr-1"></i> Tenure &amp; Rate
+                                        </span>
+                                        <span id="step5-overview-term" class="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 truncate block">--</span>
+                                    </div>
+                                    
+                                    <div class="group p-2.5 sm:p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-emerald-500/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200">
+                                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5 sm:mb-1 truncate">
+                                            <i class="fa-solid fa-paperclip text-slate-400 mr-0.5 sm:mr-1"></i> Attached Files
+                                        </span>
+                                        <span id="step5-overview-docs" class="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 truncate block">0 PDFs</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Borrower Support Remarks -->
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-700 dark:text-slate-300 tracking-wider flex items-center gap-1.5 truncate">
+                                        <i class="fa-solid fa-pen-to-square text-emerald-500 shrink-0"></i>
+                                        <span class="truncate">Borrower Purpose &amp; Remarks</span>
+                                        <span class="text-[9px] sm:text-[10px] text-slate-400 font-normal lowercase shrink-0">(optional)</span>
+                                    </label>
+                                    <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-semibold shrink-0" id="remarks-char-counter">0 / 500 chars</span>
+                                </div>
+                                
+                                <textarea name="remarks" id="loan-remarks-input" rows="3" maxlength="500" placeholder="State your loan purpose (e.g. medical emergency, tuition fees, home improvement) or any special remarks for the credit committee..." class="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-white outline-none focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-500 transition-all resize-none leading-relaxed placeholder-slate-400 dark:placeholder-slate-500 shadow-xs"></textarea>
+                                
+                                <!-- Quick Purpose Tags -->
+                                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap pt-0.5 sm:pt-1">
+                                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-0.5">Quick Tags:</span>
+                                    <button type="button" data-tag="Medical & Health Expenses" class="btn-purpose-tag inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:bg-slate-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-heart-pulse text-rose-500"></i> Medical
+                                    </button>
+                                    <button type="button" data-tag="Tuition & Education Fees" class="btn-purpose-tag inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:bg-slate-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-graduation-cap text-blue-500"></i> Education
+                                    </button>
+                                    <button type="button" data-tag="Home Repair & Improvements" class="btn-purpose-tag inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:bg-slate-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-house-chimney text-emerald-500"></i> Home
+                                    </button>
+                                    <button type="button" data-tag="Emergency Family Assistance" class="btn-purpose-tag inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:bg-slate-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Emergency
+                                    </button>
+                                    <button type="button" data-tag="Vehicle & Travel Necessities" class="btn-purpose-tag inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:bg-slate-800 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all duration-150 hover:-translate-y-0.5 active:scale-95 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-motorcycle text-indigo-500"></i> Travel
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- TERMS AND CONDITIONS SECTOR -->
-                            <div class="p-5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800 rounded-2xl space-y-4 shadow-3xs">
-                                <div class="flex items-start gap-3">
-                                    <div class="relative flex items-center h-5">
-                                        <input type="checkbox" id="main-terms-agree" name="terms_agreed" value="1" disabled class="rounded text-emerald-600 focus:ring-emerald-500/20 w-4 h-4 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 opacity-50 cursor-not-allowed">
-                                    </div>
-                                    <div class="text-[11px] text-slate-600 dark:text-slate-400 font-semibold leading-tight">
-                                        <label for="main-terms-agree" class="text-slate-850 dark:text-slate-150 font-extrabold block cursor-pointer">Accept Loan Terms &amp; Conditions</label>
-                                        <span class="block text-2xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
-                                            By checking this box, you certify that you have read, understood, and agreed to the MLSAKO Cooperative Loan Contract, including irrevocable authority for payroll deduction.
+                            <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-2xl space-y-3.5 sm:space-y-4 shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/70 dark:border-slate-800">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs sm:text-sm shrink-0">
+                                            <i class="fa-solid fa-shield-halved"></i>
                                         </span>
+                                        <h4 class="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                                            Loan Contract &amp; Payroll Authority
+                                        </h4>
+                                    </div>
+                                    <button type="button" id="btn-open-terms" class="group inline-flex items-center justify-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2 w-full sm:w-auto bg-emerald-50 hover:bg-emerald-600 active:bg-emerald-700 border border-emerald-200/80 hover:border-emerald-600 dark:bg-emerald-950/40 dark:hover:bg-emerald-600 dark:border-emerald-800/60 text-emerald-700 hover:text-white dark:text-emerald-300 dark:hover:text-white font-extrabold text-[11px] sm:text-xs rounded-xl shadow-xs hover:shadow-md hover:shadow-emerald-600/20 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 select-none cursor-pointer">
+                                        <i class="fa-solid fa-file-contract text-emerald-600 group-hover:text-white dark:text-emerald-400 transition-all group-hover:scale-110"></i>
+                                        <span>Read Contract Agreement</span>
+                                    </button>
+                                </div>
+
+                                <div class="flex items-start gap-2.5 sm:gap-3 pt-1">
+                                    <div class="relative flex items-center h-5 mt-0.5 shrink-0">
+                                        <input type="checkbox" id="main-terms-agree" name="terms_agreed" value="1" disabled class="rounded text-emerald-600 focus:ring-emerald-500/20 w-4 h-4 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 opacity-50 cursor-not-allowed transition-all">
+                                    </div>
+                                    <div class="space-y-1 min-w-0">
+                                        <label for="main-terms-agree" class="text-[11px] sm:text-xs font-extrabold text-slate-800 dark:text-slate-100 block cursor-pointer leading-snug">
+                                            I have read, understood, and agree to the MLSAKO Cooperative Loan Contract
+                                        </label>
+                                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                                            By checking this box, you certify that all information and documents uploaded are true, authentic, and accurate. You grant irrevocable authority for automatic semi-monthly payroll deduction for the full amortization amount until the loan is fully satisfied.
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="pt-3 border-t border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 items-center">
-                                    <span class="text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5" id="terms-status-badge">
-                                        ⚠️ Review required before submission
+
+                                <div class="pt-3 border-t border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
+                                    <span class="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5" id="terms-status-badge">
+                                        <i class="fa-solid fa-triangle-exclamation text-amber-500 shrink-0"></i>
+                                        <span>Review contract agreement before submission</span>
                                     </span>
-                                    <button type="button" id="btn-open-terms" class="group inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100/80 active:bg-emerald-200/80 border border-emerald-150/60 dark:bg-emerald-950/20 dark:hover:bg-emerald-900/30 dark:active:bg-emerald-900/50 dark:border-emerald-800/60 text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 font-black text-xs rounded-xl shadow-3xs transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95 select-none">
-                                        <span class="text-sm transition-transform duration-200 group-hover:scale-115">📜</span>
-                                        <span>Open &amp; Read Terms Agreement</span>
-                                    </button>
+                                    <span class="text-[9px] sm:text-[10px] text-slate-400 font-mono font-medium">
+                                        <i class="fa-solid fa-lock text-emerald-500 mr-1"></i> Authorized via 6-digit Security PIN
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -467,17 +678,34 @@
                     </div>
 
                     <!-- FOOTER NAVIGATION ACTIONS -->
-                    <div class="pt-6 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4">
-                        <button type="button" id="prev-step-btn" class="hidden items-center gap-2 px-5 py-3 text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-all select-none">
-                            &larr; Previous Step
+                    <div class="pt-5 sm:pt-6 border-t border-slate-100 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+                        <button type="button" id="prev-step-btn" class="group hidden items-center justify-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 w-full sm:w-auto text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200/90 dark:bg-slate-800 dark:hover:bg-slate-700/80 rounded-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer select-none">
+                            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                            <span>Previous Step</span>
                         </button>
                         
-                        <div class="ml-auto flex items-center gap-3">
-                            <button type="button" id="next-step-btn" class="inline-flex items-center gap-2 px-6 py-3 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-850 rounded-xl transition-all shadow-md shadow-emerald-500/10 select-none">
-                                Continue Step &rarr;
+                        <div class="w-full sm:w-auto sm:ml-auto flex items-stretch sm:items-center gap-2.5 sm:gap-3">
+                            <button type="button" id="next-step-btn" class="group inline-flex items-center justify-center gap-2.5 px-5 py-3 sm:px-6 sm:py-3 w-full sm:w-auto text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:from-emerald-700 active:to-teal-700 rounded-xl transition-all duration-200 shadow-md shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer select-none">
+                                <span>Continue Step</span>
+                                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
                             </button>
-                            <button type="submit" id="btn-submit-loan" disabled class="hidden items-center gap-2 px-6 py-3 text-xs font-black text-slate-100 bg-slate-400 rounded-xl cursor-not-allowed opacity-50 transition-all select-none">
-                                ✓ Confirm &amp; Submit Application
+                            <button type="submit" id="btn-submit-loan" disabled class="group relative hidden items-center justify-center gap-2.5 sm:gap-3 px-5 py-3 sm:px-7 sm:py-3.5 w-full sm:w-auto text-xs sm:text-[13px] font-black tracking-wider uppercase text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 active:from-emerald-700 active:to-teal-700 rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 cursor-not-allowed opacity-50 select-none overflow-hidden text-center">
+                                <!-- Ambient glowing reflection on hover -->
+                                <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none"></span>
+
+                                <!-- Leading circular icon badge -->
+                                <span class="w-6 h-6 rounded-lg bg-white/20 dark:bg-black/20 flex items-center justify-center text-xs shrink-0 shadow-xs transition-transform duration-200 group-hover:scale-110">
+                                    <i class="fa-solid fa-lock" id="btn-submit-icon"></i>
+                                </span>
+
+                                <span class="relative z-10 font-black truncate sm:whitespace-nowrap">Confirm &amp; Submit Application</span>
+
+                                <!-- Trailing dynamic arrow -->
+                                <i class="fa-solid fa-arrow-right text-xs shrink-0 transition-transform duration-200 group-hover:translate-x-1 opacity-60" id="btn-submit-arrow"></i>
                             </button>
                         </div>
                     </div>
@@ -504,24 +732,211 @@
         let currentMaxTerm = 24;
         let requiredComakersCount = 0;
 
-        // Step 1 Event Listeners: Dynamic drop-downs populated from config/loans.php
+        // Step 1 References: Native select elements for data binding & validation
         const selectCategory = document.getElementById("loan-category");
         const selectType = document.getElementById("loan-type");
+
+        // Custom Dropdown Trigger & Popover References
+        const categoryTrigger = document.getElementById("custom-category-trigger");
+        const categoryMenu = document.getElementById("custom-category-menu");
+        const categoryChevron = document.getElementById("custom-category-chevron");
+        const categoryLabel = document.getElementById("custom-category-label");
+        const categorySublabel = document.getElementById("custom-category-sublabel");
+
+        const typeTrigger = document.getElementById("custom-type-trigger");
+        const typeMenu = document.getElementById("custom-type-menu");
+        const typeChevron = document.getElementById("custom-type-chevron");
+        const typeLabel = document.getElementById("custom-type-label");
+        const typeSublabel = document.getElementById("custom-type-sublabel");
+
+        const termTrigger = document.getElementById("custom-term-trigger");
+        const termMenu = document.getElementById("custom-term-menu");
+        const termChevron = document.getElementById("custom-term-chevron");
+        const termLabel = document.getElementById("custom-term-label");
+        const termSublabel = document.getElementById("custom-term-sublabel");
+
+        const partnerTrigger = document.getElementById("custom-partner-trigger");
+        const partnerMenu = document.getElementById("custom-partner-menu");
+        const partnerChevron = document.getElementById("custom-partner-chevron");
+        const partnerLabel = document.getElementById("custom-partner-label");
+
+        function closeAllCustomDropdowns() {
+            if (categoryMenu) {
+                categoryMenu.classList.add("hidden");
+                if (categoryChevron) categoryChevron.classList.remove("rotate-180");
+            }
+            if (typeMenu) {
+                typeMenu.classList.add("hidden");
+                if (typeChevron) typeChevron.classList.remove("rotate-180");
+            }
+            if (termMenu) {
+                termMenu.classList.add("hidden");
+                if (termChevron) termChevron.classList.remove("rotate-180");
+            }
+            if (partnerMenu) {
+                partnerMenu.classList.add("hidden");
+                if (partnerChevron) partnerChevron.classList.remove("rotate-180");
+            }
+        }
+
+        // Global dismiss on click outside or Escape
+        document.addEventListener("click", function(e) {
+            if (!e.target.closest(".custom-select-container")) {
+                closeAllCustomDropdowns();
+            }
+        });
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                closeAllCustomDropdowns();
+            }
+        });
+
+        // Toggle Category Menu
+        if (categoryTrigger && categoryMenu) {
+            categoryTrigger.addEventListener("click", function(e) {
+                e.stopPropagation();
+                const isClosed = categoryMenu.classList.contains("hidden");
+                closeAllCustomDropdowns();
+                if (isClosed) {
+                    categoryMenu.classList.remove("hidden");
+                    if (categoryChevron) categoryChevron.classList.add("rotate-180");
+                }
+            });
+        }
+
+        // Category items click
+        document.querySelectorAll(".custom-category-item").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                const val = this.getAttribute("data-value");
+                selectCategory.value = val;
+                closeAllCustomDropdowns();
+                selectCategory.dispatchEvent(new Event("change"));
+            });
+        });
+
+        // Toggle Type Menu
+        if (typeTrigger && typeMenu) {
+            typeTrigger.addEventListener("click", function(e) {
+                e.stopPropagation();
+                if (this.disabled) return;
+                const isClosed = typeMenu.classList.contains("hidden");
+                closeAllCustomDropdowns();
+                if (isClosed) {
+                    typeMenu.classList.remove("hidden");
+                    if (typeChevron) typeChevron.classList.add("rotate-180");
+                }
+            });
+        }
+
+        // Toggle Term Menu
+        if (termTrigger && termMenu) {
+            termTrigger.addEventListener("click", function(e) {
+                e.stopPropagation();
+                if (this.disabled) return;
+                const isClosed = termMenu.classList.contains("hidden");
+                closeAllCustomDropdowns();
+                if (isClosed) {
+                    termMenu.classList.remove("hidden");
+                    if (termChevron) termChevron.classList.add("rotate-180");
+                }
+            });
+        }
+
+        // Toggle Partner Menu
+        if (partnerTrigger && partnerMenu) {
+            partnerTrigger.addEventListener("click", function(e) {
+                e.stopPropagation();
+                const isClosed = partnerMenu.classList.contains("hidden");
+                closeAllCustomDropdowns();
+                if (isClosed) {
+                    partnerMenu.classList.remove("hidden");
+                    if (partnerChevron) partnerChevron.classList.add("rotate-180");
+                }
+            });
+        }
 
         selectCategory.addEventListener("change", function() {
             const category = this.value;
             selectType.innerHTML = '<option value="" disabled selected>Select package...</option>';
+            if (typeMenu) typeMenu.innerHTML = '';
+            
+            // Update Category Trigger Label
+            if (categoryLabel) {
+                const prettyCat = category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) + " Loan";
+                categoryLabel.textContent = prettyCat;
+                if (categorySublabel) categorySublabel.textContent = "Facility selected";
+            }
+
+            // Update active item highlight in Category Menu
+            document.querySelectorAll(".custom-category-item").forEach(item => {
+                if (item.getAttribute("data-value") === category) {
+                    item.classList.add("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                } else {
+                    item.classList.remove("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                }
+            });
             
             if (loanConfig[category]) {
                 selectType.removeAttribute("disabled");
+                if (typeTrigger) {
+                    typeTrigger.removeAttribute("disabled");
+                    typeTrigger.classList.remove("cursor-not-allowed", "opacity-50");
+                    if (typeLabel) typeLabel.textContent = "Select loan package...";
+                    if (typeSublabel) typeSublabel.textContent = Object.keys(loanConfig[category]).length + " options available";
+                }
+
                 Object.keys(loanConfig[category]).forEach(key => {
+                    const pkg = loanConfig[category][key];
+                    // Native option
                     const option = document.createElement("option");
                     option.value = key;
-                    option.textContent = loanConfig[category][key].name;
+                    option.textContent = pkg.name;
                     selectType.appendChild(option);
+
+                    // Custom popover option item
+                    if (typeMenu) {
+                        const itemBtn = document.createElement("button");
+                        itemBtn.type = "button";
+                        itemBtn.role = "option";
+                        itemBtn.setAttribute("data-value", key);
+                        itemBtn.className = "custom-type-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer group";
+
+                        const limitStr = typeof pkg.loanable_amount === 'number' ? '₱' + pkg.loanable_amount.toLocaleString() : 'Max limit';
+                        const rateStr = pkg.available_terms && pkg.available_terms.length > 0 ? 'Tiered rate' : (pkg.interest_rate || 5) + '%';
+
+                        itemBtn.innerHTML = `
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition-colors"></span>
+                                <div class="truncate">
+                                    <span class="font-bold block truncate">${pkg.name}</span>
+                                    <span class="text-[10px] text-slate-400 block font-medium">${rateStr}</span>
+                                </div>
+                            </div>
+                            <span class="text-[9.5px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors shrink-0">
+                                ${limitStr}
+                            </span>
+                        `;
+
+                        itemBtn.addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            selectType.value = key;
+                            closeAllCustomDropdowns();
+                            selectType.dispatchEvent(new Event("change"));
+                        });
+
+                        typeMenu.appendChild(itemBtn);
+                    }
                 });
             } else {
                 selectType.setAttribute("disabled", "true");
+                if (typeTrigger) {
+                    typeTrigger.setAttribute("disabled", "true");
+                    typeTrigger.classList.add("cursor-not-allowed", "opacity-50");
+                    if (typeLabel) typeLabel.textContent = "Select category first";
+                    if (typeSublabel) typeSublabel.textContent = "Specific loan facility";
+                }
             }
 
             // Reset inputs
@@ -542,7 +957,29 @@
                 // Show dynamic card details
                 document.getElementById("info-package-name").textContent = config.name;
                 document.getElementById("info-limit").textContent = typeof config.loanable_amount === 'number' ? "₱" + currentMaxLimit.toLocaleString() : config.loanable_amount;
-                document.getElementById("info-max-term").textContent = currentMaxTerm + " Months";
+                
+                // Handle custom tenure display
+                const rateEl = document.getElementById("info-rate");
+                if (config.has_custom_terms && config.available_terms && config.available_terms.length > 0) {
+                    const tenuresStr = config.available_terms.map(t => t.months + 'm').join(', ');
+                    document.getElementById("info-max-term").textContent = `${tenuresStr} (Tiered)`;
+                    const rates = config.available_terms.map(t => parseFloat(t.interest_rate)).filter(r => !isNaN(r));
+                    if (rates.length > 0) {
+                        const minRate = Math.min(...rates);
+                        const maxRate = Math.max(...rates);
+                        if (rateEl) {
+                            rateEl.textContent = minRate === maxRate ? `${minRate}% p.a.` : `${minRate}% - ${maxRate}% (Tiered)`;
+                        }
+                    } else if (rateEl) {
+                        rateEl.textContent = (config.interest_rate || 5.0) + "% p.a.";
+                    }
+                } else {
+                    document.getElementById("info-max-term").textContent = currentMaxTerm + " Months";
+                    if (rateEl) {
+                        rateEl.textContent = (config.interest_rate || 5.0) + "% p.a.";
+                    }
+                }
+
                 document.getElementById("info-deposit").textContent = config.fixed_deposit ? "₱" + config.fixed_deposit.toLocaleString() : "None";
 
                 // Handle conditional comakers count
@@ -554,42 +991,173 @@
 
                 // Enable parameters
                 const inputAmount = document.getElementById("loan-amount");
-                const inputTerm = document.getElementById("loan-term");
-                
                 inputAmount.removeAttribute("disabled");
-                inputTerm.removeAttribute("disabled");
                 inputAmount.value = "";
-                inputTerm.value = "";
                 inputAmount.max = currentMaxLimit;
-                inputTerm.max = currentMaxTerm;
+
+                // Handle Repayment Term Custom Popover Dropdown
+                const inputTerm = document.getElementById("loan-term");
+                inputTerm.removeAttribute("disabled");
+                inputTerm.value = "";
+
+                if (termTrigger) {
+                    termTrigger.removeAttribute("disabled");
+                    termTrigger.classList.remove("cursor-not-allowed", "opacity-50");
+                }
+                if (termLabel) termLabel.textContent = "Select repayment tenure...";
+                if (termSublabel) termSublabel.textContent = config.available_terms?.length ? config.available_terms.length + " tiered options available" : "Up to " + currentMaxTerm + " months allowed";
+                if (termMenu) termMenu.innerHTML = '';
+
+                const termRateBadge = document.getElementById("term-rate-badge");
+                if (termRateBadge) termRateBadge.classList.add("hidden");
+
+                if (config.has_custom_terms && config.available_terms && config.available_terms.length > 0) {
+                    config.available_terms.forEach(t => {
+                        const yearsStr = t.months >= 12 ? ` (${(t.months / 12).toFixed(t.months % 12 === 0 ? 0 : 1)} yr${t.months > 12 ? 's' : ''})` : '';
+                        const optBtn = document.createElement("button");
+                        optBtn.type = "button";
+                        optBtn.role = "option";
+                        optBtn.setAttribute("data-term", t.months);
+                        optBtn.setAttribute("data-rate", t.interest_rate);
+                        optBtn.className = "custom-term-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer group";
+                        optBtn.innerHTML = `
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition-colors"></span>
+                                <div>
+                                    <span class="font-bold block">${t.months} Months${yearsStr}</span>
+                                    <span class="text-[10px] text-slate-400 block font-medium">Tiered tenure option</span>
+                                </div>
+                            </div>
+                            <span class="text-[9.5px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60 transition-colors shrink-0">
+                                ${t.interest_rate}% Interest
+                            </span>
+                        `;
+
+                        optBtn.addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            const termVal = parseInt(this.getAttribute("data-term"));
+                            const rateVal = this.getAttribute("data-rate");
+
+                            inputTerm.value = termVal;
+                            if (termLabel) termLabel.textContent = `${termVal} Months (${rateVal}% Interest)`;
+                            if (termSublabel) termSublabel.textContent = "Selected repayment tenure";
+
+                            if (termRateBadge) {
+                                termRateBadge.textContent = `${rateVal}% Interest`;
+                                termRateBadge.classList.remove("hidden");
+                            }
+
+                            document.querySelectorAll(".custom-term-item").forEach(item => {
+                                if (item.getAttribute("data-term") == termVal) {
+                                    item.classList.add("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                                } else {
+                                    item.classList.remove("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                                }
+                            });
+
+                            closeAllCustomDropdowns();
+                            performAmortizationCalculation();
+                            updateFilingSummary();
+                        });
+
+                        termMenu.appendChild(optBtn);
+                    });
+                } else {
+                    const baseRate = config.interest_rate || 5.0;
+                    if (termRateBadge) {
+                        termRateBadge.textContent = `${baseRate}% Interest`;
+                        termRateBadge.classList.remove("hidden");
+                    }
+                    const termsList = [3, 6, 12, 18, 24, 36, 48, 60].filter(m => m <= currentMaxTerm);
+                    if (!termsList.includes(currentMaxTerm)) termsList.push(currentMaxTerm);
+                    termsList.sort((a, b) => a - b);
+
+                    termsList.forEach(m => {
+                        const yearsStr = m >= 12 ? ` (${(m / 12).toFixed(m % 12 === 0 ? 0 : 1)} yr${m > 12 ? 's' : ''})` : '';
+                        const optBtn = document.createElement("button");
+                        optBtn.type = "button";
+                        optBtn.role = "option";
+                        optBtn.setAttribute("data-term", m);
+                        optBtn.className = "custom-term-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer group";
+                        optBtn.innerHTML = `
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition-colors"></span>
+                                <span class="font-bold">${m} Months${yearsStr}</span>
+                            </div>
+                            <span class="text-[9.5px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors shrink-0">
+                                ${baseRate}% Interest
+                            </span>
+                        `;
+
+                        optBtn.addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            inputTerm.value = m;
+                            if (termLabel) termLabel.textContent = `${m} Months (${baseRate}% Interest)`;
+                            if (termSublabel) termSublabel.textContent = "Selected repayment tenure";
+
+                            document.querySelectorAll(".custom-term-item").forEach(item => {
+                                if (item.getAttribute("data-term") == m) {
+                                    item.classList.add("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                                } else {
+                                    item.classList.remove("bg-emerald-50", "dark:bg-emerald-950/60", "text-emerald-700", "dark:text-emerald-300");
+                                }
+                            });
+
+                            closeAllCustomDropdowns();
+                            performAmortizationCalculation();
+                            updateFilingSummary();
+                        });
+
+                        termMenu.appendChild(optBtn);
+                    });
+                }
 
                 // Reset product input wrapper to original text input state to avoid silent HTML5 required blocks
                 const wrapper = document.getElementById("product-input-wrapper");
                 if (wrapper) {
-                    wrapper.innerHTML = '<label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Commodity / Specific Product Name</label>' +
-                        '<input type="text" name="product" id="loan-product" placeholder="Enter product name / specifications" class="w-full px-3 py-3 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-xs">';
+                    wrapper.innerHTML = '<label class="text-[10px] sm:text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 tracking-wider">Commodity / Specific Product Name</label>' +
+                        '<input type="text" name="product" id="loan-product" placeholder="Enter product name / specifications" class="w-full px-3.5 py-3 text-xs sm:text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-800 dark:text-white outline-none focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-500 transition-all shadow-xs">';
                 }
 
-                // Handle Acquisition Partners (optical, jewelry, appliances)
+                // Handle Acquisition Partners with custom popover
                 const partnerSection = document.getElementById("partner-product-section");
                 const selectPartner = document.getElementById("loan-partner");
                 selectPartner.innerHTML = '<option value="" selected>Select partner...</option>';
+                if (partnerMenu) partnerMenu.innerHTML = '';
+                if (partnerLabel) partnerLabel.textContent = 'Select partner...';
 
                 if (config.partner) {
                     partnerSection.classList.remove("hidden");
-                    if (Array.isArray(config.partner)) {
-                        config.partner.forEach(p => {
-                            const opt = document.createElement("option");
-                            opt.value = p;
-                            opt.textContent = p;
-                            selectPartner.appendChild(opt);
-                        });
-                    } else {
+                    const partnerList = Array.isArray(config.partner) ? config.partner : [config.partner];
+                    partnerList.forEach(p => {
+                        // Native option
                         const opt = document.createElement("option");
-                        opt.value = config.partner;
-                        opt.textContent = config.partner;
+                        opt.value = p;
+                        opt.textContent = p;
                         selectPartner.appendChild(opt);
-                    }
+
+                        // Custom popover option
+                        if (partnerMenu) {
+                            const pBtn = document.createElement("button");
+                            pBtn.type = "button";
+                            pBtn.role = "option";
+                            pBtn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer group";
+                            pBtn.innerHTML = `
+                                <div class="flex items-center gap-2 truncate">
+                                    <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition-colors"></span>
+                                    <span class="font-bold truncate">${p}</span>
+                                </div>
+                                <span class="text-[9.5px] text-emerald-600 dark:text-emerald-400 font-extrabold uppercase">Partner</span>
+                            `;
+                            pBtn.addEventListener("click", function(e) {
+                                e.stopPropagation();
+                                selectPartner.value = p;
+                                if (partnerLabel) partnerLabel.textContent = p;
+                                closeAllCustomDropdowns();
+                            });
+                            partnerMenu.appendChild(pBtn);
+                        }
+                    });
                 } else {
                     partnerSection.classList.add("hidden");
                 }
@@ -618,21 +1186,16 @@
 
         // Live calculator triggers
         const inputAmount = document.getElementById("loan-amount");
-        const inputTerm = document.getElementById("loan-term");
 
         inputAmount.addEventListener("input", function() {
             performAmortizationCalculation();
             updateFilingSummary();
         });
-        
-        inputTerm.addEventListener("input", function() {
-            performAmortizationCalculation();
-            updateFilingSummary();
-        });
 
         function performAmortizationCalculation() {
+            const currentTermInput = document.getElementById("loan-term");
             const amount = parseFloat(inputAmount.value) || 0;
-            const term = parseInt(inputTerm.value) || 0;
+            const term = parseInt(currentTermInput ? currentTermInput.value : 0) || 0;
             const calcPreview = document.getElementById("calculator-preview");
 
             // Evaluate comaker limits dynamically for Instant and Petty Cash loans
@@ -659,10 +1222,24 @@
             if (amount > 0 && term > 0) {
                 calcPreview.classList.remove("hidden");
                 
+                // Determine applied rate (custom tiered or base)
+                let appliedRate = config ? (config.interest_rate || 5.0) : 5.0;
+                if (config && config.available_terms && config.available_terms.length > 0) {
+                    const matched = config.available_terms.find(t => t.months === term);
+                    if (matched) {
+                        appliedRate = parseFloat(matched.interest_rate);
+                    }
+                }
+
+                // Update rate badge/label in preview
+                const interestLabel = document.getElementById("calc-interest-label");
+                if (interestLabel) {
+                    interestLabel.textContent = `Est. Monthly Interest (${appliedRate}% p.a.):`;
+                }
+
                 // Amortization formulas
                 const principalMonthly = amount / term;
-                // Interest: 5% per annum = 0.05 / 12 monthly interest factor
-                const interestMonthly = (amount * 0.05) / 12;
+                const interestMonthly = (amount * (appliedRate / 100)) / 12;
                 const totalMonthly = principalMonthly + interestMonthly;
 
                 document.getElementById("calc-monthly-principal").textContent = "₱" + principalMonthly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -856,7 +1433,7 @@
             docList.innerHTML = "";
             Array.from(docDataTransfer.files).forEach((file, index) => {
                 const itemDiv = document.createElement("div");
-                itemDiv.className = "flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-3xs transition-all hover:border-slate-300 dark:hover:border-slate-700";
+                itemDiv.className = "flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs transition-all hover:border-slate-300 dark:hover:border-slate-700";
                 itemDiv.innerHTML = `
                     <div class="flex items-center gap-3 min-w-0 pr-2">
                         <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0 text-xs font-black">
@@ -939,7 +1516,23 @@
             document.getElementById("comakers-selection-section").classList.add("hidden");
             document.getElementById("comaker-zero-required").classList.remove("hidden");
             document.getElementById("loan-amount").setAttribute("disabled", "true");
-            document.getElementById("loan-term").setAttribute("disabled", "true");
+            
+            const loanTermEl = document.getElementById("loan-term");
+            if (loanTermEl) {
+                loanTermEl.setAttribute("disabled", "true");
+                loanTermEl.value = "";
+            }
+
+            if (termTrigger) {
+                termTrigger.setAttribute("disabled", "true");
+                termTrigger.classList.add("cursor-not-allowed", "opacity-50");
+            }
+            if (termLabel) termLabel.textContent = "Select package first";
+            if (termSublabel) termSublabel.textContent = "Repayment tenure & interest rate";
+            if (termMenu) termMenu.innerHTML = '';
+
+            const termRateBadge = document.getElementById("term-rate-badge");
+            if (termRateBadge) termRateBadge.classList.add("hidden");
             
             // Reset terms & conditions states
             const mainTermsCheckbox = document.getElementById("main-terms-agree");
@@ -951,14 +1544,12 @@
             
             const termsBadge = document.getElementById("terms-status-badge");
             if (termsBadge) {
-                termsBadge.textContent = "⚠️ Review required before submission";
-                termsBadge.className = "text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5";
+                termsBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1.5"></i> Review contract agreement before submission`;
+                termsBadge.className = "text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5";
             }
             
-            const submitLoanBtn = document.getElementById("btn-submit-loan");
-            if (submitLoanBtn) {
-                submitLoanBtn.setAttribute("disabled", "true");
-                submitLoanBtn.className = "hidden items-center gap-2 px-6 py-3 text-xs font-black text-slate-100 bg-slate-400 rounded-xl cursor-not-allowed opacity-50 transition-all select-none";
+            if (window.setSubmitButtonState) {
+                window.setSubmitButtonState(false);
             }
             
             document.querySelectorAll(".comaker-checkbox").forEach(cb => cb.checked = false);
@@ -969,6 +1560,38 @@
             if (docInput) docInput.files = docDataTransfer.files;
             renderDocumentsQueue();
         }
+
+        // Dedicated helper for submit button dual-state styling
+        window.setSubmitButtonState = function(enabled) {
+            const btn = document.getElementById("btn-submit-loan");
+            if (!btn) return;
+            const icon = document.getElementById("btn-submit-icon");
+            const arrow = document.getElementById("btn-submit-arrow");
+
+            if (enabled) {
+                btn.removeAttribute("disabled");
+                btn.classList.remove("opacity-50", "cursor-not-allowed", "saturate-50");
+                btn.classList.add("cursor-pointer");
+                if (icon) {
+                    icon.className = "fa-solid fa-check";
+                }
+                if (arrow) {
+                    arrow.classList.remove("opacity-40");
+                    arrow.classList.add("opacity-100");
+                }
+            } else {
+                btn.setAttribute("disabled", "true");
+                btn.classList.add("opacity-50", "cursor-not-allowed", "saturate-50");
+                btn.classList.remove("cursor-pointer");
+                if (icon) {
+                    icon.className = "fa-solid fa-lock";
+                }
+                if (arrow) {
+                    arrow.classList.remove("opacity-100");
+                    arrow.classList.add("opacity-40");
+                }
+            }
+        };
 
         // --- STEP WIZARD REGISTRATION CONTROL SYSTEM ---
         let currentStep = 1;
@@ -999,22 +1622,22 @@
             // Update navigation buttons
             if (currentStep === 1) {
                 prevBtn.classList.add("hidden");
-                prevBtn.classList.remove("inline-flex");
+                prevBtn.classList.remove("flex", "inline-flex");
             } else {
                 prevBtn.classList.remove("hidden");
-                prevBtn.classList.add("inline-flex");
+                prevBtn.classList.add("flex");
             }
 
             if (currentStep === totalSteps) {
                 nextBtn.classList.add("hidden");
-                nextBtn.classList.remove("inline-flex");
+                nextBtn.classList.remove("flex", "inline-flex");
                 submitBtn.classList.remove("hidden");
-                submitBtn.classList.add("inline-flex");
+                submitBtn.classList.add("flex");
             } else {
                 nextBtn.classList.remove("hidden");
-                nextBtn.classList.add("inline-flex");
+                nextBtn.classList.add("flex");
                 submitBtn.classList.add("hidden");
-                submitBtn.classList.remove("inline-flex");
+                submitBtn.classList.remove("flex", "inline-flex");
             }
 
             // Update timeline steps
@@ -1025,18 +1648,18 @@
 
                 if (stepNum === currentStep) {
                     // Active style
-                    circle.className = "step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 ring-4 ring-emerald-500/10";
-                    label.className = "step-label text-[10px] font-black uppercase tracking-widest text-slate-800 dark:text-slate-200";
+                    circle.className = "step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 ring-4 ring-emerald-500/10";
+                    label.className = "step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 transition-colors duration-200";
                     circle.innerHTML = `${stepNum}`;
                 } else if (stepNum < currentStep) {
                     // Completed style
-                    circle.className = "step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 ring-4 ring-emerald-500/5";
-                    label.className = "step-label text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400";
+                    circle.className = "step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 ring-4 ring-emerald-500/5";
+                    label.className = "step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 transition-colors duration-200";
                     circle.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
                 } else {
                     // Pending style
-                    circle.className = "step-circle w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500";
-                    label.className = "step-label text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500";
+                    circle.className = "step-circle w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500";
+                    label.className = "step-label inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 transition-colors duration-200";
                     circle.innerHTML = `${stepNum}`;
                 }
             });
@@ -1079,15 +1702,23 @@
             document.getElementById("summary-amount").textContent = "₱" + amountVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             // 4. Term
-            const termVal = parseInt(inputTerm.value) || 0;
-            document.getElementById("summary-term").textContent = termVal > 0 ? termVal + " Mos" : "--";
+            const inputTerm = document.getElementById("loan-term");
+            const termVal = parseInt(inputTerm ? inputTerm.value : 0) || 0;
+            let appliedRate = config ? (config.interest_rate || 5.0) : 5.0;
+            if (config && config.available_terms && config.available_terms.length > 0) {
+                const matched = config.available_terms.find(t => t.months === termVal);
+                if (matched) {
+                    appliedRate = matched.interest_rate;
+                }
+            }
+            document.getElementById("summary-term").textContent = termVal > 0 ? `${termVal} Mos (${appliedRate}% rate)` : "--";
 
             // 5. Monthly deduction & payday deduction
             const summaryMonthlyEl = document.getElementById("summary-monthly");
             const summaryPaydayEl = document.getElementById("summary-payday");
             if (amountVal > 0 && termVal > 0) {
                 const principalMonthly = amountVal / termVal;
-                const interestMonthly = (amountVal * 0.05) / 12;
+                const interestMonthly = (amountVal * (appliedRate / 100)) / 12;
                 const totalMonthly = principalMonthly + interestMonthly;
                 const totalPayday = totalMonthly / 2;
                 
@@ -1119,7 +1750,50 @@
                     summaryDocsEl.textContent = "0 / 5 Attached";
                 }
             }
+
+            // 8. Step 5 Snapshot Synchronization
+            const s5Package = document.getElementById("step5-overview-package");
+            const s5Amount = document.getElementById("step5-overview-amount");
+            const s5Term = document.getElementById("step5-overview-term");
+            const s5Docs = document.getElementById("step5-overview-docs");
+
+            if (s5Package) s5Package.textContent = config ? config.name : "--";
+            if (s5Amount) s5Amount.textContent = "₱" + amountVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if (s5Term) s5Term.textContent = termVal > 0 ? `${termVal} Mos (${appliedRate}% rate)` : "--";
+            if (s5Docs) {
+                const docCount = docDataTransfer.files.length;
+                if (docCount > 0) {
+                    s5Docs.textContent = `${docCount} PDF${docCount > 1 ? 's' : ''}`;
+                } else if (hasExistingDocs) {
+                    s5Docs.textContent = `Kept Existing`;
+                } else {
+                    s5Docs.textContent = `0 PDFs`;
+                }
+            }
         }
+
+        // Step 5: Remarks character counter & Quick purpose tags
+        const remarksInput = document.getElementById("loan-remarks-input");
+        const remarksCharCounter = document.getElementById("remarks-char-counter");
+        if (remarksInput && remarksCharCounter) {
+            remarksInput.addEventListener("input", function() {
+                remarksCharCounter.textContent = `${this.value.length} / 500 chars`;
+            });
+        }
+
+        document.querySelectorAll(".btn-purpose-tag").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const tag = this.getAttribute("data-tag");
+                if (remarksInput) {
+                    if (remarksInput.value.trim().length > 0) {
+                        remarksInput.value += ", " + tag;
+                    } else {
+                        remarksInput.value = tag;
+                    }
+                    remarksInput.dispatchEvent(new Event("input"));
+                }
+            });
+        });
 
         // Validate individual steps to allow forward progression
         function validateStep(stepNum) {
@@ -1140,19 +1814,38 @@
             }
 
             if (stepNum === 2) {
+                const inputTerm = document.getElementById("loan-term");
                 const amount = parseFloat(inputAmount.value) || 0;
-                const term = parseInt(inputTerm.value) || 0;
+                const term = parseInt(inputTerm ? inputTerm.value : 0) || 0;
 
                 if (amount <= 0 || term <= 0) {
+                    let errTitle = 'Simulation Incomplete';
+                    let errText = 'Please enter a valid Requested Amount and select a Repayment Term from the dropdown.';
+
+                    if (amount <= 0 && term > 0) {
+                        errTitle = 'Requested Amount Required';
+                        errText = 'Please enter a valid Requested Amount greater than ₱0.00.';
+                        inputAmount.focus();
+                    } else if (amount > 0 && term <= 0) {
+                        errTitle = 'Repayment Term Required';
+                        errText = 'Please click the "Repayment Term" dropdown to select your repayment tenure.';
+                        if (termTrigger) {
+                            setTimeout(() => {
+                                termTrigger.focus();
+                                termTrigger.click();
+                            }, 300);
+                        }
+                    }
+
                     if (window.MLSAKOAlert) {
                         MLSAKOAlert.fire({
                             icon: 'warning',
-                            title: 'Simulation Missing',
-                            text: "Please fill in a valid Requested Amount and Term (Months) to simulate payments.",
-                            confirmButtonText: 'OK'
+                            title: errTitle,
+                            text: errText,
+                            confirmButtonText: 'Got It'
                         });
                     } else {
-                        alert("Please fill in a valid Requested Amount and Term (Months) to simulate payments.");
+                        alert(errText);
                     }
                     return false;
                 }
@@ -1172,8 +1865,29 @@
                     return false;
                 }
 
-                // Validate Term Max Bounds
-                if (term > currentMaxTerm) {
+                const category = selectCategory.value;
+                const type = selectType.value;
+                const config = loanConfig[category]?.[type];
+
+                // Validate Term Max Bounds or Custom Allowed Tenures
+                if (config && config.has_custom_terms && config.available_terms && config.available_terms.length > 0) {
+                    const isAllowed = config.available_terms.some(t => t.months === term);
+                    if (!isAllowed) {
+                        const alertInstance = window.MLSAKOAlert || Swal;
+                        const allowedListStr = config.available_terms.map(t => t.months + ' mos').join(', ');
+                        if (alertInstance) {
+                            alertInstance.fire({
+                                icon: 'warning',
+                                title: 'Invalid Tenure Selected',
+                                text: `Please select one of the authorized tenures for this loan facility: ${allowedListStr}.`,
+                                confirmButtonText: 'Correct Tenure'
+                            });
+                        } else {
+                            alert(`Please select one of the authorized tenures: ${allowedListStr}.`);
+                        }
+                        return false;
+                    }
+                } else if (term > currentMaxTerm) {
                     if (window.MLSAKOAlert) {
                         MLSAKOAlert.fire({
                             icon: 'warning',
@@ -1291,8 +2005,9 @@
                 return;
             }
 
+            const inputTerm = document.getElementById("loan-term");
             const amount = parseFloat(inputAmount.value) || 0;
-            const term = parseInt(inputTerm.value) || 0;
+            const term = parseInt(inputTerm ? inputTerm.value : 0) || 0;
 
             // Validate Limit Max Bounds
             if (currentMaxLimit > 0 && amount > currentMaxLimit) {
@@ -1310,8 +2025,30 @@
                 return;
             }
 
-            // Validate Term Max Bounds
-            if (term > currentMaxTerm) {
+            const category = selectCategory.value;
+            const type = selectType.value;
+            const config = loanConfig[category]?.[type];
+
+            // Validate Term Bounds
+            if (config && config.has_custom_terms && config.available_terms && config.available_terms.length > 0) {
+                const isAllowed = config.available_terms.some(t => t.months === term);
+                if (!isAllowed) {
+                    e.preventDefault();
+                    const alertInstance = window.MLSAKOAlert || Swal;
+                    const allowedListStr = config.available_terms.map(t => t.months + ' mos').join(', ');
+                    if (alertInstance) {
+                        alertInstance.fire({
+                            icon: 'warning',
+                            title: 'Invalid Tenure Selected',
+                            text: `Please select one of the authorized tenures for this loan facility: ${allowedListStr}.`,
+                            confirmButtonText: 'Correct Tenure'
+                        });
+                    } else {
+                        alert(`Please select one of the authorized tenures for this loan facility: ${allowedListStr}.`);
+                    }
+                    return;
+                }
+            } else if (term > currentMaxTerm) {
                 e.preventDefault();
                 if (window.MLSAKOAlert) {
                     MLSAKOAlert.fire({
@@ -1587,8 +2324,15 @@
                 inputAmount.value = resub.requested_amount;
                 inputAmount.dispatchEvent(new Event("input"));
                 
-                inputTerm.value = resub.form_data.term_months || "";
-                inputTerm.dispatchEvent(new Event("input"));
+                const termMonths = resub.form_data.term_months || "";
+                const loanTermInput = document.getElementById("loan-term");
+                if (loanTermInput) {
+                    loanTermInput.value = termMonths;
+                }
+                const targetOption = document.querySelector(`.custom-term-item[data-term="${termMonths}"]`);
+                if (targetOption) {
+                    targetOption.click();
+                }
                 
                 // Set partner
                 const selectPartner = document.getElementById("loan-partner");

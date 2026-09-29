@@ -432,6 +432,7 @@ class AdminController extends Controller
             'fixed_deposit' => 'required|numeric|min:0',
             'comakers' => 'required|string',
             'interest_rate' => 'required|numeric|min:0|max:100',
+            'available_terms' => 'nullable',
             'max_term_months' => 'nullable|integer|min:1',
             'minimum_membership_months' => 'nullable|integer|min:0',
             'approval_flow' => 'nullable',
@@ -460,18 +461,29 @@ class AdminController extends Controller
             }
         }
 
+        // Parse and validate custom available terms
+        $availableTerms = $this->parseAvailableTerms($request->input('available_terms'));
+        $maxTermMonths = $validated['max_term_months'] ?? null;
+        if (!empty($availableTerms)) {
+            $highestTerm = max(array_column($availableTerms, 'months'));
+            if (!$maxTermMonths || $maxTermMonths < $highestTerm) {
+                $maxTermMonths = $highestTerm;
+            }
+        }
+
         $loan = Loan::create([
             'category' => $validated['category'],
             'type_key' => $typeKey,
             'name' => $validated['name'],
-            'partner' => $validated['partner'],
-            'loanable_amount' => $validated['loanable_amount'],
+            'partner' => $validated['partner'] ?? null,
+            'loanable_amount' => $validated['loanable_amount'] ?? null,
             'fixed_deposit' => $validated['fixed_deposit'],
             'comakers' => $comakersValue,
             'interest_rate' => $validated['interest_rate'],
-            'max_term_months' => $validated['max_term_months'],
-            'minimum_membership_months' => $validated['minimum_membership_months'],
-            'hrmd_approval' => $request->has('hrmd_approval'),
+            'available_terms' => $availableTerms,
+            'max_term_months' => $maxTermMonths,
+            'minimum_membership_months' => $validated['minimum_membership_months'] ?? null,
+            'hrmd_approval' => is_array($decodedFlow) ? in_array('hrmd_staff', $decodedFlow) : $request->has('hrmd_approval'),
             'approval_flow' => $decodedFlow,
             'is_active' => true,
         ]);
@@ -494,6 +506,7 @@ class AdminController extends Controller
             'fixed_deposit' => 'required|numeric|min:0',
             'comakers' => 'required|string',
             'interest_rate' => 'required|numeric|min:0|max:100',
+            'available_terms' => 'nullable',
             'max_term_months' => 'nullable|integer|min:1',
             'minimum_membership_months' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
@@ -521,18 +534,29 @@ class AdminController extends Controller
             }
         }
 
+        // Parse and validate custom available terms
+        $availableTerms = $this->parseAvailableTerms($request->input('available_terms'));
+        $maxTermMonths = $validated['max_term_months'] ?? null;
+        if (!empty($availableTerms)) {
+            $highestTerm = max(array_column($availableTerms, 'months'));
+            if (!$maxTermMonths || $maxTermMonths < $highestTerm) {
+                $maxTermMonths = $highestTerm;
+            }
+        }
+
         $oldValues = $loan->toArray();
 
         $loan->update([
             'category' => $validated['category'],
             'name' => $validated['name'],
-            'partner' => $validated['partner'],
-            'loanable_amount' => $validated['loanable_amount'],
+            'partner' => $validated['partner'] ?? null,
+            'loanable_amount' => $validated['loanable_amount'] ?? null,
             'fixed_deposit' => $validated['fixed_deposit'],
             'comakers' => $comakersValue,
             'interest_rate' => $validated['interest_rate'],
-            'max_term_months' => $validated['max_term_months'],
-            'minimum_membership_months' => $validated['minimum_membership_months'],
+            'available_terms' => $availableTerms,
+            'max_term_months' => $maxTermMonths,
+            'minimum_membership_months' => $validated['minimum_membership_months'] ?? null,
             'hrmd_approval' => is_array($decodedFlow) && in_array('hrmd_staff', $decodedFlow),
             'is_active' => $request->has('is_active'),
             'approval_flow' => $decodedFlow,
@@ -541,6 +565,52 @@ class AdminController extends Controller
         AuditLogger::log('loan_config_updated', "Admin " . auth()->user()->name . " updated parameters for loan product: {$loan->name}.", 'info', $loan, $oldValues, $loan->fresh()->toArray());
 
         return redirect()->route('admin.loans.management')->with('success', 'Loan product parameters updated successfully!');
+    }
+
+    /**
+     * Parse and sanitize available terms input from request.
+     * Expects an array or JSON string of [{ months: int, interest_rate: float }, ...].
+     * Normalizes by sorting by month ascending and constraining months between 2 and 60.
+     */
+    protected function parseAvailableTerms(mixed $rawTerms): ?array
+    {
+        if (empty($rawTerms)) {
+            return null;
+        }
+
+        if (is_string($rawTerms)) {
+            $decoded = json_decode($rawTerms, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $rawTerms = $decoded;
+            } else {
+                return null;
+            }
+        }
+
+        if (!is_array($rawTerms)) {
+            return null;
+        }
+
+        $cleaned = [];
+        foreach ($rawTerms as $term) {
+            if (isset($term['months']) && isset($term['interest_rate'])) {
+                $months = (int) $term['months'];
+                $rate = (float) $term['interest_rate'];
+                if ($months >= 2 && $months <= 60 && $rate >= 0 && $rate <= 100) {
+                    $cleaned[$months] = [
+                        'months' => $months,
+                        'interest_rate' => round($rate, 2),
+                    ];
+                }
+            }
+        }
+
+        if (empty($cleaned)) {
+            return null;
+        }
+
+        ksort($cleaned);
+        return array_values($cleaned);
     }
 
     /**

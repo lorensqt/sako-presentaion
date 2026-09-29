@@ -93,18 +93,18 @@
 
         <!-- Warning / Status Indicator Panel -->
         <div class="px-4 sm:px-6 pt-4 pb-1.5">
-            <div id="terms-unlock-alert" class="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-250 dark:border-amber-900/50 rounded-xl text-amber-800 dark:text-amber-400 text-2xs font-bold flex items-start gap-2.5 transition-all duration-300">
+            <div id="terms-unlock-alert" class="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-250 dark:border-amber-900/50 rounded-xl text-amber-800 dark:text-amber-400 text-[11px] font-bold flex items-start gap-2.5 transition-all duration-300">
                 <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m0-6h.01M5.071 19h13.858c1.41 0 2.29-1.53 1.58-2.66l-6.93-11.13c-.71-1.13-2.45-1.13-3.16 0L3.49 16.34c-.71 1.13.17 2.66 1.58 2.66z"/></svg>
                 <span>Please scroll to the very bottom of the Terms &amp; Conditions text inside the box to unlock the agreement button.</span>
             </div>
         </div>
 
         <!-- Footer Actions -->
-        <div class="px-4 sm:px-6 py-4 bg-slate-50/50 dark:bg-slate-950/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2.5">
-            <button type="button" id="btn-decline-terms" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-extrabold text-xs px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:-translate-y-0.5 transition-all shadow-xs">
+        <div class="px-4 sm:px-6 py-4 bg-slate-50/50 dark:bg-slate-950/30 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-2.5">
+            <button type="button" id="btn-decline-terms" class="w-full sm:w-auto text-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-extrabold text-xs px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:-translate-y-0.5 transition-all shadow-xs">
                 Decline &amp; Cancel
             </button>
-            <button type="button" id="modal-agree-btn" disabled class="bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-xs px-5 py-2.5 rounded-xl cursor-not-allowed opacity-50 transition-all">
+            <button type="button" id="modal-agree-btn" disabled class="w-full sm:w-auto text-center bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-xs px-5 py-2.5 rounded-xl cursor-not-allowed opacity-50 transition-all">
                 ✓ I Agree &amp; Accept
             </button>
         </div>
@@ -159,9 +159,9 @@
         function enableAgreementState() {
             hasScrolledToBottom = true;
             agreeBtn.removeAttribute("disabled");
-            agreeBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-5 py-2.5 rounded-xl hover:-translate-y-0.5 transition-all shadow-md shadow-emerald-600/10 cursor-pointer";
+            agreeBtn.className = "w-full sm:w-auto text-center bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-5 py-2.5 rounded-xl hover:-translate-y-0.5 transition-all shadow-md shadow-emerald-600/10 cursor-pointer";
             
-            unlockAlert.className = "p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-250 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-400 text-2xs font-bold flex items-start gap-2.5 transition-all duration-300";
+            unlockAlert.className = "p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-250 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-400 text-[11px] font-bold flex items-start gap-2.5 transition-all duration-300";
             unlockAlert.innerHTML = `
                 <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span>Terms fully read and unlocked! You are now authorized to accept and agree.</span>
@@ -207,14 +207,16 @@
                 mainTermsCheckbox.disabled = true;
                 mainTermsCheckbox.classList.add("opacity-50", "cursor-not-allowed");
             }
-            if (submitLoanBtn) {
+            if (window.setSubmitButtonState) {
+                window.setSubmitButtonState(false);
+            } else if (submitLoanBtn) {
                 submitLoanBtn.setAttribute("disabled", "true");
-                submitLoanBtn.className = "bg-slate-400 text-slate-100 font-black text-xs px-6 py-3 rounded-xl cursor-not-allowed opacity-50 transition-all";
+                submitLoanBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
             const termsBadge = document.getElementById("terms-status-badge");
             if (termsBadge) {
-                termsBadge.textContent = "⚠️ Review required before submission";
-                termsBadge.className = "text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5";
+                termsBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1.5"></i> Review contract agreement before submission`;
+                termsBadge.className = "text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5";
             }
             closeTermsAndConditionsModal();
         });
@@ -226,17 +228,48 @@
                 mainTermsCheckbox.checked = true;
                 mainTermsCheckbox.classList.remove("opacity-50", "cursor-not-allowed");
             }
-            if (submitLoanBtn) {
+            if (window.setSubmitButtonState) {
+                window.setSubmitButtonState(true);
+            } else if (submitLoanBtn) {
                 submitLoanBtn.removeAttribute("disabled");
-                submitLoanBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/10 hover:-translate-y-0.5 transition-all cursor-pointer";
+                submitLoanBtn.classList.remove("opacity-50", "cursor-not-allowed");
             }
             const termsBadge = document.getElementById("terms-status-badge");
             if (termsBadge) {
-                termsBadge.textContent = "✓ Terms and Conditions Agreed";
-                termsBadge.className = "text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5";
+                termsBadge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Contract reviewed & terms agreed`;
+                termsBadge.className = "text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5";
             }
             closeTermsAndConditionsModal();
         });
+
+        if (mainTermsCheckbox) {
+            mainTermsCheckbox.addEventListener("change", function() {
+                const termsBadge = document.getElementById("terms-status-badge");
+                if (this.checked) {
+                    if (window.setSubmitButtonState) {
+                        window.setSubmitButtonState(true);
+                    } else if (submitLoanBtn) {
+                        submitLoanBtn.removeAttribute("disabled");
+                        submitLoanBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                    }
+                    if (termsBadge) {
+                        termsBadge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i> Contract reviewed & terms agreed`;
+                        termsBadge.className = "text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5";
+                    }
+                } else {
+                    if (window.setSubmitButtonState) {
+                        window.setSubmitButtonState(false);
+                    } else if (submitLoanBtn) {
+                        submitLoanBtn.setAttribute("disabled", "true");
+                        submitLoanBtn.classList.add("opacity-50", "cursor-not-allowed");
+                    }
+                    if (termsBadge) {
+                        termsBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1.5"></i> Checkbox agreement unchecked`;
+                        termsBadge.className = "text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5";
+                    }
+                }
+            });
+        }
 
         // Close on escape key
         document.addEventListener("keydown", function(e) {

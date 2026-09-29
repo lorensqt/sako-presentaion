@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Loan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -513,5 +514,109 @@ class AdminPortalTest extends TestCase
             'id' => $deductionRequest->id,
             'status' => 'rejected',
         ]);
+    }
+
+    /**
+     * Test that administrators can create a loan product with custom available terms and tiered rates.
+     */
+    public function test_admins_can_create_loan_facility_with_custom_available_terms(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::create([
+            'name' => 'Sako Admin',
+            'email' => 'admin_terms@mlsako.com',
+            'role' => 'admin',
+            'company_id' => '10001009',
+            'password' => Hash::make('password'),
+        ]);
+
+        $terms = [
+            ['months' => 2, 'interest_rate' => 2.00],
+            ['months' => 4, 'interest_rate' => 3.50],
+            ['months' => 6, 'interest_rate' => 5.00],
+        ];
+
+        $response = $this->actingAs($admin)->post('/admin/loans/products', [
+            'category' => 'regular',
+            'name' => 'Custom Tiered Multi-Term Loan',
+            'fixed_deposit' => 2000,
+            'comakers' => '0',
+            'interest_rate' => 5.00,
+            'available_terms' => json_encode($terms),
+            'minimum_membership_months' => 3,
+        ]);
+
+        $response->assertRedirect('/admin/loans/management');
+        $response->assertSessionHas('success');
+
+        $loan = Loan::where('name', 'Custom Tiered Multi-Term Loan')->first();
+        $this->assertNotNull($loan);
+        $this->assertTrue($loan->hasCustomTerms());
+        $this->assertEquals(6, $loan->max_term_months);
+        $this->assertEquals(2.00, $loan->getInterestRateForTerm(2));
+        $this->assertEquals(3.50, $loan->getInterestRateForTerm(4));
+        $this->assertEquals(5.00, $loan->getInterestRateForTerm(6));
+
+        // Test rendering on management page
+        $pageResponse = $this->actingAs($admin)->get('/admin/loans/management');
+        $pageResponse->assertStatus(200);
+        $pageResponse->assertSee('Tiered Rates');
+        $pageResponse->assertSee('3 Tenures');
+    }
+
+    /**
+     * Test that administrators can update an existing loan product with new available terms.
+     */
+    public function test_admins_can_update_loan_facility_terms(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::create([
+            'name' => 'Sako Admin',
+            'email' => 'admin_update_terms@mlsako.com',
+            'role' => 'admin',
+            'company_id' => '10001010',
+            'password' => Hash::make('password'),
+        ]);
+
+        $loan = Loan::create([
+            'category' => 'regular',
+            'type_key' => 'initial_term_loan',
+            'name' => 'Initial Term Loan',
+            'fixed_deposit' => 1000,
+            'comakers' => 0,
+            'interest_rate' => 3.00,
+            'max_term_months' => 12,
+            'is_active' => true,
+        ]);
+
+        $newTerms = [
+            ['months' => 3, 'interest_rate' => 3.00],
+            ['months' => 6, 'interest_rate' => 5.00],
+            ['months' => 12, 'interest_rate' => 7.50],
+        ];
+
+        $response = $this->actingAs($admin)->put("/admin/loans/products/{$loan->id}", [
+            'category' => 'regular',
+            'name' => 'Updated Term Loan',
+            'fixed_deposit' => 1500,
+            'comakers' => '0',
+            'interest_rate' => 4.00,
+            'available_terms' => json_encode($newTerms),
+            'minimum_membership_months' => 3,
+            'is_active' => 1,
+        ]);
+
+        $response->assertRedirect('/admin/loans/management');
+        $response->assertSessionHas('success');
+
+        $loan->refresh();
+        $this->assertEquals('Updated Term Loan', $loan->name);
+        $this->assertTrue($loan->hasCustomTerms());
+        $this->assertEquals(12, $loan->max_term_months);
+        $this->assertEquals(3.00, $loan->getInterestRateForTerm(3));
+        $this->assertEquals(5.00, $loan->getInterestRateForTerm(6));
+        $this->assertEquals(7.50, $loan->getInterestRateForTerm(12));
     }
 }

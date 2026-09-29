@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Loan;
 use App\Models\LoanApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -427,5 +429,126 @@ class LoanApprovalTest extends TestCase
             'action' => 'resubmitted',
             'description' => 'Loan application resubmitted with corrected/updated requirements. Current Stage: Sako Staff',
         ]);
+    }
+
+    public function test_member_loan_submission_locks_tiered_interest_rate(): void
+    {
+        $borrower = User::factory()->create([
+            'role' => 'member',
+            'pin' => Hash::make('123456'),
+        ]);
+
+        $loan = Loan::create([
+            'category' => 'special',
+            'type_key' => 'tiered_special_loan',
+            'name' => 'Special Tiered Loan Facility',
+            'loanable_amount' => 50000.00,
+            'fixed_deposit' => 0.00,
+            'comakers' => 0,
+            'interest_rate' => 10.00, // base rate
+            'max_term_months' => 24,
+            'available_terms' => [
+                ['months' => 6, 'interest_rate' => 3.50],
+                ['months' => 12, 'interest_rate' => 4.50],
+                ['months' => 24, 'interest_rate' => 6.00],
+            ],
+            'is_active' => true,
+        ]);
+
+        $file = UploadedFile::fake()->create('id_doc.pdf', 100, 'application/pdf');
+
+        $response = $this->actingAs($borrower)->post('/loans/apply', [
+            'category' => 'special',
+            'type' => 'tiered_special_loan',
+            'amount' => 20000,
+            'term' => 6, // 6 months matches 3.50%
+            'pin' => '123456',
+            'documents' => [$file],
+        ]);
+
+        $response->assertRedirect('/myloans');
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('loan_applications', [
+            'user_id' => $borrower->id,
+            'loan_id' => $loan->id,
+            'loan_category' => 'special',
+            'loan_type' => 'tiered_special_loan',
+            'requested_amount' => 20000,
+            'interest_rate' => 3.50, // Confirms the exact tiered rate is locked!
+            'status' => 'pending',
+        ]);
+    }
+
+    public function test_member_loan_submission_rejects_unauthorized_term(): void
+    {
+        $borrower = User::factory()->create([
+            'role' => 'member',
+            'pin' => Hash::make('123456'),
+        ]);
+
+        Loan::create([
+            'category' => 'special',
+            'type_key' => 'tiered_fixed_terms',
+            'name' => 'Fixed Terms Loan',
+            'loanable_amount' => 50000.00,
+            'fixed_deposit' => 0.00,
+            'comakers' => 0,
+            'interest_rate' => 5.00,
+            'max_term_months' => 24,
+            'available_terms' => [
+                ['months' => 6, 'interest_rate' => 3.00],
+                ['months' => 12, 'interest_rate' => 5.00],
+            ],
+            'is_active' => true,
+        ]);
+
+        $file = UploadedFile::fake()->create('id_doc.pdf', 100, 'application/pdf');
+
+        // Submitting with term 9 (which is not allowed in available_terms)
+        $response = $this->actingAs($borrower)->post('/loans/apply', [
+            'category' => 'special',
+            'type' => 'tiered_fixed_terms',
+            'amount' => 15000,
+            'term' => 9,
+            'pin' => '123456',
+            'documents' => [$file],
+        ]);
+
+        $response->assertSessionHasErrors(['term']);
+    }
+
+    public function test_member_loan_submission_rejects_amount_exceeding_limit(): void
+    {
+        $borrower = User::factory()->create([
+            'role' => 'member',
+            'pin' => Hash::make('123456'),
+        ]);
+
+        Loan::create([
+            'category' => 'special',
+            'type_key' => 'capped_loan',
+            'name' => 'Capped Loan',
+            'loanable_amount' => 30000.00,
+            'fixed_deposit' => 0.00,
+            'comakers' => 0,
+            'interest_rate' => 5.00,
+            'max_term_months' => 12,
+            'is_active' => true,
+        ]);
+
+        $file = UploadedFile::fake()->create('id_doc.pdf', 100, 'application/pdf');
+
+        // Submitting with amount 40000 (exceeds 30000 cap)
+        $response = $this->actingAs($borrower)->post('/loans/apply', [
+            'category' => 'special',
+            'type' => 'capped_loan',
+            'amount' => 40000,
+            'term' => 12,
+            'pin' => '123456',
+            'documents' => [$file],
+        ]);
+
+        $response->assertSessionHasErrors(['amount']);
     }
 }
