@@ -50,7 +50,7 @@
         </div>
     @endif
 
-    <!-- Active Loans Summary -->
+    {{-- <!-- Active Loans Summary -->
     <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6">
         <div class="flex items-center justify-between border-b border-slate-50 dark:border-slate-700 pb-4">
             <div>
@@ -90,7 +90,7 @@
                 <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 49.33%"></div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- My Loan Applications Queue -->
     @if($applications->isNotEmpty())
@@ -629,6 +629,7 @@
             const container = drawer.querySelector(".modal-container");
             
             drawer.classList.remove("hidden");
+            drawer.classList.add("flex");
             setTimeout(() => {
                 if (overlay) {
                     overlay.classList.remove("opacity-0", "pointer-events-none");
@@ -666,6 +667,7 @@
             }
             setTimeout(() => {
                 drawer.classList.add("hidden");
+                drawer.classList.remove("flex");
             }, 300);
         }
 

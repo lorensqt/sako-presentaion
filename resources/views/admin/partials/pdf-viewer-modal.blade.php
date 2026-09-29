@@ -4,7 +4,7 @@
     <div id="pdf-viewer-backdrop" class="modal-overlay absolute inset-0 bg-slate-950/80 backdrop-blur-md opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
     <!-- Modal Dialog Window -->
-    <div class="modal-container relative w-full max-w-5xl h-[88vh] max-h-[920px] bg-slate-900 rounded-[2rem] border border-slate-800 shadow-2xl flex flex-col overflow-hidden transform scale-95 opacity-0 transition-all duration-300 z-10">
+    <div class="modal-container relative w-full max-w-5xl h-[88vh] max-h-[920px] bg-slate-900 rounded-[2rem] border border-slate-800 shadow-2xl flex flex-col overflow-hidden transform scale-95 opacity-0 transition-all duration-300 z-10 m-auto">
         
         <!-- Header Bar -->
         <div class="h-16 px-5 sm:px-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
