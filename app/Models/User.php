@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'pin',
         'pin_attempts',
         'role',
+        'admin_permissions',
         'company_id',
         'address',
         'contact_number',
@@ -53,7 +55,121 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'admin_permissions' => 'array',
         ];
+    }
+
+    /**
+     * Definitions of all configurable admin page permissions.
+     */
+    public static function allAdminPagePermissions(): array
+    {
+        return [
+            'dashboard' => [
+                'label' => 'Overview Panel',
+                'description' => 'Access system summary metrics, KPIs, and dashboard charts.',
+                'icon' => 'fa-solid fa-chart-pie',
+                'group' => 'Core Panel',
+                'route' => 'admin.dashboard',
+            ],
+            'members' => [
+                'label' => 'Members Directory',
+                'description' => 'View, search, register, and manage cooperative members.',
+                'icon' => 'fa-solid fa-users',
+                'group' => 'Registry',
+                'route' => 'admin.members',
+            ],
+            'loans' => [
+                'label' => 'Loans Directory',
+                'description' => 'Browse loan accounts, statuses, and export PDF statements.',
+                'icon' => 'fa-solid fa-list-check',
+                'group' => 'Credit & Loans',
+                'route' => 'admin.loans',
+            ],
+            'loan_approvals' => [
+                'label' => 'Loan Approvals',
+                'description' => 'Review applications and execute staged workflow approvals.',
+                'icon' => 'fa-solid fa-signature',
+                'group' => 'Credit & Loans',
+                'route' => 'admin.loans.approvals',
+            ],
+            'loans_management' => [
+                'label' => 'Loans Management',
+                'description' => 'Configure loan products, interest rates, and available terms.',
+                'icon' => 'fa-solid fa-sliders',
+                'group' => 'Credit & Loans',
+                'route' => 'admin.loans.management',
+            ],
+            'withdrawals' => [
+                'label' => 'Withdrawals',
+                'description' => 'Review and process capital build-up / savings withdrawal requests.',
+                'icon' => 'fa-solid fa-arrow-up-from-bracket',
+                'group' => 'Treasury',
+                'route' => 'admin.withdrawals',
+            ],
+            'deductions' => [
+                'label' => 'Deduction Approvals',
+                'description' => 'Approve or reject monthly payroll deduction adjustment requests.',
+                'icon' => 'fa-solid fa-receipt',
+                'group' => 'Treasury',
+                'route' => 'admin.deductions',
+            ],
+            'elections' => [
+                'label' => 'Governance & Elections',
+                'description' => 'Create elections, manage positions, candidates, and live results.',
+                'icon' => 'fa-solid fa-check-to-slot',
+                'group' => 'Governance',
+                'route' => 'admin.elections.index',
+            ],
+            'audit_logs' => [
+                'label' => 'Audit & Security Logs',
+                'description' => 'Monitor immutable security event logs and system audit trails.',
+                'icon' => 'fa-solid fa-shield-halved',
+                'group' => 'System Security',
+                'route' => 'admin.audit-logs',
+            ],
+        ];
+    }
+
+    /**
+     * Determine whether the user can access a specific admin page/module.
+     */
+    public function canAccessAdminPage(string $page): bool
+    {
+        if ($this->role === 'super_admin') {
+            return true;
+        }
+
+        if ($this->role !== 'admin') {
+            return false;
+        }
+
+        // If admin_permissions is null (legacy admin or unconfigured), allow access
+        // Once configured, it is an array of explicitly granted permission keys
+        if ($this->admin_permissions === null) {
+            return true;
+        }
+
+        return is_array($this->admin_permissions) && in_array($page, $this->admin_permissions, true);
+    }
+
+    /**
+     * Get the first route the admin is permitted to access.
+     */
+    public function firstAccessibleAdminRoute(): string
+    {
+        if ($this->role === 'super_admin') {
+            return 'admin.dashboard';
+        }
+
+        $all = self::allAdminPagePermissions();
+        foreach ($all as $key => $info) {
+            if ($this->canAccessAdminPage($key)) {
+                return $info['route'];
+            }
+        }
+
+        return 'admin.dashboard';
     }
 
     /**
@@ -112,5 +228,87 @@ class User extends Authenticatable
     public function deductionRequests()
     {
         return $this->hasMany(DeductionRequest::class);
+    }
+
+    /**
+     * Get the storage disk used for signatures.
+     */
+    public static function signatureDisk(): string
+    {
+        if (config('filesystems.default') === 's3' || !empty(config('filesystems.disks.s3.bucket'))) {
+            return 's3';
+        }
+        return 'public';
+    }
+
+    /**
+     * Get the publicly accessible URL for the signature.
+     */
+    public function getSignatureUrlAttribute(): ?string
+    {
+        if (empty($this->signature)) {
+            return null;
+        }
+
+        if (str_starts_with($this->signature, 'http://') || str_starts_with($this->signature, 'https://')) {
+            return $this->signature;
+        }
+
+        $disk = self::signatureDisk();
+
+        try {
+            return Storage::disk($disk)->url($this->signature);
+        } catch (\Throwable $e) {
+            return asset('storage/' . $this->signature);
+        }
+    }
+
+    /**
+     * Determine if a signature exists on the storage disk or locally.
+     */
+    public function hasSignature(): bool
+    {
+        if (empty($this->signature)) {
+            return false;
+        }
+
+        $disk = self::signatureDisk();
+
+        try {
+            if (Storage::disk($disk)->exists($this->signature)) {
+                return true;
+            }
+        } catch (\Throwable $e) {}
+
+        return file_exists(storage_path('app/public/' . $this->signature));
+    }
+
+    /**
+     * Get base64 data URI of the signature (ideal for DomPDF rendering).
+     */
+    public function getSignatureBase64Attribute(): ?string
+    {
+        if (empty($this->signature)) {
+            return null;
+        }
+
+        $disk = self::signatureDisk();
+
+        try {
+            if (Storage::disk($disk)->exists($this->signature)) {
+                $content = Storage::disk($disk)->get($this->signature);
+                $mime = Storage::disk($disk)->mimeType($this->signature) ?? 'image/png';
+                return 'data:' . $mime . ';base64,' . base64_encode($content);
+            }
+        } catch (\Throwable $e) {}
+
+        // Fallback to local storage if available
+        $localPath = storage_path('app/public/' . $this->signature);
+        if (file_exists($localPath)) {
+            $content = file_get_contents($localPath);
+            return 'data:image/png;base64,' . base64_encode($content);
+        }
+
+        return null;
     }
 }

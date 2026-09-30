@@ -417,12 +417,12 @@
         <tr>
             <!-- Left Signature box (Borrower) -->
             <td class="signoff-box">
-                @if($application->borrower->signature && file_exists(storage_path('app/public/' . $application->borrower->signature)))
+                @if($application->borrower->signature_base64)
                     <div style="text-align: center; margin-bottom: -15px;">
-                        <img src="{{ storage_path('app/public/' . $application->borrower->signature) }}" alt="Borrower Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
+                        <img src="{{ $application->borrower->signature_base64 }}" alt="Borrower Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
                     </div>
                 @endif
-                <div class="signoff-line" style="margin-top: {{ $application->borrower->signature && file_exists(storage_path('app/public/' . $application->borrower->signature)) ? '5px' : '35px' }};"></div>
+                <div class="signoff-line" style="margin-top: {{ $application->borrower->signature_base64 ? '5px' : '35px' }};"></div>
                 <div class="signoff-caption"><span style="font-weight: bold; color: #0f172a;">{{ $application->borrower->name }}</span><br>Primary Borrower Signature</div>
             </td>
             
@@ -431,12 +431,12 @@
             
             <!-- Right Signature box (Cooperative Representative / Admin) -->
             <td class="signoff-box">
-                @if(auth()->user()->signature && file_exists(storage_path('app/public/' . auth()->user()->signature)))
+                @if(auth()->user()->signature_base64)
                     <div style="text-align: center; margin-bottom: -15px;">
-                        <img src="{{ storage_path('app/public/' . auth()->user()->signature) }}" alt="Officer Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
+                        <img src="{{ auth()->user()->signature_base64 }}" alt="Officer Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
                     </div>
                 @endif
-                <div class="signoff-line" style="margin-top: {{ auth()->user()->signature && file_exists(storage_path('app/public/' . auth()->user()->signature)) ? '5px' : '35px' }};"></div>
+                <div class="signoff-line" style="margin-top: {{ auth()->user()->signature_base64 ? '5px' : '35px' }};"></div>
                 <div class="signoff-caption"><span style="font-weight: bold; color: #0f172a;">{{ auth()->user()->name }}</span><br>Cooperative Auditor / Releasing Officer</div>
             </td>
         </tr>
@@ -459,12 +459,12 @@
                     </tr><tr>
                 @endif
                 <td class="signoff-box" style="width: 48%; vertical-align: bottom;">
-                    @if($comaker->signature && file_exists(storage_path('app/public/' . $comaker->signature)))
+                    @if($comaker->signature_base64)
                         <div style="text-align: center; margin-bottom: -15px;">
-                            <img src="{{ storage_path('app/public/' . $comaker->signature) }}" alt="Co-Maker Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
+                            <img src="{{ $comaker->signature_base64 }}" alt="Co-Maker Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
                         </div>
                     @endif
-                    <div class="signoff-line" style="margin-top: {{ $comaker->signature && file_exists(storage_path('app/public/' . $comaker->signature)) ? '5px' : '35px' }};"></div>
+                    <div class="signoff-line" style="margin-top: {{ $comaker->signature_base64 ? '5px' : '35px' }};"></div>
                     <div class="signoff-caption">
                         <span style="font-weight: bold; color: #0f172a;">{{ $comaker->name }}</span><br>
                         Solidary Co-Maker (ID: {{ $comaker->company_id ?: 'N/A' }})

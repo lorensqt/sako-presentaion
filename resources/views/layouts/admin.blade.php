@@ -152,6 +152,22 @@
 <body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased overflow-hidden">
     @include('components.pin-security-overlay')
 
+    @php
+        $authUser = auth()->user();
+        $canOverview = $authUser ? $authUser->canAccessAdminPage('dashboard') : false;
+        $canMembers = $authUser ? $authUser->canAccessAdminPage('members') : false;
+        $canLoansDir = $authUser ? $authUser->canAccessAdminPage('loans') : false;
+        $canLoanApprovals = $authUser ? $authUser->canAccessAdminPage('loan_approvals') : false;
+        $canLoansMgmt = $authUser ? $authUser->canAccessAdminPage('loans_management') : false;
+        $canLoansGroup = $canLoansDir || $canLoanApprovals || $canLoansMgmt;
+        $canWithdrawals = $authUser ? $authUser->canAccessAdminPage('withdrawals') : false;
+        $canDeductions = $authUser ? $authUser->canAccessAdminPage('deductions') : false;
+        $canTreasuryGroup = $canWithdrawals || $canDeductions;
+        $canElections = $authUser ? $authUser->canAccessAdminPage('elections') : false;
+        $canAuditLogs = $authUser ? $authUser->canAccessAdminPage('audit_logs') : false;
+        $firstAdminRoute = $authUser ? $authUser->firstAccessibleAdminRoute() : 'admin.dashboard';
+    @endphp
+
     <div class="flex h-full overflow-hidden">
         
         <!-- Sidebar for Desktop -->
@@ -163,17 +179,18 @@
             </script>
             <!-- Sidebar Header / Branding -->
             <div class="h-16 flex items-center px-6 border-b border-slate-200/80 dark:border-slate-700/80">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+                <a href="{{ route($firstAdminRoute) }}" class="flex items-center gap-2.5 group">
                     <img src="{{ asset('img/sako-logo-nobg.png') }}" alt="ML Sako Logo" class="h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105 flex-shrink-0">
                     <span class="text-base font-black tracking-widest text-slate-900 dark:text-white uppercase sidebar-text">
                         ML<span class="text-emerald-600 font-black">Sako</span>
                     </span>
-                    <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-black tracking-wider uppercase border border-emerald-500/20 sidebar-text">Admin</span>
+                    <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-black tracking-wider uppercase border border-emerald-500/20 sidebar-text">{{ $authUser && $authUser->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</span>
                 </a>
             </div>
 
             <!-- Sidebar Navigation -->
             <nav class="flex-1 px-4 py-4 space-y-4 overflow-y-auto overflow-x-hidden sidebar-nav">
+                @if($canOverview)
                 <!-- Group: Core -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pb-1 select-none">
@@ -186,7 +203,9 @@
                         <span class="sidebar-tooltip hidden lg:block">Overview Panel</span>
                     </a>
                 </div>
+                @endif
 
+                @if($canMembers)
                 <!-- Group: Registry -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
@@ -199,7 +218,9 @@
                         <span class="sidebar-tooltip hidden lg:block">Members Directory</span>
                     </a>
                 </div>
+                @endif
 
+                @if($canLoansGroup)
                 <!-- Group: Credit & Loans (Collapsible) -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
@@ -213,7 +234,7 @@
                             <span class="sidebar-text">Credit &amp; Loans</span>
                         </div>
                         <div class="flex items-center gap-1.5 sidebar-text">
-                            @if($pendingLoanCount > 0)
+                            @if($pendingLoanCount > 0 && $canLoanApprovals)
                                 <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse {{ $isLoansActive ? 'hidden' : '' }}">
                                     {{ $pendingLoanCount }}
                                 </span>
@@ -224,13 +245,16 @@
 
                     <!-- Submenu items -->
                     <div id="loans-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isLoansActive ? 'block' : 'hidden' }} submenu-container">
+                        @if($canLoansDir)
                         <a href="{{ route('admin.loans') }}"
                             class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                             <i class="fa-solid fa-list-check w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="sidebar-text flex-1 truncate">Loans Directory</span>
                             <span class="sidebar-tooltip hidden lg:block">Loans Directory</span>
                         </a>
+                        @endif
 
+                        @if($canLoanApprovals)
                         <a href="{{ route('admin.loans.approvals') }}"
                             class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                             <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans.approvals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
@@ -242,16 +266,21 @@
                             @endif
                             <span class="sidebar-tooltip hidden lg:block">Loan Approvals</span>
                         </a>
+                        @endif
 
+                        @if($canLoansMgmt)
                         <a href="{{ route('admin.loans.management') }}"
                             class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                             <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans.management') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="sidebar-text flex-1 truncate">Loans Management</span>
                             <span class="sidebar-tooltip hidden lg:block">Loans Management</span>
                         </a>
+                        @endif
                     </div>
                 </div>
+                @endif
 
+                @if($canTreasuryGroup)
                 <!-- Group: Treasury (Collapsible) -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
@@ -276,6 +305,7 @@
 
                     <!-- Submenu items -->
                     <div id="treasury-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isTreasuryActive ? 'block' : 'hidden' }} submenu-container">
+                        @if($canWithdrawals)
                         <a href="{{ route('admin.withdrawals') }}"
                             class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                             <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
@@ -287,7 +317,9 @@
                             @endif
                             <span class="sidebar-tooltip hidden lg:block">Withdrawals</span>
                         </a>
+                        @endif
 
+                        @if($canDeductions)
                         <a href="{{ route('admin.deductions') }}"
                             class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                             <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
@@ -299,9 +331,12 @@
                             @endif
                             <span class="sidebar-tooltip hidden lg:block">Deduction Approvals</span>
                         </a>
+                        @endif
                     </div>
                 </div>
+                @endif
 
+                @if($canElections)
                 <!-- Group: Governance -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
@@ -314,19 +349,33 @@
                         <span class="sidebar-tooltip hidden lg:block">Elections</span>
                     </a>
                 </div>
+                @endif
 
+                @if($canAuditLogs || ($authUser && $authUser->role === 'super_admin'))
                 <!-- Group: Security -->
                 <div class="space-y-1">
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
                         System Security
                     </p>
+                    @if($authUser && $authUser->role === 'super_admin')
+                    <a href="{{ route('admin.administrators') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.administrators*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-user-shield w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.administrators*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Administrators</span>
+                        <span class="sidebar-tooltip hidden lg:block">System Administrators</span>
+                    </a>
+                    @endif
+
+                    @if($canAuditLogs)
                     <a href="{{ route('admin.audit-logs') }}"
                         class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.audit-logs') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                         <i class="fa-solid fa-shield-halved w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.audit-logs') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">Audit &amp; Security Logs</span>
                         <span class="sidebar-tooltip hidden lg:block">Audit &amp; Security Logs</span>
                     </a>
+                    @endif
                 </div>
+                @endif
             </nav>
 
             <!-- Sidebar Footer -->
@@ -360,6 +409,7 @@
                 </div>
 
                 <div class="flex-1 px-4 py-4 space-y-4 overflow-y-auto sidebar-nav">
+                    @if($canOverview)
                     <!-- Group: Core -->
                     <div class="space-y-1">
                         <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pb-1 select-none">
@@ -371,7 +421,9 @@
                             <span>Overview Panel</span>
                         </a>
                     </div>
+                    @endif
 
+                    @if($canMembers)
                     <!-- Group: Registry -->
                     <div class="space-y-1">
                         <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
@@ -383,7 +435,9 @@
                             <span>Members Directory</span>
                         </a>
                     </div>
+                    @endif
 
+                    @if($canLoansGroup)
                     <!-- Group: Credit & Loans (Collapsible) -->
                     <div class="space-y-1">
                         <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
@@ -396,7 +450,7 @@
                                 <span>Credit &amp; Loans</span>
                             </div>
                             <div class="flex items-center gap-1.5">
-                                @if($pendingLoanCount > 0)
+                                @if($pendingLoanCount > 0 && $canLoanApprovals)
                                     <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white {{ $isLoansActive ? 'hidden' : '' }}">
                                         {{ $pendingLoanCount }}
                                     </span>
@@ -406,11 +460,15 @@
                         </button>
 
                         <div id="mobile-loans-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isLoansActive ? 'block' : 'hidden' }}">
+                            @if($canLoansDir)
                             <a href="{{ route('admin.loans') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                                 <i class="fa-solid fa-list-check w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans') ? 'text-white' : 'text-slate-400' }}"></i>
                                 <span>Loans Directory</span>
                             </a>
+                            @endif
+
+                            @if($canLoanApprovals)
                             <a href="{{ route('admin.loans.approvals') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                                 <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans.approvals') ? 'text-white' : 'text-slate-400' }}"></i>
@@ -421,14 +479,20 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
+
+                            @if($canLoansMgmt)
                             <a href="{{ route('admin.loans.management') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                                 <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans.management') ? 'text-white' : 'text-slate-400' }}"></i>
                                 <span>Loans Management</span>
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
+                    @if($canTreasuryGroup)
                     <!-- Group: Treasury (Collapsible) -->
                     <div class="space-y-1">
                         <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
@@ -451,6 +515,7 @@
                         </button>
 
                         <div id="mobile-treasury-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isTreasuryActive ? 'block' : 'hidden' }}">
+                            @if($canWithdrawals)
                             <a href="{{ route('admin.withdrawals') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                                 <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.withdrawals') ? 'text-white' : 'text-slate-400' }}"></i>
@@ -461,6 +526,9 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
+
+                            @if($canDeductions)
                             <a href="{{ route('admin.deductions') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
                                 <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.deductions') ? 'text-white' : 'text-slate-400' }}"></i>
@@ -471,9 +539,12 @@
                                     </span>
                                 @endif
                             </a>
+                            @endif
                         </div>
                     </div>
+                    @endif
 
+                    @if($canElections)
                     <!-- Group: Governance -->
                     <div class="space-y-1">
                         <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
@@ -485,16 +556,31 @@
                             <span>Elections</span>
                         </a>
                     </div>
+                    @endif
 
+                    @if($canAuditLogs || ($authUser && $authUser->role === 'super_admin'))
                     <!-- Group: Security -->
-                    <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>System Security</span>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
+                            System Security
+                        </p>
+                        @if($authUser && $authUser->role === 'super_admin')
+                        <a href="{{ route('admin.administrators') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.administrators*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-user-shield w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.administrators*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span>Administrators</span>
+                        </a>
+                        @endif
+
+                        @if($canAuditLogs)
+                        <a href="{{ route('admin.audit-logs') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.audit-logs') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-shield-halved w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.audit-logs') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span>Audit &amp; Security Logs</span>
+                        </a>
+                        @endif
                     </div>
-                    <a href="{{ route('admin.audit-logs') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.audit-logs') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        <span>Audit & Security Logs</span>
-                    </a>
+                    @endif
                 </div>
                 
                 <div class="p-4 border-t border-slate-200/80 dark:border-slate-700/80">
@@ -592,15 +678,15 @@
 
                             <!-- Navigation Links & Settings -->
                             <div class="py-1">
-                                <!-- Settings -->
-                                <a href="{{ route('member.settings') }}"
-                                    class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
-                                    <i class="fa-solid fa-gear fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
-                                    <span>Settings</span>
-                                </a>
+                                <!-- My Profile & E-Signature Trigger -->
+                                <button type="button" id="btn-open-admin-profile"
+                                    class="w-full text-left group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50 cursor-pointer">
+                                    <i class="fa-solid fa-file-signature fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
+                                    <span>My E-Signature &amp; Profile</span>
+                                </button>
 
-                                @if(Auth::check() && in_array(Auth::user()->role, ['admin', 'super_admin']))
-                                    <!-- Switch to Member Portal -->
+                                @if(Auth::check() && Auth::user()->role === 'super_admin')
+                                    <!-- Switch to Member Portal (Super Admin Testing Only) -->
                                     <a href="{{ route('member.savings') }}"
                                         class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
                                         <i class="fa-solid fa-user-tag fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
@@ -852,6 +938,148 @@
             @endif
         });
     </script>
+
+    @if(Auth::check())
+    <!-- MODAL: ADMIN PROFILE & E-SIGNATURE -->
+    <div id="modal-admin-profile" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
+        
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] sm:w-full sm:max-w-lg fixed right-4 top-4 bottom-4 z-50 transform translate-x-[calc(100%+2rem)] transition-transform duration-300 modal-container p-5 sm:p-6 flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-file-signature text-emerald-600 text-sm"></i>
+                        <span>My Official E-Signature &amp; Profile</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Manage your administrative credential and sign-off signature</p>
+                </div>
+                <button type="button" class="admin-profile-modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col overflow-hidden mt-4">
+                @csrf
+                
+                <div class="flex-1 overflow-y-auto pr-1 space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Operator Name</label>
+                            <input type="text" name="name" value="{{ Auth::user()->name }}" required class="w-full px-3 py-2 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Login Identifier</label>
+                            <input type="text" value="{{ Auth::user()->company_id }}" disabled class="w-full px-3 py-2 text-xs font-mono font-bold border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Notification Email</label>
+                            <input type="email" name="email" value="{{ Auth::user()->email }}" placeholder="staff@coop.internal" class="w-full px-3 py-2 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                                <span>Change Password</span>
+                                <span class="text-[9px] text-slate-400 normal-case">(Leave blank to keep)</span>
+                            </label>
+                            <input type="password" name="password" placeholder="••••••••" class="w-full px-3 py-2 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all">
+                        </div>
+                    </div>
+
+                    <!-- E-Signature Section -->
+                    <div class="space-y-2 border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Registered Official E-Signature</label>
+                            <span class="text-[9px] text-slate-400 font-semibold">(Recorded in approvals &amp; PDF contracts)</span>
+                        </div>
+
+                        <!-- Current E-Sign preview -->
+                        <div class="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl flex items-center justify-center">
+                            @if(Auth::user()->signature_url)
+                                <img src="{{ Auth::user()->signature_url }}" alt="My E-Sign" class="max-h-16 w-auto object-contain bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                            @else
+                                <div class="text-center py-2">
+                                    <i class="fa-solid fa-signature text-slate-300 dark:text-slate-600 text-2xl mb-1 block"></i>
+                                    <span class="text-[11px] text-slate-400 dark:text-slate-500 font-semibold">No signature currently registered on file.</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Upload New Signature</label>
+                            <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
+                        </div>
+
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">
+                            Recommended: transparent PNG or SVG image. You can draw and save a free transparent signature at 
+                            <a href="https://www.signwell.com/online-signature/" target="_blank" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">SignWell</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2 mt-3">
+                    <button type="button" class="admin-profile-modal-close px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">Cancel</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow-xs shadow-emerald-600/10 transition-all cursor-pointer">Save Profile &amp; Signature</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profileModal = document.getElementById("modal-admin-profile");
+            const btnOpenProfile = document.getElementById("btn-open-admin-profile");
+            
+            function openProfileModal() {
+                if (!profileModal) return;
+                const overlay = profileModal.querySelector(".modal-overlay");
+                const container = profileModal.querySelector(".modal-container");
+                profileModal.classList.remove("hidden");
+                setTimeout(() => {
+                    if (overlay) {
+                        overlay.classList.remove("opacity-0", "pointer-events-none");
+                        overlay.classList.add("opacity-100", "pointer-events-auto");
+                    }
+                    if (container) {
+                        container.classList.remove("translate-x-[calc(100%+2rem)]");
+                        container.classList.add("translate-x-0");
+                    }
+                }, 30);
+            }
+
+            function closeProfileModal() {
+                if (!profileModal) return;
+                const overlay = profileModal.querySelector(".modal-overlay");
+                const container = profileModal.querySelector(".modal-container");
+                if (overlay) {
+                    overlay.classList.add("opacity-0", "pointer-events-none");
+                    overlay.classList.remove("opacity-100", "pointer-events-auto");
+                }
+                if (container) {
+                    container.classList.add("translate-x-[calc(100%+2rem)]");
+                    container.classList.remove("translate-x-0");
+                }
+                setTimeout(() => profileModal.classList.add("hidden"), 250);
+            }
+
+            if (btnOpenProfile) {
+                btnOpenProfile.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    const dropdown = document.getElementById("profile-dropdown-menu");
+                    if (dropdown) dropdown.classList.add("hidden");
+                    openProfileModal();
+                });
+            }
+
+            if (profileModal) {
+                profileModal.querySelectorAll(".admin-profile-modal-close, .modal-overlay").forEach(btn => {
+                    btn.addEventListener("click", closeProfileModal);
+                });
+            }
+        });
+    </script>
+    @endif
     @stack('scripts')
 </body>
 </html>

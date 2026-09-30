@@ -22,39 +22,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function() {
-        return redirect()->route('member.savings');
-    })->name('dashboard');
-    Route::get('/savings', [MemberController::class, 'savings'])->name('member.savings');
-    Route::get('/myloans', [MemberController::class, 'loans'])->name('member.loans');
-    Route::get('/comaker-requests', [MemberController::class, 'coMakerRequests'])->name('member.comaker_requests');
-    Route::get('/withdrawals', [MemberController::class, 'withdrawals'])->name('member.withdrawals');
-    Route::post('/withdrawals', [MemberController::class, 'storeWithdrawal'])->name('member.withdrawals.store');
-    Route::post('/withdrawals/{withdrawal}/cancel', [MemberController::class, 'cancelWithdrawal'])->name('member.withdrawals.cancel');
-    Route::get('/deductions', [MemberController::class, 'deductions'])->name('member.deductions');
-    Route::post('/deductions', [MemberController::class, 'storeDeductionRequest'])->name('member.deductions.store');
-    Route::get('/loans', [MemberController::class, 'forms'])->name('member.forms');
-    Route::get('/settings', [MemberController::class, 'settings'])->name('member.settings');
-    Route::post('/settings', [MemberController::class, 'updateSettings'])->name('member.settings.update');
-
-    // Loan Approvals & Rejections (collaborative workflow)
-    Route::post('/loans/{application}/approve', [LoanApprovalController::class, 'approve'])->name('loans.approve');
-    Route::post('/loans/{application}/reject', [LoanApprovalController::class, 'reject'])->name('loans.reject');
-    Route::post('/loans/{application}/return', [LoanApprovalController::class, 'returnLoan'])->name('loans.return');
-    Route::get('/loan-documents/{document}', [LoanApprovalController::class, 'viewDocument'])->name('loan.documents.show');
-    Route::get('/loans/{application}/ledger', [LoanApprovalController::class, 'viewLedger'])->name('loans.ledger.show');
-    Route::get('/loans/{application}/schedule', [LoanApprovalController::class, 'viewSchedule'])->name('loans.schedule.show');
-
-    // Member Loan Applications
-    Route::post('/loans/apply', [MemberController::class, 'applyLoan'])->name('member.loans.apply');
-    Route::patch('/loans/{application}/replace-comaker', [MemberController::class, 'replaceCoMaker'])->name('member.loans.replace_comaker');
-
-    // Member Election & Voting
-    Route::get('/elections', [MemberElectionController::class, 'index'])->name('member.elections.index');
-    Route::get('/elections/{election}', [MemberElectionController::class, 'show'])->name('member.elections.show');
-    Route::post('/elections/{election}/vote', [MemberElectionController::class, 'store'])->name('member.elections.vote');
-    Route::get('/elections/{election}/results', [MemberElectionController::class, 'results'])->name('member.elections.results');
-
     // PIN security routes
     Route::post('/pin/setup', [AuthController::class, 'setupPin'])->name('pin.setup');
     Route::post('/pin/verify', [AuthController::class, 'verifyPin'])->name('pin.verify');
@@ -64,48 +31,114 @@ Route::middleware('auth')->group(function () {
     Route::post('/otp/verify', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Member Self-Service Portal (Isolated from internal staff admins)
+    Route::middleware('member.portal')->group(function () {
+        Route::get('/dashboard', function() {
+            return redirect()->route('member.savings');
+        })->name('dashboard');
+        Route::get('/savings', [MemberController::class, 'savings'])->name('member.savings');
+        Route::get('/myloans', [MemberController::class, 'loans'])->name('member.loans');
+        Route::get('/comaker-requests', [MemberController::class, 'coMakerRequests'])->name('member.comaker_requests');
+        Route::get('/withdrawals', [MemberController::class, 'withdrawals'])->name('member.withdrawals');
+        Route::post('/withdrawals', [MemberController::class, 'storeWithdrawal'])->name('member.withdrawals.store');
+        Route::post('/withdrawals/{withdrawal}/cancel', [MemberController::class, 'cancelWithdrawal'])->name('member.withdrawals.cancel');
+        Route::get('/deductions', [MemberController::class, 'deductions'])->name('member.deductions');
+        Route::post('/deductions', [MemberController::class, 'storeDeductionRequest'])->name('member.deductions.store');
+        Route::get('/loans', [MemberController::class, 'forms'])->name('member.forms');
+        Route::get('/settings', [MemberController::class, 'settings'])->name('member.settings');
+        Route::post('/settings', [MemberController::class, 'updateSettings'])->name('member.settings.update');
+
+        // Loan Approvals & Rejections (collaborative workflow)
+        Route::post('/loans/{application}/approve', [LoanApprovalController::class, 'approve'])->name('loans.approve');
+        Route::post('/loans/{application}/reject', [LoanApprovalController::class, 'reject'])->name('loans.reject');
+        Route::post('/loans/{application}/return', [LoanApprovalController::class, 'returnLoan'])->name('loans.return');
+        Route::get('/loan-documents/{document}', [LoanApprovalController::class, 'viewDocument'])->name('loan.documents.show');
+        Route::get('/loans/{application}/ledger', [LoanApprovalController::class, 'viewLedger'])->name('loans.ledger.show');
+        Route::get('/loans/{application}/schedule', [LoanApprovalController::class, 'viewSchedule'])->name('loans.schedule.show');
+
+        // Member Loan Applications
+        Route::post('/loans/apply', [MemberController::class, 'applyLoan'])->name('member.loans.apply');
+        Route::patch('/loans/{application}/replace-comaker', [MemberController::class, 'replaceCoMaker'])->name('member.loans.replace_comaker');
+
+        // Member Election & Voting
+        Route::get('/elections', [MemberElectionController::class, 'index'])->name('member.elections.index');
+        Route::get('/elections/{election}', [MemberElectionController::class, 'show'])->name('member.elections.show');
+        Route::post('/elections/{election}/vote', [MemberElectionController::class, 'store'])->name('member.elections.vote');
+        Route::get('/elections/{election}/results', [MemberElectionController::class, 'results'])->name('member.elections.results');
+    });
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/audit-logs', [AdminController::class, 'auditLogs'])->name('admin.audit-logs');
-    Route::get('/members', [AdminController::class, 'members'])->name('admin.members');
-    Route::get('/loans', [AdminController::class, 'loans'])->name('admin.loans');
-    Route::get('/loan-approvals', [AdminController::class, 'loanApprovals'])->name('admin.loans.approvals');
-    Route::delete('/loans/{application}', [AdminController::class, 'destroyApplication'])->name('admin.loans.destroy_application');
-    Route::get('/loans/management', [AdminController::class, 'loansManagement'])->name('admin.loans.management');
-    Route::post('/loans/products', [AdminController::class, 'storeLoan'])->name('admin.loans.store');
-    Route::put('/loans/products/{loan}', [AdminController::class, 'updateLoan'])->name('admin.loans.update');
-    Route::delete('/loans/products/{loan}', [AdminController::class, 'deleteLoan'])->name('admin.loans.destroy');
-    Route::get('/loans/{application}/pdf', [AdminController::class, 'exportLoanPdf'])->name('admin.loans.pdf');
-    Route::get('/withdrawals', [AdminController::class, 'withdrawals'])->name('admin.withdrawals');
-    Route::get('/withdrawals/export-pdf', [AdminController::class, 'exportWithdrawalsPdf'])->name('admin.withdrawals.pdf');
-    Route::post('/withdrawals/{withdrawal}/status', [AdminController::class, 'updateWithdrawalStatus'])->name('admin.withdrawals.status');
-
-    // Admin Deductions Adjustments
-    Route::get('/deductions', [AdminController::class, 'deductions'])->name('admin.deductions');
-    Route::post('/deductions/{deductionRequest}/status', [AdminController::class, 'updateDeductionRequestStatus'])->name('admin.deductions.status');
-    Route::get('/deductions/{deductionRequest}/pdf', [AdminController::class, 'exportDeductionPdf'])->name('admin.deductions.pdf');
+    Route::post('/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin.page:dashboard');
+    Route::get('/audit-logs', [AdminController::class, 'auditLogs'])->name('admin.audit-logs')->middleware('admin.page:audit_logs');
     
-    // Member CRUD Actions
-    Route::post('/members', [AdminController::class, 'storeMember'])->name('admin.members.store');
-    Route::put('/members/{user}', [AdminController::class, 'updateMember'])->name('admin.members.update');
-    Route::delete('/members/{user}', [AdminController::class, 'deleteMember'])->name('admin.members.destroy');
-    Route::get('/members/{user}/pdf', [AdminController::class, 'exportMemberPdf'])->name('admin.members.pdf');
+    // System Administrators Management (Super Admin Exclusive)
+    Route::middleware('admin.super')->group(function () {
+        Route::get('/administrators', [AdminController::class, 'administrators'])->name('admin.administrators');
+        Route::post('/administrators', [AdminController::class, 'storeAdministrator'])->name('admin.administrators.store');
+        Route::put('/administrators/{user}', [AdminController::class, 'updateAdministrator'])->name('admin.administrators.update');
+        Route::delete('/administrators/{user}', [AdminController::class, 'deleteAdministrator'])->name('admin.administrators.destroy');
+    });
+    
+    // Members Directory & Actions
+    Route::middleware('admin.page:members')->group(function () {
+        Route::get('/members', [AdminController::class, 'members'])->name('admin.members');
+        Route::post('/members', [AdminController::class, 'storeMember'])->name('admin.members.store');
+        Route::put('/members/{user}', [AdminController::class, 'updateMember'])->name('admin.members.update');
+        Route::delete('/members/{user}', [AdminController::class, 'deleteMember'])->name('admin.members.destroy');
+        Route::get('/members/{user}/pdf', [AdminController::class, 'exportMemberPdf'])->name('admin.members.pdf');
+    });
 
-    // Admin Election Management
-    Route::get('/elections', [AdminElectionController::class, 'index'])->name('admin.elections.index');
-    Route::get('/elections/create', [AdminElectionController::class, 'create'])->name('admin.elections.create');
-    Route::post('/elections', [AdminElectionController::class, 'store'])->name('admin.elections.store');
-    Route::get('/elections/{election}', [AdminElectionController::class, 'show'])->name('admin.elections.show');
-    Route::get('/elections/{election}/edit', [AdminElectionController::class, 'edit'])->name('admin.elections.edit');
-    Route::put('/elections/{election}', [AdminElectionController::class, 'update'])->name('admin.elections.update');
-    Route::delete('/elections/{election}', [AdminElectionController::class, 'destroy'])->name('admin.elections.destroy');
-    Route::get('/elections/{election}/results', [AdminElectionController::class, 'results'])->name('admin.elections.results');
+    // Loans Directory
+    Route::middleware('admin.page:loans')->group(function () {
+        Route::get('/loans', [AdminController::class, 'loans'])->name('admin.loans');
+        Route::get('/loans/{application}/pdf', [AdminController::class, 'exportLoanPdf'])->name('admin.loans.pdf');
+    });
 
-    // Position & Candidate management
-    Route::post('/elections/{election}/positions', [AdminElectionController::class, 'storePosition'])->name('admin.elections.positions.store');
-    Route::delete('/positions/{position}', [AdminElectionController::class, 'destroyPosition'])->name('admin.positions.destroy');
-    Route::post('/positions/{position}/candidates', [AdminElectionController::class, 'storeCandidate'])->name('admin.positions.candidates.store');
-    Route::delete('/candidates/{candidate}', [AdminElectionController::class, 'destroyCandidate'])->name('admin.candidates.destroy');
+    // Loan Approvals
+    Route::middleware('admin.page:loan_approvals')->group(function () {
+        Route::get('/loan-approvals', [AdminController::class, 'loanApprovals'])->name('admin.loans.approvals');
+        Route::delete('/loans/{application}', [AdminController::class, 'destroyApplication'])->name('admin.loans.destroy_application');
+    });
+
+    // Loan Products Management
+    Route::middleware('admin.page:loans_management')->group(function () {
+        Route::get('/loans/management', [AdminController::class, 'loansManagement'])->name('admin.loans.management');
+        Route::post('/loans/products', [AdminController::class, 'storeLoan'])->name('admin.loans.store');
+        Route::put('/loans/products/{loan}', [AdminController::class, 'updateLoan'])->name('admin.loans.update');
+        Route::delete('/loans/products/{loan}', [AdminController::class, 'deleteLoan'])->name('admin.loans.destroy');
+    });
+
+    // Treasury Withdrawals
+    Route::middleware('admin.page:withdrawals')->group(function () {
+        Route::get('/withdrawals', [AdminController::class, 'withdrawals'])->name('admin.withdrawals');
+        Route::get('/withdrawals/export-pdf', [AdminController::class, 'exportWithdrawalsPdf'])->name('admin.withdrawals.pdf');
+        Route::post('/withdrawals/{withdrawal}/status', [AdminController::class, 'updateWithdrawalStatus'])->name('admin.withdrawals.status');
+    });
+
+    // Treasury Deduction Adjustments
+    Route::middleware('admin.page:deductions')->group(function () {
+        Route::get('/deductions', [AdminController::class, 'deductions'])->name('admin.deductions');
+        Route::post('/deductions/{deductionRequest}/status', [AdminController::class, 'updateDeductionRequestStatus'])->name('admin.deductions.status');
+        Route::get('/deductions/{deductionRequest}/pdf', [AdminController::class, 'exportDeductionPdf'])->name('admin.deductions.pdf');
+    });
+
+    // Admin Election Management & Positions/Candidates
+    Route::middleware('admin.page:elections')->group(function () {
+        Route::get('/elections', [AdminElectionController::class, 'index'])->name('admin.elections.index');
+        Route::get('/elections/create', [AdminElectionController::class, 'create'])->name('admin.elections.create');
+        Route::post('/elections', [AdminElectionController::class, 'store'])->name('admin.elections.store');
+        Route::get('/elections/{election}', [AdminElectionController::class, 'show'])->name('admin.elections.show');
+        Route::get('/elections/{election}/edit', [AdminElectionController::class, 'edit'])->name('admin.elections.edit');
+        Route::put('/elections/{election}', [AdminElectionController::class, 'update'])->name('admin.elections.update');
+        Route::delete('/elections/{election}', [AdminElectionController::class, 'destroy'])->name('admin.elections.destroy');
+        Route::get('/elections/{election}/results', [AdminElectionController::class, 'results'])->name('admin.elections.results');
+
+        Route::post('/elections/{election}/positions', [AdminElectionController::class, 'storePosition'])->name('admin.elections.positions.store');
+        Route::delete('/positions/{position}', [AdminElectionController::class, 'destroyPosition'])->name('admin.positions.destroy');
+        Route::post('/positions/{position}/candidates', [AdminElectionController::class, 'storeCandidate'])->name('admin.positions.candidates.store');
+        Route::delete('/candidates/{candidate}', [AdminElectionController::class, 'destroyCandidate'])->name('admin.candidates.destroy');
+    });
 });

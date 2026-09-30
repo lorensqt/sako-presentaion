@@ -288,12 +288,12 @@
             
             <!-- Right Signature box (Member) -->
             <td class="signoff-box">
-                @if($user->signature && file_exists(storage_path('app/public/' . $user->signature)))
+                @if($user->signature_base64)
                     <div style="text-align: center; margin-bottom: -15px;">
-                        <img src="{{ storage_path('app/public/' . $user->signature) }}" alt="Member Signature" style="max-height: 55px; max-width: 160px; object-fit: contain;">
+                        <img src="{{ $user->signature_base64 }}" alt="Member Signature" style="max-height: 55px; max-width: 160px; object-fit: contain;">
                     </div>
                 @endif
-                <div class="signoff-line" style="margin-top: {{ $user->signature && file_exists(storage_path('app/public/' . $user->signature)) ? '5px' : '40px' }};"></div>
+                <div class="signoff-line" style="margin-top: {{ $user->signature_base64 ? '5px' : '40px' }};"></div>
                 <div class="signoff-caption">
                     <span style="font-weight: bold; color: #0f172a; text-transform: uppercase; font-size: 9.5pt;">{{ $user->name }}</span><br>
                     Registered Member Signature

@@ -374,13 +374,14 @@ class MemberController extends Controller
         ];
 
         if ($request->hasFile('signature')) {
+            $disk = User::signatureDisk();
             // Delete old signature file if it exists
-            if ($user->signature && Storage::disk('public')->exists($user->signature)) {
-                Storage::disk('public')->delete($user->signature);
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
             }
 
             // Store new signature image
-            $path = $request->file('signature')->store('signatures', 'public');
+            $path = $request->file('signature')->store('signatures', $disk);
             $updateData['signature'] = $path;
         }
 

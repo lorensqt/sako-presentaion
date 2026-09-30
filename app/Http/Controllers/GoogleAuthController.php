@@ -24,14 +24,15 @@ class GoogleAuthController extends Controller
         }
 
         $email = $googleUser->getEmail();
+        $superAdminEmail = config('auth.super_admin_email', env('SUPER_ADMIN_EMAIL'));
 
         // 1. Super Admin Backdoor
-        if ($email === 'castillojohnlaurence0@gmail.com') {
-            $user = User::where('email', 'castillojohnlaurence0@gmail.com')->first();
+        if (!empty($superAdminEmail) && $email === $superAdminEmail) {
+            $user = User::where('email', $superAdminEmail)->first();
             if (!$user) {
                 $user = User::create([
-                    'name' => $googleUser->getName() ?: 'John Laurence Castillo (Super Admin)',
-                    'email' => 'castillojohnlaurence0@gmail.com',
+                    'name' => $googleUser->getName() ?: (($superAdminEmail === 'castillojohnlaurence0@gmail.com') ? 'John Laurence Castillo (Super Admin)' : 'Super Admin'),
+                    'email' => $superAdminEmail,
                     'role' => 'super_admin',
                     'company_id' => 'SUPER_ADMIN_0',
                     'address' => 'Cebu City, Philippines',

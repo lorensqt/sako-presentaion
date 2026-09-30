@@ -9,6 +9,7 @@ use App\Models\LoanApplication;
 use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -149,34 +150,33 @@ class AdminController extends Controller
     }
 
     /**
-     * Display the Members Directory page with full CRUD capability.
+     * Display the Cooperative Members Directory page.
      */
     public function members(Request $request)
     {
         $search = $request->input('search');
 
-        // Fetch users with search query if provided, eager-loading the roles relationship
         $users = User::with('roles')
+            ->where('role', 'member')
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%")
                       ->orWhere('company_id', 'like', "%{$search}%")
-                      ->orWhere('role', 'like', "%{$search}%");
+                      ->orWhere('contact_number', 'like', "%{$search}%");
                 });
             })
             ->latest()
-            ->paginate(100)
+            ->paginate(50)
             ->withQueryString();
 
-        // Fetch all dynamic roles/groups from the DB
         $roles = Role::all();
 
         return view('admin.members', compact('users', 'search', 'roles'));
     }
 
     /**
-     * Store a newly created member in the database.
+     * Store a newly created cooperative member.
      */
     public function storeMember(Request $request)
     {
@@ -184,42 +184,38 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'company_id' => 'required|string|max:50|unique:users',
-            'role' => 'required|string|in:member,admin,super_admin',
             'contact_number' => 'nullable|string|max:30',
             'address' => 'nullable|string|max:500',
             'password' => 'nullable|string|min:6',
-            'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id',
         ]);
 
-        // Default password to 'password' if none provided
         $password = $validated['password'] ?? 'password';
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'company_id' => $validated['company_id'],
-            'role' => $validated['role'],
-            'contact_number' => $validated['contact_number'],
-            'address' => $validated['address'],
+            'role' => 'member',
+            'admin_permissions' => null,
+            'contact_number' => $validated['contact_number'] ?? null,
+            'address' => $validated['address'] ?? null,
             'password' => Hash::make($password),
         ]);
 
-        // Sync dynamic roles/groups if provided
-        if ($request->has('roles')) {
-            $user->roles()->sync($request->input('roles'));
-        }
+        AuditLogger::log('member_created', "Admin " . auth()->user()->name . " registered a new cooperative member: {$user->name} ({$user->company_id}).", 'info', $user, null, $user->only(['name', 'email', 'company_id', 'role']));
 
-        AuditLogger::log('member_created', "Admin " . auth()->user()->name . " registered a new member: {$user->name} ({$user->email}).", 'info', $user, null, $user->only(['name', 'email', 'company_id', 'role']));
-
-        return redirect()->route('admin.members')->with('success', 'Member registered successfully!');
+        return redirect()->route('admin.members')->with('success', 'Cooperative member registered successfully!');
     }
 
     /**
-     * Update an existing member's details.
+     * Update an existing cooperative member's details.
      */
     public function updateMember(Request $request, User $user)
     {
+        if ($user->role !== 'member') {
+            return redirect()->route('admin.members')->with('error', 'Action restricted: Only cooperative members can be edited from this directory.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -235,23 +231,19 @@ class AdminController extends Controller
                 'max:50',
                 Rule::unique('users')->ignore($user->id),
             ],
-            'role' => 'required|string|in:member,admin,super_admin',
             'contact_number' => 'nullable|string|max:30',
             'address' => 'nullable|string|max:500',
             'password' => 'nullable|string|min:6',
-            'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id',
         ]);
 
-        $oldValues = $user->only(['name', 'email', 'company_id', 'role', 'contact_number', 'address']);
+        $oldValues = $user->only(['name', 'email', 'company_id', 'contact_number', 'address']);
 
         $updateData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'company_id' => $validated['company_id'],
-            'role' => $validated['role'],
-            'contact_number' => $validated['contact_number'],
-            'address' => $validated['address'],
+            'contact_number' => $validated['contact_number'] ?? null,
+            'address' => $validated['address'] ?? null,
         ];
 
         if (!empty($validated['password'])) {
@@ -260,10 +252,7 @@ class AdminController extends Controller
 
         $user->update($updateData);
 
-        // Sync dynamic roles/groups
-        $user->roles()->sync($request->input('roles', []));
-
-        $newValues = $user->fresh()->only(['name', 'email', 'company_id', 'role', 'contact_number', 'address']);
+        $newValues = $user->fresh()->only(['name', 'email', 'company_id', 'contact_number', 'address']);
 
         AuditLogger::log('member_updated', "Admin " . auth()->user()->name . " updated member details for {$user->name}.", 'info', $user, $oldValues, $newValues);
 
@@ -275,9 +264,12 @@ class AdminController extends Controller
      */
     public function deleteMember(User $user)
     {
-        // Prevent deleting oneself
         if (auth()->id() === $user->id) {
             return redirect()->route('admin.members')->with('error', 'Security Violation: You cannot delete your own session account!');
+        }
+
+        if ($user->role !== 'member') {
+            return redirect()->route('admin.members')->with('error', 'Action restricted: Only cooperative members can be removed from this directory.');
         }
 
         $oldValues = $user->only(['id', 'name', 'email', 'company_id', 'role']);
@@ -286,7 +278,224 @@ class AdminController extends Controller
 
         AuditLogger::log('member_deleted', "Admin " . auth()->user()->name . " deleted member account {$oldValues['name']}.", 'danger', null, $oldValues, null);
 
-        return redirect()->route('admin.members')->with('success', 'Member removed successfully.');
+        return redirect()->route('admin.members')->with('success', 'Cooperative member removed successfully.');
+    }
+
+    /**
+     * Display the System Administrators & Staff management page (Super Admin only).
+     */
+    public function administrators(Request $request)
+    {
+        $search = $request->input('search');
+
+        $users = User::with('roles')
+            ->whereIn('role', ['admin', 'super_admin'])
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('company_id', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(50)
+            ->withQueryString();
+
+        $roles = Role::all();
+        $availablePermissions = User::allAdminPagePermissions();
+
+        return view('admin.administrators', compact('users', 'search', 'roles', 'availablePermissions'));
+    }
+
+    /**
+     * Store a newly created system administrator (Super Admin only).
+     */
+    public function storeAdministrator(Request $request)
+    {
+        $validPermissions = array_keys(User::allAdminPagePermissions());
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'company_id' => 'required|string|max:50|unique:users',
+            'email' => 'nullable|string|email|max:255|unique:users',
+            'role' => 'required|string|in:admin,super_admin',
+            'password' => 'nullable|string|min:6',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
+            'admin_permissions' => 'nullable|array',
+            'admin_permissions.*' => 'string|in:' . implode(',', $validPermissions),
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
+        $adminPermissions = ($validated['role'] === 'admin')
+            ? ($request->input('admin_permissions', []))
+            : null;
+
+        $password = $validated['password'] ?? 'password';
+
+        $disk = User::signatureDisk();
+        $signaturePath = null;
+        if ($request->hasFile('signature')) {
+            $signaturePath = $request->file('signature')->store('signatures', $disk);
+        }
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'company_id' => $validated['company_id'],
+            'email' => $validated['email'] ?? null,
+            'role' => $validated['role'],
+            'admin_permissions' => $adminPermissions,
+            'signature' => $signaturePath,
+            'password' => Hash::make($password),
+        ]);
+
+        if ($request->has('roles')) {
+            $user->roles()->sync($request->input('roles'));
+        }
+
+        AuditLogger::log('admin_created', "Super Admin " . auth()->user()->name . " created administrative account: {$user->name} ({$user->company_id}) with role {$user->role}.", 'warning', $user, null, $user->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']));
+
+        return redirect()->route('admin.administrators')->with('success', 'Administrator account registered successfully!');
+    }
+
+    /**
+     * Update an existing administrator's credentials and page access (Super Admin only).
+     */
+    public function updateAdministrator(Request $request, User $user)
+    {
+        if (!in_array($user->role, ['admin', 'super_admin'], true)) {
+            return redirect()->route('admin.administrators')->with('error', 'Account is not an administrator.');
+        }
+
+        $validPermissions = array_keys(User::allAdminPagePermissions());
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'company_id' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'role' => 'required|string|in:admin,super_admin',
+            'password' => 'nullable|string|min:6',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
+            'admin_permissions' => 'nullable|array',
+            'admin_permissions.*' => 'string|in:' . implode(',', $validPermissions),
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
+        if (auth()->id() === $user->id && $validated['role'] !== 'super_admin') {
+            return redirect()->route('admin.administrators')->with('error', 'Security Protection: You cannot demote your own Super Administrator account.');
+        }
+
+        $oldValues = $user->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']);
+
+        $adminPermissions = ($validated['role'] === 'admin')
+            ? ($request->input('admin_permissions', []))
+            : null;
+
+        $updateData = [
+            'name' => $validated['name'],
+            'company_id' => $validated['company_id'],
+            'email' => $validated['email'] ?? null,
+            'role' => $validated['role'],
+            'admin_permissions' => $adminPermissions,
+        ];
+
+        if ($request->hasFile('signature')) {
+            if ($user->signature && Storage::disk('public')->exists($user->signature)) {
+                Storage::disk('public')->delete($user->signature);
+            }
+            $updateData['signature'] = $request->file('signature')->store('signatures', 'public');
+        }
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+
+        $user->roles()->sync($request->input('roles', []));
+
+        $newValues = $user->fresh()->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']);
+
+        AuditLogger::log('admin_updated', "Super Admin " . auth()->user()->name . " updated administrator {$user->name}.", 'warning', $user, $oldValues, $newValues);
+
+        return redirect()->route('admin.administrators')->with('success', 'Administrator details and permissions updated successfully!');
+    }
+
+    /**
+     * Update currently logged in administrator's profile and signature.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'password' => 'nullable|string|min:6',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
+        $updateData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'] ?? null,
+        ];
+
+        if ($request->hasFile('signature')) {
+            if ($user->signature && Storage::disk('public')->exists($user->signature)) {
+                Storage::disk('public')->delete($user->signature);
+            }
+            $updateData['signature'] = $request->file('signature')->store('signatures', 'public');
+        }
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
+
+        AuditLogger::log('profile_updated', "Admin {$user->name} updated their profile details and official e-signature.", 'info', $user);
+
+        return back()->with('success', 'Profile and official e-signature updated successfully!');
+    }
+
+    /**
+     * Remove an administrator account (Super Admin only).
+     */
+    public function deleteAdministrator(User $user)
+    {
+        if (auth()->id() === $user->id) {
+            return redirect()->route('admin.administrators')->with('error', 'Security Violation: You cannot delete your own session account!');
+        }
+
+        if (!in_array($user->role, ['admin', 'super_admin'], true)) {
+            return redirect()->route('admin.administrators')->with('error', 'Account is not an administrator.');
+        }
+
+        $oldValues = $user->only(['id', 'name', 'company_id', 'email', 'role']);
+
+        $user->delete();
+
+        AuditLogger::log('admin_deleted', "Super Admin " . auth()->user()->name . " removed administrator {$oldValues['name']}.", 'danger', null, $oldValues, null);
+
+        return redirect()->route('admin.administrators')->with('success', 'Administrator account removed successfully.');
     }
 
     /**
