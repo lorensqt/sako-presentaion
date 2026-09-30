@@ -453,10 +453,20 @@
                         </label>
                         <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
                     </div>
-                    <div id="edit-signature-preview-container" class="hidden items-center gap-3 p-2 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl mb-2">
-                        <img id="edit-signature-preview-img" src="" alt="Current Signature" class="h-10 w-auto max-w-[120px] object-contain bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium leading-tight">Currently registered signature on file. Upload below to replace.</span>
+                    <div id="edit-signature-preview-container" class="hidden items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl mb-2">
+                        <div class="flex items-center gap-3">
+                            <img id="edit-signature-preview-img" src="" alt="Current Signature" class="h-10 w-auto max-w-[120px] object-contain bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <div>
+                                <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200 block">Registered on file</span>
+                                <span class="text-[9px] text-slate-400">Used for official sign-offs and PDF contracts.</span>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-remove-admin-sig" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1 cursor-pointer" title="Remove obsolete signature so admin can re-upload">
+                            <i class="fa-solid fa-trash-can text-[9px]"></i>
+                            <span>Clear</span>
+                        </button>
                     </div>
+                    <input type="hidden" name="remove_signature" id="admin-remove-signature-flag" value="0">
                     <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
                 </div>
 
@@ -691,6 +701,9 @@
                 // Handle E-Signature preview
                 const previewContainer = document.getElementById("edit-signature-preview-container");
                 const previewImg = document.getElementById("edit-signature-preview-img");
+                const removeSigFlag = document.getElementById("admin-remove-signature-flag");
+                if (removeSigFlag) removeSigFlag.value = "0";
+
                 if (signatureUrl && previewContainer && previewImg) {
                     previewImg.src = signatureUrl;
                     previewContainer.classList.remove("hidden");
@@ -714,6 +727,20 @@
                 openModal("modal-edit-admin");
             });
         });
+
+        // Clear Admin Signature button in Edit Drawer
+        const btnRemoveAdminSig = document.getElementById("btn-remove-admin-sig");
+        if (btnRemoveAdminSig) {
+            btnRemoveAdminSig.addEventListener("click", function() {
+                const removeSigFlag = document.getElementById("admin-remove-signature-flag");
+                const sigPreviewContainer = document.getElementById("edit-signature-preview-container");
+                if (removeSigFlag) removeSigFlag.value = "1";
+                if (sigPreviewContainer) {
+                    sigPreviewContainer.classList.add("hidden");
+                    sigPreviewContainer.classList.remove("flex");
+                }
+            });
+        }
 
         document.querySelectorAll(".btn-delete-admin").forEach(btn => {
             btn.addEventListener("click", function() {

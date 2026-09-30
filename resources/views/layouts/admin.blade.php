@@ -995,16 +995,24 @@
                         </div>
 
                         <!-- Current E-Sign preview -->
-                        <div class="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl flex items-center justify-center">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl flex items-center justify-between">
                             @if(Auth::user()->signature_url)
-                                <img src="{{ Auth::user()->signature_url }}" alt="My E-Sign" class="max-h-16 w-auto object-contain bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                                <div class="flex items-center gap-3">
+                                    <img id="my-profile-signature-img" src="{{ Auth::user()->signature_url }}" alt="My E-Sign" class="max-h-16 w-auto object-contain bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                                    <span class="text-[10px] text-slate-400 font-medium">Currently active signature</span>
+                                </div>
+                                <button type="button" id="btn-remove-my-profile-sig" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1 cursor-pointer">
+                                    <i class="fa-solid fa-trash-can text-[9px]"></i>
+                                    <span>Clear</span>
+                                </button>
                             @else
-                                <div class="text-center py-2">
+                                <div class="text-center py-2 w-full">
                                     <i class="fa-solid fa-signature text-slate-300 dark:text-slate-600 text-2xl mb-1 block"></i>
                                     <span class="text-[11px] text-slate-400 dark:text-slate-500 font-semibold">No signature currently registered on file.</span>
                                 </div>
                             @endif
                         </div>
+                        <input type="hidden" name="remove_signature" id="my-profile-remove-signature-flag" value="0">
 
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Upload New Signature</label>
@@ -1076,6 +1084,21 @@
                 profileModal.querySelectorAll(".admin-profile-modal-close, .modal-overlay").forEach(btn => {
                     btn.addEventListener("click", closeProfileModal);
                 });
+
+                const btnRemoveMySig = document.getElementById("btn-remove-my-profile-sig");
+                if (btnRemoveMySig) {
+                    btnRemoveMySig.addEventListener("click", function() {
+                        const removeFlag = document.getElementById("my-profile-remove-signature-flag");
+                        const sigImg = document.getElementById("my-profile-signature-img");
+                        if (removeFlag) removeFlag.value = "1";
+                        if (sigImg) {
+                            const parentFrame = sigImg.closest('.p-3');
+                            if (parentFrame) {
+                                parentFrame.innerHTML = '<div class="text-center py-2 w-full"><i class="fa-solid fa-signature text-slate-300 dark:text-slate-600 text-2xl mb-1 block"></i><span class="text-[11px] text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider">Signature marked for removal upon saving</span></div>';
+                            }
+                        }
+                    });
+                }
             }
         });
     </script>

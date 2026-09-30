@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::delete('/users/{user}/signature', [AdminController::class, 'deleteSignature'])->name('admin.users.signature.destroy');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin.page:dashboard');
     Route::get('/audit-logs', [AdminController::class, 'auditLogs'])->name('admin.audit-logs')->middleware('admin.page:audit_logs');
     

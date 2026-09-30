@@ -18,7 +18,7 @@
             <span>Cooperative Members Directory</span>
         </h1>
         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
-            Browse, register, search, and manage cooperative member profiles, contact credentials, and residential details.
+            Browse, register, search, and manage cooperative member profiles, contact credentials, and registered e-signatures.
         </p>
     </div>
 
@@ -72,6 +72,12 @@
                         </th>
                         <th class="px-5 py-3.5">
                             <span class="inline-flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-signature text-slate-500 dark:text-slate-400 text-[11px]"></i>
+                                E-Signature
+                            </span>
+                        </th>
+                        <th class="px-5 py-3.5">
+                            <span class="inline-flex items-center gap-1.5">
                                 <i class="fa-solid fa-phone text-slate-500 dark:text-slate-400 text-[11px]"></i>
                                 Contact Number
                             </span>
@@ -108,13 +114,26 @@
                                 </span>
                             </td>
 
+                            <!-- E-Signature Status / Thumbnail -->
+                            <td class="px-5 py-3.5">
+                                @if($user->signature_url)
+                                    <div class="h-9 w-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-lg p-1 flex items-center justify-center shadow-2xs">
+                                        <img src="{{ $user->signature_url }}" alt="E-Sign" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                @else
+                                    <span class="inline-flex items-center gap-1 text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-semibold italic">
+                                        Not Uploaded
+                                    </span>
+                                @endif
+                            </td>
+
                             <!-- Contact Number -->
                             <td class="px-5 py-3.5 font-semibold text-slate-600 dark:text-slate-300">
                                 {{ $user->contact_number ?: 'N/A' }}
                             </td>
 
                             <!-- Permanent Address -->
-                            <td class="px-5 py-3.5 max-w-[260px] truncate text-slate-500 dark:text-slate-400 text-xs" title="{{ $user->address }}">
+                            <td class="px-5 py-3.5 max-w-[240px] truncate text-slate-500 dark:text-slate-400 text-xs" title="{{ $user->address }}">
                                 {{ $user->address ?: 'N/A' }}
                             </td>
 
@@ -133,6 +152,7 @@
                                         data-company_id="{{ $user->company_id }}"
                                         data-contact_number="{{ $user->contact_number }}"
                                         data-address="{{ $user->address }}"
+                                        data-signature="{{ $user->signature_url ?? '' }}"
                                         title="Edit Member Details">
                                         <i class="fa-solid fa-pen-to-square text-xs"></i>
                                     </button>
@@ -150,7 +170,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-5 py-12 text-center text-slate-400 dark:text-slate-500 text-xs">
+                            <td colspan="6" class="px-5 py-12 text-center text-slate-400 dark:text-slate-500 text-xs">
                                 <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center mx-auto text-slate-400 mb-2">
                                     <i class="fa-solid fa-user-slash text-sm"></i>
                                 </div>
@@ -189,7 +209,7 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.members.store') }}" method="POST" class="flex-1 flex flex-col overflow-hidden mt-4">
+        <form action="{{ route('admin.members.store') }}" method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col overflow-hidden mt-4">
             @csrf
             
             <div class="flex-1 overflow-y-auto pr-1 space-y-4">
@@ -223,6 +243,18 @@
                     <input type="password" name="password" placeholder="••••••••" class="w-full px-3 py-2 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 transition-all">
                 </div>
 
+                <!-- Optional E-Signature Upload -->
+                <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
+                            <span>Official E-Signature</span>
+                        </label>
+                        <span class="text-[9px] text-slate-400 font-semibold">(Optional, PNG / SVG transparent)</span>
+                    </div>
+                    <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
+                </div>
+
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Permanent Residential Address</label>
                     <textarea name="address" rows="3" placeholder="Brgy. Pahina Central, Cebu City" class="w-full px-3 py-2 text-xs font-medium border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 transition-all resize-none"></textarea>
@@ -248,14 +280,14 @@
                     <i class="fa-solid fa-pen-to-square text-emerald-600 text-sm"></i>
                     <span>Edit Member Details</span>
                 </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Update cooperative borrower/investor profile</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Update cooperative borrower profile &amp; signature</p>
             </div>
             <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
-        <form id="form-edit-member" method="POST" class="flex-1 flex flex-col overflow-hidden mt-4">
+        <form id="form-edit-member" method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col overflow-hidden mt-4">
             @csrf
             @method('PUT')
             
@@ -288,6 +320,38 @@
                         <span class="text-[9px] text-slate-400 normal-case">(Leave blank to keep current)</span>
                     </label>
                     <input type="password" name="password" placeholder="••••••••" class="w-full px-3 py-2 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 transition-all">
+                </div>
+
+                <!-- E-Signature Section in Edit Member -->
+                <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
+                            <span>Registered Member E-Signature</span>
+                        </label>
+                        <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
+                    </div>
+
+                    <div id="member-signature-preview-container" class="hidden items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl mb-2">
+                        <div class="flex items-center gap-3">
+                            <img id="member-signature-preview-img" src="" alt="Member Signature" class="h-10 w-auto max-w-[120px] object-contain bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <div>
+                                <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200 block">Registered on file</span>
+                                <span class="text-[9px] text-slate-400">Used on official loan & deduction contracts.</span>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-remove-member-sig" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1 cursor-pointer" title="Remove obsolete signature so member can re-upload">
+                            <i class="fa-solid fa-trash-can text-[9px]"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="remove_signature" id="member-remove-signature-flag" value="0">
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Upload Replacement</label>
+                        <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
+                    </div>
                 </div>
 
                 <div class="space-y-1">
@@ -418,6 +482,7 @@
                 const companyId = this.getAttribute("data-company_id");
                 const contact = this.getAttribute("data-contact_number");
                 const address = this.getAttribute("data-address");
+                const signatureUrl = this.getAttribute("data-signature");
 
                 document.getElementById("edit-member-name").value = name || '';
                 document.getElementById("edit-member-email").value = email || '';
@@ -425,12 +490,41 @@
                 document.getElementById("edit-member-contact_number").value = contact || '';
                 document.getElementById("edit-member-address").value = address || '';
 
+                // Handle signature preview & flag
+                const sigPreviewContainer = document.getElementById("member-signature-preview-container");
+                const sigPreviewImg = document.getElementById("member-signature-preview-img");
+                const removeSigFlag = document.getElementById("member-remove-signature-flag");
+                if (removeSigFlag) removeSigFlag.value = "0";
+
+                if (signatureUrl && sigPreviewContainer && sigPreviewImg) {
+                    sigPreviewImg.src = signatureUrl;
+                    sigPreviewContainer.classList.remove("hidden");
+                    sigPreviewContainer.classList.add("flex");
+                } else if (sigPreviewContainer) {
+                    sigPreviewContainer.classList.add("hidden");
+                    sigPreviewContainer.classList.remove("flex");
+                }
+
                 const editForm = document.getElementById("form-edit-member");
                 editForm.action = `/admin/members/${id}`;
 
                 openModal("modal-edit-member");
             });
         });
+
+        // Clear Member Signature button in Edit Drawer
+        const btnRemoveMemberSig = document.getElementById("btn-remove-member-sig");
+        if (btnRemoveMemberSig) {
+            btnRemoveMemberSig.addEventListener("click", function() {
+                const removeSigFlag = document.getElementById("member-remove-signature-flag");
+                const sigPreviewContainer = document.getElementById("member-signature-preview-container");
+                if (removeSigFlag) removeSigFlag.value = "1";
+                if (sigPreviewContainer) {
+                    sigPreviewContainer.classList.add("hidden");
+                    sigPreviewContainer.classList.remove("flex");
+                }
+            });
+        }
 
         document.querySelectorAll(".btn-delete-member").forEach(btn => {
             btn.addEventListener("click", function() {

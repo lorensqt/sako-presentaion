@@ -187,9 +187,16 @@ class AdminController extends Controller
             'contact_number' => 'nullable|string|max:30',
             'address' => 'nullable|string|max:500',
             'password' => 'nullable|string|min:6',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
 
         $password = $validated['password'] ?? 'password';
+
+        $disk = User::signatureDisk();
+        $signaturePath = null;
+        if ($request->hasFile('signature')) {
+            $signaturePath = $request->file('signature')->store('signatures', $disk);
+        }
 
         $user = User::create([
             'name' => $validated['name'],
@@ -199,10 +206,11 @@ class AdminController extends Controller
             'admin_permissions' => null,
             'contact_number' => $validated['contact_number'] ?? null,
             'address' => $validated['address'] ?? null,
+            'signature' => $signaturePath,
             'password' => Hash::make($password),
         ]);
 
-        AuditLogger::log('member_created', "Admin " . auth()->user()->name . " registered a new cooperative member: {$user->name} ({$user->company_id}).", 'info', $user, null, $user->only(['name', 'email', 'company_id', 'role']));
+        AuditLogger::log('member_created', "Admin " . auth()->user()->name . " registered a new cooperative member: {$user->name} ({$user->company_id}).", 'info', $user, null, $user->only(['name', 'email', 'company_id', 'role', 'signature']));
 
         return redirect()->route('admin.members')->with('success', 'Cooperative member registered successfully!');
     }
@@ -234,9 +242,11 @@ class AdminController extends Controller
             'contact_number' => 'nullable|string|max:30',
             'address' => 'nullable|string|max:500',
             'password' => 'nullable|string|min:6',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'remove_signature' => 'nullable|boolean',
         ]);
 
-        $oldValues = $user->only(['name', 'email', 'company_id', 'contact_number', 'address']);
+        $oldValues = $user->only(['name', 'email', 'company_id', 'contact_number', 'address', 'signature']);
 
         $updateData = [
             'name' => $validated['name'],
@@ -246,13 +256,26 @@ class AdminController extends Controller
             'address' => $validated['address'] ?? null,
         ];
 
+        $disk = User::signatureDisk();
+        if ($request->boolean('remove_signature')) {
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
+            }
+            $updateData['signature'] = null;
+        } elseif ($request->hasFile('signature')) {
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
+            }
+            $updateData['signature'] = $request->file('signature')->store('signatures', $disk);
+        }
+
         if (!empty($validated['password'])) {
             $updateData['password'] = Hash::make($validated['password']);
         }
 
         $user->update($updateData);
 
-        $newValues = $user->fresh()->only(['name', 'email', 'company_id', 'contact_number', 'address']);
+        $newValues = $user->fresh()->only(['name', 'email', 'company_id', 'contact_number', 'address', 'signature']);
 
         AuditLogger::log('member_updated', "Admin " . auth()->user()->name . " updated member details for {$user->name}.", 'info', $user, $oldValues, $newValues);
 
@@ -391,6 +414,7 @@ class AdminController extends Controller
             'admin_permissions' => 'nullable|array',
             'admin_permissions.*' => 'string|in:' . implode(',', $validPermissions),
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'remove_signature' => 'nullable|boolean',
         ]);
 
         if (auth()->id() === $user->id && $validated['role'] !== 'super_admin') {
@@ -411,8 +435,13 @@ class AdminController extends Controller
             'admin_permissions' => $adminPermissions,
         ];
 
-        if ($request->hasFile('signature')) {
-            $disk = User::signatureDisk();
+        $disk = User::signatureDisk();
+        if ($request->boolean('remove_signature')) {
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
+            }
+            $updateData['signature'] = null;
+        } elseif ($request->hasFile('signature')) {
             if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
                 Storage::disk($disk)->delete($user->signature);
             }
@@ -452,6 +481,7 @@ class AdminController extends Controller
             ],
             'password' => 'nullable|string|min:6',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'remove_signature' => 'nullable|boolean',
         ]);
 
         $updateData = [
@@ -459,8 +489,13 @@ class AdminController extends Controller
             'email' => $validated['email'] ?? null,
         ];
 
-        if ($request->hasFile('signature')) {
-            $disk = User::signatureDisk();
+        $disk = User::signatureDisk();
+        if ($request->boolean('remove_signature')) {
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
+            }
+            $updateData['signature'] = null;
+        } elseif ($request->hasFile('signature')) {
             if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
                 Storage::disk($disk)->delete($user->signature);
             }
@@ -476,6 +511,31 @@ class AdminController extends Controller
         AuditLogger::log('profile_updated', "Admin {$user->name} updated their profile details and official e-signature.", 'info', $user);
 
         return back()->with('success', 'Profile and official e-signature updated successfully!');
+    }
+
+    /**
+     * Remove / reset an e-signature for a member or administrator (Super Admin or Account Owner).
+     */
+    public function deleteSignature(User $user)
+    {
+        if (auth()->user()->role !== 'super_admin' && auth()->id() !== $user->id) {
+            return back()->with('error', 'Unauthorized: Only Super Administrators can reset a user signature.');
+        }
+
+        if ($user->signature) {
+            $disk = User::signatureDisk();
+            try {
+                if (Storage::disk($disk)->exists($user->signature)) {
+                    Storage::disk($disk)->delete($user->signature);
+                }
+            } catch (\Throwable $e) {}
+
+            $user->update(['signature' => null]);
+
+            AuditLogger::log('signature_removed', "Super Admin " . auth()->user()->name . " deleted signature for user {$user->name}.", 'warning', $user);
+        }
+
+        return back()->with('success', "E-signature for {$user->name} has been removed. The user can now re-upload a fresh signature.");
     }
 
     /**
