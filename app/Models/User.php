@@ -243,6 +243,7 @@ class User extends Authenticatable
 
     /**
      * Get the publicly accessible URL for the signature.
+     * Uses temporary presigned URLs for private cloud buckets.
      */
     public function getSignatureUrlAttribute(): ?string
     {
@@ -256,11 +257,17 @@ class User extends Authenticatable
 
         $disk = self::signatureDisk();
 
-        try {
-            return Storage::disk($disk)->url($this->signature);
-        } catch (\Throwable $e) {
-            return asset('storage/' . $this->signature);
+        if ($disk === 's3') {
+            try {
+                // Generate a temporary presigned URL for private cloud bucket access (30 min expiry)
+                return Storage::disk('s3')->temporaryUrl($this->signature, now()->addMinutes(30));
+            } catch (\Throwable $e) {
+                // Fallback to authenticated streaming route if temporaryUrl cannot be generated
+                return route('signature.show', $this->id);
+            }
         }
+
+        return asset('storage/' . $this->signature);
     }
 
     /**

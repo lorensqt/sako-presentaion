@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\LoanApplication;
 use App\Models\LoanComaker;
 use App\Models\LoanDocument;
+use App\Models\User;
 use App\Services\LoanWorkflowService;
 use App\Services\AuditLogger;
 use App\Mail\CoMakerDeclinedMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class LoanApprovalController extends Controller
 {
@@ -74,12 +76,13 @@ class LoanApprovalController extends Controller
         DB::transaction(function () use ($application, $user, $currentStageRole, $request) {
             // If in accounting stage, store uploaded Ledger and Schedule files
             if ($currentStageRole === 'accounting') {
+                $disk = User::signatureDisk();
                 if ($request->hasFile('ledger')) {
-                    $ledgerPath = $request->file('ledger')->store("loans/accounting/{$application->id}", 'public');
+                    $ledgerPath = $request->file('ledger')->store("loans/accounting/{$application->id}", $disk);
                     $application->ledger_path = $ledgerPath;
                 }
                 if ($request->hasFile('schedule')) {
-                    $schedulePath = $request->file('schedule')->store("loans/accounting/{$application->id}", 'public');
+                    $schedulePath = $request->file('schedule')->store("loans/accounting/{$application->id}", $disk);
                     $application->schedule_path = $schedulePath;
                 }
             }
@@ -457,7 +460,15 @@ class LoanApprovalController extends Controller
 
         $this->authorizeDocumentAccess($application);
 
-        // Retrieve full path
+        $disk = User::signatureDisk();
+        if (Storage::disk($disk)->exists($document->file_path)) {
+            return Storage::disk($disk)->response($document->file_path, $document->original_name, [
+                'Content-Type' => $document->mime_type ?: 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . addslashes($document->original_name) . '"'
+            ]);
+        }
+
+        // Retrieve local path fallback
         $path = storage_path('app/public/' . $document->file_path);
         if (!file_exists($path)) {
             $altPath = storage_path('app/' . $document->file_path);
@@ -485,6 +496,14 @@ class LoanApprovalController extends Controller
             abort(404, 'Accounting ledger has not been uploaded for this loan.');
         }
 
+        $disk = User::signatureDisk();
+        if (Storage::disk($disk)->exists($application->ledger_path)) {
+            return Storage::disk($disk)->response($application->ledger_path, 'Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+            ]);
+        }
+
         $path = storage_path('app/public/' . $application->ledger_path);
         if (!file_exists($path)) {
             $altPath = storage_path('app/' . $application->ledger_path);
@@ -510,6 +529,14 @@ class LoanApprovalController extends Controller
 
         if (!$application->schedule_path) {
             abort(404, 'Payment schedule has not been uploaded for this loan.');
+        }
+
+        $disk = User::signatureDisk();
+        if (Storage::disk($disk)->exists($application->schedule_path)) {
+            return Storage::disk($disk)->response($application->schedule_path, 'Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+            ]);
         }
 
         $path = storage_path('app/public/' . $application->schedule_path);

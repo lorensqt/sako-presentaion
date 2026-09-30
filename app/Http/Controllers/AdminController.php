@@ -412,10 +412,11 @@ class AdminController extends Controller
         ];
 
         if ($request->hasFile('signature')) {
-            if ($user->signature && Storage::disk('public')->exists($user->signature)) {
-                Storage::disk('public')->delete($user->signature);
+            $disk = User::signatureDisk();
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
             }
-            $updateData['signature'] = $request->file('signature')->store('signatures', 'public');
+            $updateData['signature'] = $request->file('signature')->store('signatures', $disk);
         }
 
         if (!empty($validated['password'])) {
@@ -459,10 +460,11 @@ class AdminController extends Controller
         ];
 
         if ($request->hasFile('signature')) {
-            if ($user->signature && Storage::disk('public')->exists($user->signature)) {
-                Storage::disk('public')->delete($user->signature);
+            $disk = User::signatureDisk();
+            if ($user->signature && Storage::disk($disk)->exists($user->signature)) {
+                Storage::disk($disk)->delete($user->signature);
             }
-            $updateData['signature'] = $request->file('signature')->store('signatures', 'public');
+            $updateData['signature'] = $request->file('signature')->store('signatures', $disk);
         }
 
         if (!empty($validated['password'])) {
@@ -474,6 +476,29 @@ class AdminController extends Controller
         AuditLogger::log('profile_updated', "Admin {$user->name} updated their profile details and official e-signature.", 'info', $user);
 
         return back()->with('success', 'Profile and official e-signature updated successfully!');
+    }
+
+    /**
+     * Securely stream a user's signature to authenticated clients.
+     */
+    public function streamSignature(User $user)
+    {
+        if (empty($user->signature)) {
+            abort(404, 'Signature not found.');
+        }
+
+        $disk = User::signatureDisk();
+
+        if (Storage::disk($disk)->exists($user->signature)) {
+            return Storage::disk($disk)->response($user->signature);
+        }
+
+        $localPath = storage_path('app/public/' . $user->signature);
+        if (file_exists($localPath)) {
+            return response()->file($localPath);
+        }
+
+        abort(404, 'Signature file could not be located.');
     }
 
     /**

@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Secure Signature Stream
+    Route::get('/signatures/{user}', [AdminController::class, 'streamSignature'])->name('signature.show');
+
     // Member Self-Service Portal (Isolated from internal staff admins)
     Route::middleware('member.portal')->group(function () {
         Route::get('/dashboard', function() {
