@@ -173,166 +173,164 @@
             </div>
 
             <!-- Sidebar Navigation -->
-            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
+            <nav class="flex-1 px-4 py-4 space-y-4 overflow-y-auto overflow-x-hidden sidebar-nav">
                 <!-- Group: Core -->
-                <div class="sidebar-text px-2.5 pt-1 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>Core Panel</span>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pb-1 select-none">
+                        Core Panel
+                    </p>
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-chart-pie w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Overview Panel</span>
+                        <span class="sidebar-tooltip hidden lg:block">Overview Panel</span>
+                    </a>
                 </div>
-                <a href="{{ route('admin.dashboard') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                    <!-- Dashboard Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <span class="sidebar-text">Overview Panel</span>
-                    <span class="sidebar-tooltip hidden lg:block">Overview Panel</span>
-                </a>
 
                 <!-- Group: Registry -->
-                <div class="sidebar-text px-2.5 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>Registry</span>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
+                        Registry
+                    </p>
+                    <a href="{{ route('admin.members') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.members') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-users w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.members') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Members Directory</span>
+                        <span class="sidebar-tooltip hidden lg:block">Members Directory</span>
+                    </a>
                 </div>
-                <a href="{{ route('admin.members') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.members') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                    <!-- Members Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    <span class="sidebar-text">Members Directory</span>
-                    <span class="sidebar-tooltip hidden lg:block">Members Directory</span>
-                </a>
 
                 <!-- Group: Credit & Loans (Collapsible) -->
-                <div class="sidebar-text px-2.5 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>Credit & Loans</span>
-                </div>
-                
-                <!-- Trigger Button -->
-                <button type="button" class="relative flex items-center justify-between w-full px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/50 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}" data-target="loans-submenu">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                        <span class="sidebar-text">Credit & Loans</span>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
+                        Credit &amp; Loans
+                    </p>
+                    
+                    <!-- Trigger Button -->
+                    <button type="button" class="group relative flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/50 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}" data-target="loans-submenu">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-hand-holding-dollar w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text">Credit &amp; Loans</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 sidebar-text">
+                            @if($pendingLoanCount > 0)
+                                <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse {{ $isLoansActive ? 'hidden' : '' }}">
+                                    {{ $pendingLoanCount }}
+                                </span>
+                            @endif
+                            <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 chevron-icon {{ $isLoansActive ? 'rotate-180' : '' }}"></i>
+                        </div>
+                    </button>
+
+                    <!-- Submenu items -->
+                    <div id="loans-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isLoansActive ? 'block' : 'hidden' }} submenu-container">
+                        <a href="{{ route('admin.loans') }}"
+                            class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-list-check w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text flex-1 truncate">Loans Directory</span>
+                            <span class="sidebar-tooltip hidden lg:block">Loans Directory</span>
+                        </a>
+
+                        <a href="{{ route('admin.loans.approvals') }}"
+                            class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans.approvals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text flex-1 truncate">Loan Approvals</span>
+                            @if($pendingLoanCount > 0)
+                                <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
+                                    {{ $pendingLoanCount }}
+                                </span>
+                            @endif
+                            <span class="sidebar-tooltip hidden lg:block">Loan Approvals</span>
+                        </a>
+
+                        <a href="{{ route('admin.loans.management') }}"
+                            class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.loans.management') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text flex-1 truncate">Loans Management</span>
+                            <span class="sidebar-tooltip hidden lg:block">Loans Management</span>
+                        </a>
                     </div>
-                    <!-- Bubbled up Badge + Chevron container -->
-                    <div class="flex items-center gap-1.5 sidebar-text">
-                        @if($pendingLoanCount > 0)
-                            <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse {{ $isLoansActive ? 'hidden' : '' }}">
-                                {{ $pendingLoanCount }}
-                            </span>
-                        @endif
-                        <svg class="w-4 h-4 transition-transform duration-200 chevron-icon {{ $isLoansActive ? 'rotate-180' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </button>
-
-                <!-- Submenu items -->
-                <div id="loans-submenu" class="pl-4 ml-5 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isLoansActive ? 'block' : 'hidden' }} submenu-container">
-                    <a href="{{ route('admin.loans') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <!-- List/Directory Icon -->
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                        <span class="sidebar-text">Loans Directory</span>
-                        <span class="sidebar-tooltip hidden lg:block">Loans Directory</span>
-                    </a>
-
-                    <a href="{{ route('admin.loans.approvals') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <!-- Approvals Icon -->
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        <span class="sidebar-text">Loan Approvals</span>
-                        @if($pendingLoanCount > 0)
-                            <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
-                                {{ $pendingLoanCount }}
-                            </span>
-                        @endif
-                        <span class="sidebar-tooltip hidden lg:block">Loan Approvals</span>
-                    </a>
-
-                    <a href="{{ route('admin.loans.management') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <!-- Management Gear Icon -->
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31(2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        <span class="sidebar-text">Loans Management</span>
-                        <span class="sidebar-tooltip hidden lg:block">Loans Management</span>
-                    </a>
                 </div>
 
                 <!-- Group: Treasury (Collapsible) -->
-                <div class="sidebar-text px-2.5 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>Treasury</span>
-                </div>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
+                        Treasury
+                    </p>
 
-                <!-- Trigger Button -->
-                <button type="button" class="relative flex items-center justify-between w-full px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/50 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}" data-target="treasury-submenu">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span class="sidebar-text">Treasury</span>
+                    <!-- Trigger Button -->
+                    <button type="button" class="group relative flex items-center justify-between w-full px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/50 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}" data-target="treasury-submenu">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-vault w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text">Treasury</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 sidebar-text">
+                            @if($pendingTreasuryCount > 0)
+                                <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse {{ $isTreasuryActive ? 'hidden' : '' }}">
+                                    {{ $pendingTreasuryCount }}
+                                </span>
+                            @endif
+                            <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 chevron-icon {{ $isTreasuryActive ? 'rotate-180' : '' }}"></i>
+                        </div>
+                    </button>
+
+                    <!-- Submenu items -->
+                    <div id="treasury-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isTreasuryActive ? 'block' : 'hidden' }} submenu-container">
+                        <a href="{{ route('admin.withdrawals') }}"
+                            class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text flex-1 truncate">Withdrawals</span>
+                            @if($pendingWithdrawalCount > 0)
+                                <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
+                                    {{ $pendingWithdrawalCount }}
+                                </span>
+                            @endif
+                            <span class="sidebar-tooltip hidden lg:block">Withdrawals</span>
+                        </a>
+
+                        <a href="{{ route('admin.deductions') }}"
+                            class="group relative flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('admin.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="sidebar-text flex-1 truncate">Deduction Approvals</span>
+                            @if($pendingDeductionCount > 0)
+                                <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
+                                    {{ $pendingDeductionCount }}
+                                </span>
+                            @endif
+                            <span class="sidebar-tooltip hidden lg:block">Deduction Approvals</span>
+                        </a>
                     </div>
-                    <!-- Bubbled up Badge + Chevron container -->
-                    <div class="flex items-center gap-1.5 sidebar-text">
-                        @if($pendingTreasuryCount > 0)
-                            <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse {{ $isTreasuryActive ? 'hidden' : '' }}">
-                                {{ $pendingTreasuryCount }}
-                            </span>
-                        @endif
-                        <svg class="w-4 h-4 transition-transform duration-200 chevron-icon {{ $isTreasuryActive ? 'rotate-180' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </button>
-
-                <!-- Submenu items -->
-                <div id="treasury-submenu" class="pl-4 ml-5 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 transition-all duration-300 {{ $isTreasuryActive ? 'block' : 'hidden' }} submenu-container">
-                    <a href="{{ route('admin.withdrawals') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <!-- Withdrawals Icon -->
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        <span class="sidebar-text">Withdrawal Approvals</span>
-                        @if($pendingWithdrawalCount > 0)
-                            <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
-                                {{ $pendingWithdrawalCount }}
-                            </span>
-                        @endif
-                        <span class="sidebar-tooltip hidden lg:block">Withdrawal Approvals</span>
-                    </a>
-
-                    <a href="{{ route('admin.deductions') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <!-- Deductions Icon -->
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span class="sidebar-text">Deduction Approvals</span>
-                        @if($pendingDeductionCount > 0)
-                            <span class="sidebar-text ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white animate-pulse">
-                                {{ $pendingDeductionCount }}
-                            </span>
-                        @endif
-                        <span class="sidebar-tooltip hidden lg:block">Deduction Approvals</span>
-                    </a>
                 </div>
 
                 <!-- Group: Governance -->
-                <div class="sidebar-text px-2.5 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>Governance</span>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
+                        Governance &amp; Elections
+                    </p>
+                    <a href="{{ route('admin.elections.index') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Elections</span>
+                        <span class="sidebar-tooltip hidden lg:block">Elections</span>
+                    </a>
                 </div>
-                <a href="{{ route('admin.elections.index') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                    <!-- Elections Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                    <span class="sidebar-text">Elections</span>
-                    <span class="sidebar-tooltip hidden lg:block">Elections</span>
-                </a>
 
                 <!-- Group: Security -->
-                <div class="sidebar-text px-2.5 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                    <span>System Security</span>
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
+                        System Security
+                    </p>
+                    <a href="{{ route('admin.audit-logs') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.audit-logs') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-shield-halved w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.audit-logs') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Audit &amp; Security Logs</span>
+                        <span class="sidebar-tooltip hidden lg:block">Audit &amp; Security Logs</span>
+                    </a>
                 </div>
-                <a href="{{ route('admin.audit-logs') }}" class="relative flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.audit-logs') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                    <!-- Shield Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    <span class="sidebar-text">Audit & Security Logs</span>
-                    <span class="sidebar-tooltip hidden lg:block">Audit & Security Logs</span>
-                </a>
             </nav>
 
             <!-- Sidebar Footer -->
-            <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+            {{-- <div class="p-4 border-t border-slate-200 dark:border-slate-700">
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
                 </form>
@@ -342,7 +340,7 @@
                     <span class="sidebar-text">Sign Out</span>
                     <span class="sidebar-tooltip hidden lg:block">Sign Out</span>
                 </a>
-            </div>
+            </div> --}}
         </aside>
 
         <!-- Mobile Sidebar / Off-canvas Menu Overlay -->
@@ -361,125 +359,132 @@
                     </button>
                 </div>
 
-                <div class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <div class="flex-1 px-4 py-4 space-y-4 overflow-y-auto sidebar-nav">
                     <!-- Group: Core -->
-                    <div class="px-3 pt-1 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>Core Panel</span>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pb-1 select-none">
+                            Core Panel
+                        </p>
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-chart-pie w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span>Overview Panel</span>
+                        </a>
                     </div>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2"/></svg>
-                        <span>Overview Panel</span>
-                    </a>
 
                     <!-- Group: Registry -->
-                    <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>Registry</span>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
+                            Registry
+                        </p>
+                        <a href="{{ route('admin.members') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.members') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-users w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.members') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span>Members Directory</span>
+                        </a>
                     </div>
-                    <a href="{{ route('admin.members') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.members') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292"/></svg>
-                        <span>Members Directory</span>
-                    </a>
 
                     <!-- Group: Credit & Loans (Collapsible) -->
-                    <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>Credit & Loans</span>
-                    </div>
-                    
-                    <button type="button" class="flex items-center justify-between w-full px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/60 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}" data-target="mobile-loans-submenu">
-                        <div class="flex items-center gap-3">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                            <span>Credit & Loans</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            @if($pendingLoanCount > 0)
-                                <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white {{ $isLoansActive ? 'hidden' : '' }}">
-                                    {{ $pendingLoanCount }}
-                                </span>
-                            @endif
-                            <svg class="w-4 h-4 transition-transform duration-200 chevron-icon {{ $isLoansActive ? 'rotate-180' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
-                    </button>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
+                            Credit &amp; Loans
+                        </p>
+                        
+                        <button type="button" class="group flex items-center justify-between w-full px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/60 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}" data-target="mobile-loans-submenu">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-hand-holding-dollar w-5 text-center flex-shrink-0 text-sm {{ $isLoansActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                                <span>Credit &amp; Loans</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                @if($pendingLoanCount > 0)
+                                    <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white {{ $isLoansActive ? 'hidden' : '' }}">
+                                        {{ $pendingLoanCount }}
+                                    </span>
+                                @endif
+                                <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 chevron-icon {{ $isLoansActive ? 'rotate-180' : '' }}"></i>
+                            </div>
+                        </button>
 
-                    <div id="mobile-loans-submenu" class="pl-4 ml-5 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isLoansActive ? 'block' : 'hidden' }}">
-                        <a href="{{ route('admin.loans') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                            <span>Loans Directory</span>
-                        </a>
-                        <a href="{{ route('admin.loans.approvals') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29(9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                            <span>Loan Approvals</span>
-                            @if($pendingLoanCount > 0)
-                                <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
-                                    {{ $pendingLoanCount }}
-                                </span>
-                            @endif
-                        </a>
-                        <a href="{{ route('admin.loans.management') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31(2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                            <span>Loans Management</span>
-                        </a>
+                        <div id="mobile-loans-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isLoansActive ? 'block' : 'hidden' }}">
+                            <a href="{{ route('admin.loans') }}"
+                                class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                                <i class="fa-solid fa-list-check w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans') ? 'text-white' : 'text-slate-400' }}"></i>
+                                <span>Loans Directory</span>
+                            </a>
+                            <a href="{{ route('admin.loans.approvals') }}"
+                                class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.approvals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                                <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans.approvals') ? 'text-white' : 'text-slate-400' }}"></i>
+                                <span>Loan Approvals</span>
+                                @if($pendingLoanCount > 0)
+                                    <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
+                                        {{ $pendingLoanCount }}
+                                    </span>
+                                @endif
+                            </a>
+                            <a href="{{ route('admin.loans.management') }}"
+                                class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.loans.management') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                                <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.loans.management') ? 'text-white' : 'text-slate-400' }}"></i>
+                                <span>Loans Management</span>
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Group: Treasury (Collapsible) -->
-                    <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>Treasury</span>
-                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
+                            Treasury
+                        </p>
 
-                    <button type="button" class="flex items-center justify-between w-full px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/60 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}" data-target="mobile-treasury-submenu">
-                        <div class="flex items-center gap-3">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>Treasury</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            @if($pendingTreasuryCount > 0)
-                                <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white {{ $isTreasuryActive ? 'hidden' : '' }}">
-                                    {{ $pendingTreasuryCount }}
-                                </span>
-                            @endif
-                            <svg class="w-4 h-4 transition-transform duration-200 chevron-icon {{ $isTreasuryActive ? 'rotate-180' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
-                    </button>
+                        <button type="button" class="group flex items-center justify-between w-full px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer menu-collapse-trigger {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-slate-200/60 dark:bg-slate-700/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}" data-target="mobile-treasury-submenu">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-vault w-5 text-center flex-shrink-0 text-sm {{ $isTreasuryActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                                <span>Treasury</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                @if($pendingTreasuryCount > 0)
+                                    <span class="parent-badge flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white {{ $isTreasuryActive ? 'hidden' : '' }}">
+                                        {{ $pendingTreasuryCount }}
+                                    </span>
+                                @endif
+                                <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 chevron-icon {{ $isTreasuryActive ? 'rotate-180' : '' }}"></i>
+                            </div>
+                        </button>
 
-                    <div id="mobile-treasury-submenu" class="pl-4 ml-5 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isTreasuryActive ? 'block' : 'hidden' }}">
-                        <a href="{{ route('admin.withdrawals') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            <span>Withdrawal Approvals</span>
-                            @if($pendingWithdrawalCount > 0)
-                                <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
-                                    {{ $pendingWithdrawalCount }}
-                                </span>
-                            @endif
-                        </a>
-                        <a href="{{ route('admin.deductions') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            <span>Deduction Approvals</span>
-                            @if($pendingDeductionCount > 0)
-                                <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
-                                    {{ $pendingDeductionCount }}
-                                </span>
-                            @endif
-                        </a>
+                        <div id="mobile-treasury-submenu" class="pl-4 ml-4 border-l border-slate-200 dark:border-slate-700/80 space-y-1 mt-1 {{ $isTreasuryActive ? 'block' : 'hidden' }}">
+                            <a href="{{ route('admin.withdrawals') }}"
+                                class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                                <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.withdrawals') ? 'text-white' : 'text-slate-400' }}"></i>
+                                <span>Withdrawal Approvals</span>
+                                @if($pendingWithdrawalCount > 0)
+                                    <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
+                                        {{ $pendingWithdrawalCount }}
+                                    </span>
+                                @endif
+                            </a>
+                            <a href="{{ route('admin.deductions') }}"
+                                class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                                <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.deductions') ? 'text-white' : 'text-slate-400' }}"></i>
+                                <span>Deduction Approvals</span>
+                                @if($pendingDeductionCount > 0)
+                                    <span class="ml-auto flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white">
+                                        {{ $pendingDeductionCount }}
+                                    </span>
+                                @endif
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Group: Governance -->
-                    <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></span>
-                        <span>Governance</span>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
+                            Governance &amp; Elections
+                        </p>
+                        <a href="{{ route('admin.elections.index') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span>Elections</span>
+                        </a>
                     </div>
-                    <a href="{{ route('admin.elections.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                        <span>Elections</span>
-                    </a>
 
                     <!-- Group: Security -->
                     <div class="px-3 pt-4 pb-1 text-[9px] font-extrabold tracking-widest text-slate-400/80 dark:text-slate-500/80 uppercase flex items-center gap-1.5">
@@ -536,38 +541,16 @@
                 </div>
 
                 <!-- Right Toolbar -->
-                <div class="flex items-center gap-4">
-                    <!-- Theme Switcher Button (80% Size) -->
-                    <button id="theme-toggle" type="button"
-                        class="relative inline-flex h-6.5 w-11 flex-shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-sky-400 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-black dark:focus:ring-offset-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]"
-                        role="switch" aria-checked="false" title="Toggle Theme">
-                        <span class="sr-only">Toggle Theme</span>
-                        <!-- Toggle Button handle -->
-                        <span
-                            class="pointer-events-none relative inline-flex h-5 w-5 transform items-center justify-center transition duration-300 ease-in-out translate-x-0 dark:translate-x-4.5">
-                            <!-- Sun Icon (for light mode) -->
-                            <img src="https://img.icons8.com/?size=100&id=8EUmYhfLPTCF&format=png&color=000000"
-                                alt="Sun"
-                                class="absolute h-4.5 w-4.5 object-contain transition-all duration-300 opacity-100 scale-100 dark:opacity-0 dark:scale-50">
-                            <!-- Moon Icon (for dark mode) -->
-                            <img src="https://img.icons8.com/?size=100&id=13477&format=png&color=000000"
-                                alt="Moon"
-                                class="absolute h-4.5 w-4.5 object-contain transition-all duration-300 opacity-0 scale-50 dark:opacity-100 dark:scale-100">
-                        </span>
-                    </button>
-
-                    <!-- Divider -->
-                    <span class="w-px h-6 bg-slate-100 dark:bg-slate-700"></span>
-
+                <div class="flex items-center gap-2 flex-shrink-0">
                     <!-- Profile Dropdown Wrapper -->
                     <div class="relative" id="profile-dropdown-wrapper">
                         <!-- Profile Dropdown Trigger -->
                         <button id="profile-dropdown-trigger" type="button"
-                            class="group flex items-center gap-2.5 rounded-lg p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            class="group flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
 
                             <!-- Avatar -->
                             <div
-                                class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-600 font-bold text-sm text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-bold text-sm text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
                                 {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                             </div>
 
@@ -577,34 +560,41 @@
                                     class="text-xs font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-snug">
                                     {{ Auth::user()->name ?? 'Admin Executive' }}
                                 </p>
-                                <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                                     {{ Auth::user()->role === 'super_admin' ? 'Super Administrator' : 'Administrator' }}
                                 </p>
                             </div>
 
                             <!-- Chevron Icon -->
-                            <i class="fa-solid fa-chevron-down text-[11px] text-slate-400 transition-transform duration-200 group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200 group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                         </button>
 
                         <!-- Dropdown Menu -->
                         <div id="profile-dropdown-menu"
-                            class="hidden absolute right-0 z-50 mt-2 w-56 transform origin-top-right rounded-xl border border-slate-200/80 bg-white py-1.5 shadow-xl transition-all duration-150 dark:border-slate-700/80 dark:bg-slate-800 dark:shadow-2xl">
+                            class="hidden absolute right-0 z-50 mt-2 w-56 sm:w-60 transform origin-top-right rounded-2xl border border-slate-200/80 bg-white p-1.5 shadow-xl transition-all duration-150 dark:border-slate-700/80 dark:bg-slate-800 dark:shadow-2xl">
 
-                            <!-- User Info Header (Mobile View) -->
-                            <div class="border-b border-slate-100 px-4 py-2.5 dark:border-slate-700/60 md:hidden">
-                                <p class="text-xs font-bold text-slate-900 dark:text-slate-100">
+                            <!-- User Info Header -->
+                            <div class="border-b border-slate-100 dark:border-slate-700/60 px-3.5 py-2.5">
+                                <p class="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                                     {{ Auth::user()->name ?? 'Admin Executive' }}
                                 </p>
-                                <p class="mt-0.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                                    {{ Auth::user()->role === 'super_admin' ? 'Super Administrator' : 'Administrator' }}
-                                </p>
+                                <div class="flex items-center justify-between gap-2 mt-0.5">
+                                    <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                                        {{ Auth::user()->role === 'super_admin' ? 'Super Administrator' : 'Administrator' }}
+                                    </p>
+                                    @if(Auth::check() && Auth::user()->company_id)
+                                        <span class="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-200/50 dark:border-emerald-800/40">
+                                            {{ Auth::user()->company_id }}
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
 
-                            <!-- Navigation Links -->
+                            <!-- Navigation Links & Settings -->
                             <div class="py-1">
                                 <!-- Settings -->
                                 <a href="{{ route('member.settings') }}"
-                                    class="group flex items-center gap-3 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                                    class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
                                     <i class="fa-solid fa-gear fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                                     <span>Settings</span>
                                 </a>
@@ -612,11 +602,36 @@
                                 @if(Auth::check() && in_array(Auth::user()->role, ['admin', 'super_admin']))
                                     <!-- Switch to Member Portal -->
                                     <a href="{{ route('member.savings') }}"
-                                        class="group flex items-center gap-3 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
-                                        <i class="fa-solid fa-users fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
+                                        class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                                        <i class="fa-solid fa-user-tag fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                                         <span>Member Portal</span>
                                     </a>
                                 @endif
+
+                                <!-- Theme Switcher Row -->
+                                <div id="theme-toggle-row"
+                                    class="group flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer select-none">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-700/70 flex items-center justify-center text-slate-500 dark:text-amber-400">
+                                            <!-- Moon icon for light mode, Sun for dark mode -->
+                                            <svg class="w-3.5 h-3.5 block dark:hidden text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                            </svg>
+                                            <svg class="w-3.5 h-3.5 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </div>
+                                        <span>Dark Mode</span>
+                                    </div>
+
+                                    <!-- Switch Toggle Pill -->
+                                    <button id="theme-toggle" type="button"
+                                        class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-slate-300 dark:bg-emerald-600 transition-colors duration-200 ease-in-out focus:outline-none"
+                                        role="switch" aria-checked="false" title="Toggle Theme">
+                                        <span class="sr-only">Toggle Theme</span>
+                                        <span class="pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out translate-x-0.5 dark:translate-x-4.5"></span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="my-1 border-t border-slate-100 dark:border-slate-700/60"></div>
@@ -625,7 +640,7 @@
                             <form action="{{ route('logout') }}" method="POST" class="m-0">
                                 @csrf
                                 <button type="submit"
-                                    class="group flex w-full items-center gap-3 px-4 py-2 text-left text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50/80 focus:outline-none dark:text-rose-400 dark:hover:bg-rose-950/30">
+                                    class="group flex w-full items-center gap-3 px-3.5 py-2 rounded-xl text-left text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50/80 focus:outline-none dark:text-rose-400 dark:hover:bg-rose-950/30">
                                     <i class="fa-solid fa-right-from-bracket fa-fw text-sm text-rose-500 transition-colors group-hover:text-rose-600 dark:text-rose-400 dark:group-hover:text-rose-300"></i>
                                     <span>Sign Out</span>
                                 </button>
@@ -691,17 +706,32 @@
 
             // Theme Toggle Logic
             const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleRow = document.getElementById('theme-toggle-row');
+
+            function toggleTheme() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (themeToggleBtn) themeToggleBtn.setAttribute('aria-checked', 'false');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (themeToggleBtn) themeToggleBtn.setAttribute('aria-checked', 'true');
+                }
+            }
 
             if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function() {
-                    // Toggle dark class and save preference
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    }
+                themeToggleBtn.setAttribute('aria-checked', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+                themeToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleTheme();
+                });
+            }
+
+            if (themeToggleRow) {
+                themeToggleRow.addEventListener('click', function(e) {
+                    if (e.target.closest('#theme-toggle')) return;
+                    toggleTheme();
                 });
             }
 
@@ -714,6 +744,15 @@
                 dropdownTrigger.addEventListener("click", function(e) {
                     e.stopPropagation();
                     dropdownMenu.classList.toggle("hidden");
+                });
+
+                // Do not close dropdown on theme toggle click; close on links or submit
+                dropdownMenu.addEventListener("click", function(e) {
+                    if (e.target.closest('a') || e.target.closest('button[type="submit"]')) {
+                        dropdownMenu.classList.add("hidden");
+                    } else {
+                        e.stopPropagation();
+                    }
                 });
 
                 document.addEventListener("click", function(e) {

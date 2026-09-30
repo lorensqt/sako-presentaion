@@ -166,7 +166,8 @@ class AdminController extends Controller
                 });
             })
             ->latest()
-            ->paginate(15);
+            ->paginate(100)
+            ->withQueryString();
 
         // Fetch all dynamic roles/groups from the DB
         $roles = Role::all();
