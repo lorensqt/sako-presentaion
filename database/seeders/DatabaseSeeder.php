@@ -84,6 +84,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             LoanProductSeeder::class,
             AuditLogSeeder::class,
+            CoMakerRequestSeeder::class,
         ]);
     }
 }

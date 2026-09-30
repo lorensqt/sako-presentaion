@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('title', 'Co-Maker Endorsements - ML Sako')
+@section('title', 'Co-Maker Requests - ML Sako')
 
 @section('navbar_title')
 <span class="sm:hidden">Co-Maker Requests</span><span class="hidden sm:inline">Co-Maker Endorsements</span>
@@ -8,123 +8,153 @@
 @section('navbar_subtitle', 'Review, digitally authorize, and manage loan co-signing requests from fellow cooperative members.')
 
 @section('content')
-<div class="space-y-6 animate-fade-in">
+<div class="space-y-5 sm:space-y-6 animate-fade-in">
 
     <!-- Top Action Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
         <div class="flex flex-wrap items-center gap-2">
             @if($pendingRequests->count() > 0)
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
-                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200/60 dark:border-amber-800/40">
+                    <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
                     {{ $pendingRequests->count() }} Action{{ $pendingRequests->count() > 1 ? 's' : '' }} Required
                 </span>
             @else
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
-                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold border border-emerald-200/60 dark:border-emerald-800/40">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                     Inbox Up to Date
                 </span>
             @endif
-            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-200/80 dark:border-slate-700">
+                ID: <strong class="text-slate-700 dark:text-slate-200">{{ Auth::user()->company_id ?: 'N/A' }}</strong>
             </span>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
             <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Total Historical Endorsements: <strong class="text-slate-800 dark:text-slate-200">{{ $historicalRequests->count() }}</strong>
+                Total Sign-offs: <strong class="text-slate-800 dark:text-slate-200 font-mono">{{ $historicalRequests->count() }}</strong>
             </span>
         </div>
     </div>
 
-    <!-- Metrics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm space-y-1.5 flex items-center justify-between">
-            <div class="space-y-1">
-                <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block">Pending Signatures</span>
-                <p class="text-3xl font-black text-slate-800 dark:text-white">{{ $pendingRequests->count() }}</p>
-                <span class="text-2xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Awaiting My Verification</span>
+    <!-- Metrics Summary Micro-Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <!-- Metric 1: Pending Signatures -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xs flex items-center justify-between">
+            <div class="space-y-0.5">
+                <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Pending Signatures</span>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono">
+                    {{ $pendingRequests->count() }}
+                </p>
+                <span class="text-[10px] {{ $pendingRequests->count() > 0 ? 'text-amber-600 dark:text-amber-400 font-semibold' : 'text-slate-400 dark:text-slate-500' }} block">
+                    {{ $pendingRequests->count() > 0 ? 'Awaiting your digital sign-off' : 'All requests completed' }}
+                </span>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-pen-nib text-sm"></i>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm space-y-1.5 flex items-center justify-between">
-            <div class="space-y-1">
-                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">History Endorsed</span>
-                <p class="text-3xl font-black text-slate-800 dark:text-white">{{ $historicalRequests->count() }}</p>
-                <span class="text-2xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Total Actions Taken</span>
+        <!-- Metric 2: History Endorsed -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xs flex items-center justify-between">
+            <div class="space-y-0.5">
+                <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">History Endorsed</span>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono">
+                    {{ $historicalRequests->count() }}
+                </p>
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 block">Total authorizations actioned</span>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200/60 dark:border-slate-600 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-clipboard-check text-sm"></i>
             </div>
         </div>
     </div>
 
-    <!-- Main Navigation/List Board -->
-    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
+    <!-- Main Navigation / List Container -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs overflow-hidden flex flex-col">
         
-        <!-- Tab Headers -->
-        <div class="flex border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 p-2 gap-2">
-            <button id="tab-inbox" class="tab-btn active px-3 sm:px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-200/40 dark:border-slate-700">
-                📥 <span class="sm:hidden">Pending</span><span class="hidden sm:inline">Pending Co-Signings</span> ({{ $pendingRequests->count() }})
+        <!-- Segmented Tab Navigation -->
+        <div class="flex items-center border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/60 dark:bg-slate-900/40 p-2 gap-1.5 sm:gap-2">
+            <button id="tab-inbox" type="button" class="tab-btn active inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-150 text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-xs border border-slate-200/80 dark:border-slate-700">
+                <i class="fa-solid fa-inbox text-xs"></i>
+                <span>Pending Requests</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-extrabold {{ $pendingRequests->count() > 0 ? 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-500' }}">
+                    {{ $pendingRequests->count() }}
+                </span>
             </button>
-            <button id="tab-history" class="tab-btn px-3 sm:px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-200">
-                🌐 <span class="sm:hidden">History</span><span class="hidden sm:inline">Historical Sign-offs</span> ({{ $historicalRequests->count() }})
+            <button id="tab-history" type="button" class="tab-btn inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all duration-150">
+                <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                <span>Endorsement History</span>
+                <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-700 text-slate-500">
+                    {{ $historicalRequests->count() }}
+                </span>
             </button>
         </div>
 
         <!-- TAB 1: PENDING INBOX -->
-        <div id="content-inbox" class="tab-panel">
-            <!-- Desktop Table (Visible on larger screens) -->
+        <div id="content-inbox" class="tab-panel p-4 sm:p-5">
+            <!-- Desktop Table (Visible on md+ screens) -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                            <th class="px-6 py-4.5">Borrower Profile</th>
-                            <th class="px-6 py-4.5">Loan Product</th>
-                            <th class="px-6 py-4.5">Requested Amount</th>
-                            <th class="px-6 py-4.5">Requested Date</th>
-                            <th class="px-6 py-4.5 text-right">Actions</th>
+                        <tr class="text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-900/40 border-b border-slate-200/70 dark:border-slate-700 uppercase tracking-wider text-[10px] font-bold">
+                            <th class="py-2.5 px-3.5 rounded-l-lg">Borrower Profile</th>
+                            <th class="py-2.5 px-3.5">Loan Facility</th>
+                            <th class="py-2.5 px-3.5">Requested Amount</th>
+                            <th class="py-2.5 px-3.5">Date Requested</th>
+                            <th class="py-2.5 px-3.5 text-right rounded-r-lg">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-700 text-slate-700 dark:text-slate-300 font-medium">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-slate-700 dark:text-slate-300 font-medium">
                         @forelse($pendingRequests as $loan)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                                <td class="px-6 py-4 flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs border border-slate-200/40 dark:border-slate-600/40">
-                                        {{ strtoupper(substr($loan->borrower->name, 0, 1)) }}
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-slate-950 dark:text-white">{{ $loan->borrower->name }}</h4>
-                                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-mono">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                            <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors">
+                                <!-- Borrower Profile -->
+                                <td class="py-3 px-3.5">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                            {{ strtoupper(substr($loan->borrower->name, 0, 2)) }}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h4 class="font-bold text-slate-900 dark:text-white text-xs truncate">{{ $loan->borrower->name }}</h4>
+                                            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-mono">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <span class="font-bold text-slate-950 dark:text-white block">
+
+                                <!-- Loan Facility -->
+                                <td class="py-3 px-3.5">
+                                    <span class="font-bold text-slate-900 dark:text-white block text-xs">
                                         {{ config("loans.{$loan->loan_category}.{$loan->loan_type}.name", ucwords(str_replace('_', ' ', $loan->loan_type))) }}
                                     </span>
-                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">{{ $loan->loan_category }} Loan</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold">
+                                        {{ $loan->loan_category }} Loan • {{ $loan->form_data['term_months'] ?? 'N/A' }} Mos
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 font-black font-mono text-slate-900 dark:text-white">
+
+                                <!-- Requested Amount -->
+                                <td class="py-3 px-3.5 font-mono font-bold text-slate-900 dark:text-white text-xs">
                                     ₱{{ number_format($loan->requested_amount, 2) }}
                                 </td>
-                                <td class="px-6 py-4 text-slate-400 dark:text-slate-500 font-bold">
+
+                                <!-- Date Requested -->
+                                <td class="py-3 px-3.5 text-slate-500 dark:text-slate-400 text-xs">
                                     {{ $loan->created_at->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="btn-evaluate-comaker bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-[10px] px-3.5 py-2 rounded-xl transition-all shadow-sm shadow-emerald-600/10 cursor-pointer" 
+
+                                <!-- Action Button -->
+                                <td class="py-3 px-3.5 text-right">
+                                    <button type="button" class="btn-evaluate-comaker inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs shadow-emerald-600/10 transition-all cursor-pointer" 
                                             data-loan="{{ json_encode($loan) }}"
                                             data-borrower-name="{{ $loan->borrower->name }}"
                                             data-borrower-id="{{ $loan->borrower->company_id ?: 'N/A' }}"
                                             data-history="{{ json_encode($loan->approvals->map(function($appr) { return ['stage' => ucwords(str_replace('_', ' ', $appr->stage_role_slug)), 'actor' => $appr->actor->name, 'decision' => $appr->decision, 'remarks' => $appr->remarks, 'date' => $appr->created_at->format('M d, Y h:i A')]; })) }}">
-                                        ✍️ Review & Sign
+                                        <i class="fa-solid fa-signature text-xs"></i>
+                                        <span>Review &amp; Sign</span>
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-400 dark:text-slate-500 font-semibold italic">
+                                <td colspan="5" class="py-10 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
                                     No pending co-maker endorsement requests found. You are all caught up!
                                 </td>
                             </tr>
@@ -133,54 +163,58 @@
                 </table>
             </div>
 
-            <!-- Mobile Card Stack (Visible on mobile viewports) -->
-            <div class="block md:hidden divide-y divide-slate-100 dark:divide-slate-700">
+            <!-- Mobile Card Stack (Visible on <md screens) -->
+            <div class="block md:hidden space-y-3">
                 @forelse($pendingRequests as $loan)
-                    <div class="p-5 space-y-4">
-                        <!-- Borrower Profile & Request Date -->
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs border border-slate-200/40 dark:border-slate-600/40 flex-shrink-0">
-                                    {{ strtoupper(substr($loan->borrower->name, 0, 1)) }}
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 space-y-3 shadow-xs">
+                        <!-- Borrower Profile Header -->
+                        <div class="flex items-start justify-between gap-2.5">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                    {{ strtoupper(substr($loan->borrower->name, 0, 2)) }}
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-950 dark:text-white text-sm leading-none">{{ $loan->borrower->name }}</h4>
-                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-mono mt-1 leading-none">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs truncate leading-tight">{{ $loan->borrower->name }}</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 font-mono mt-0.5">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
                                 </div>
                             </div>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1 block">
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold flex-shrink-0">
                                 {{ $loan->created_at->format('M d, Y') }}
                             </span>
                         </div>
 
-                        <!-- Loan Details Grid -->
-                        <div class="grid grid-cols-2 gap-4 p-3 bg-slate-50/50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
+                        <!-- Loan Details Inset -->
+                        <div class="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60">
                             <div>
-                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Loan Product</span>
-                                <span class="text-xs font-bold text-slate-900 dark:text-white mt-1 block leading-tight">
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Facility</span>
+                                <span class="text-xs font-bold text-slate-900 dark:text-white block truncate mt-0.5">
                                     {{ config("loans.{$loan->loan_category}.{$loan->loan_type}.name", ucwords(str_replace('_', ' ', $loan->loan_type))) }}
                                 </span>
-                                <span class="text-[9px] text-slate-450 dark:text-slate-500 font-semibold uppercase tracking-wider block mt-0.5">{{ $loan->loan_category }} Loan</span>
+                                <span class="text-[9px] text-slate-400 uppercase font-semibold block">{{ $loan->loan_category }}</span>
                             </div>
-                            <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
-                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Requested Amount</span>
-                                <span class="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 font-mono mt-1 block leading-none">₱{{ number_format($loan->requested_amount, 2) }}</span>
+                            <div class="border-l border-slate-200 dark:border-slate-700/80 pl-3">
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Principal</span>
+                                <span class="text-sm font-extrabold text-emerald-700 dark:text-emerald-400 font-mono block mt-0.5">
+                                    ₱{{ number_format($loan->requested_amount, 2) }}
+                                </span>
+                                <span class="text-[9px] text-slate-400 block">{{ $loan->form_data['term_months'] ?? 'N/A' }} Months</span>
                             </div>
                         </div>
 
                         <!-- Action Button -->
-                        <div class="pt-1 text-right">
-                            <button class="btn-evaluate-comaker w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-sm cursor-pointer" 
+                        <div class="pt-1">
+                            <button type="button" class="btn-evaluate-comaker w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all cursor-pointer" 
                                     data-loan="{{ json_encode($loan) }}"
                                     data-borrower-name="{{ $loan->borrower->name }}"
                                     data-borrower-id="{{ $loan->borrower->company_id ?: 'N/A' }}"
                                     data-history="{{ json_encode($loan->approvals->map(function($appr) { return ['stage' => ucwords(str_replace('_', ' ', $appr->stage_role_slug)), 'actor' => $appr->actor->name, 'decision' => $appr->decision, 'remarks' => $appr->remarks, 'date' => $appr->created_at->format('M d, Y h:i A')]; })) }}">
-                                ✍️ Review & Sign Request
+                                <i class="fa-solid fa-signature text-xs"></i>
+                                <span>Review &amp; Sign Request</span>
                             </button>
                         </div>
                     </div>
                 @empty
-                    <div class="p-8 text-center text-slate-400 dark:text-slate-500 font-semibold italic">
+                    <div class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
                         No pending co-maker endorsement requests found. You are all caught up!
                     </div>
                 @endforelse
@@ -188,61 +222,85 @@
         </div>
 
         <!-- TAB 2: HISTORICAL ARCHIVE -->
-        <div id="content-history" class="tab-panel hidden">
-            <!-- Desktop Table (Visible on larger screens) -->
+        <div id="content-history" class="tab-panel hidden p-4 sm:p-5">
+            <!-- Desktop Table (Visible on md+ screens) -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                            <th class="px-6 py-4.5">Borrower Profile</th>
-                            <th class="px-6 py-4.5">Loan Product</th>
-                            <th class="px-6 py-4.5">Requested Amount</th>
-                            <th class="px-6 py-4.5">Approval Status</th>
-                            <th class="px-6 py-4.5 text-right">Timeline</th>
+                        <tr class="text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-900/40 border-b border-slate-200/70 dark:border-slate-700 uppercase tracking-wider text-[10px] font-bold">
+                            <th class="py-2.5 px-3.5 rounded-l-lg">Borrower Profile</th>
+                            <th class="py-2.5 px-3.5">Loan Facility</th>
+                            <th class="py-2.5 px-3.5">Requested Amount</th>
+                            <th class="py-2.5 px-3.5">Approval Status</th>
+                            <th class="py-2.5 px-3.5 text-right rounded-r-lg">Audit Trail</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-700 text-slate-700 dark:text-slate-300 font-medium">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-slate-700 dark:text-slate-300 font-medium">
                         @forelse($historicalRequests as $loan)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                                <td class="px-6 py-4 flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs border border-slate-200/40 dark:border-slate-600/40">
-                                        {{ strtoupper(substr($loan->borrower->name, 0, 1)) }}
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-slate-950 dark:text-white">{{ $loan->borrower->name }}</h4>
-                                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-mono">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                            <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors">
+                                <!-- Borrower Profile -->
+                                <td class="py-3 px-3.5">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                            {{ strtoupper(substr($loan->borrower->name, 0, 2)) }}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h4 class="font-bold text-slate-900 dark:text-white text-xs truncate">{{ $loan->borrower->name }}</h4>
+                                            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-mono">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <span class="font-bold text-slate-950 dark:text-white block">
+
+                                <!-- Loan Facility -->
+                                <td class="py-3 px-3.5">
+                                    <span class="font-bold text-slate-900 dark:text-white block text-xs">
                                         {{ config("loans.{$loan->loan_category}.{$loan->loan_type}.name", ucwords(str_replace('_', ' ', $loan->loan_type))) }}
                                     </span>
-                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">{{ $loan->loan_category }} Loan</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold">
+                                        {{ $loan->loan_category }} Loan
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 font-black font-mono text-slate-900 dark:text-white">
+
+                                <!-- Requested Amount -->
+                                <td class="py-3 px-3.5 font-mono font-bold text-slate-900 dark:text-white text-xs">
                                     ₱{{ number_format($loan->requested_amount, 2) }}
                                 </td>
-                                <td class="px-6 py-4">
+
+                                <!-- Status Badge -->
+                                <td class="py-3 px-3.5">
                                     @if($loan->status === 'approved')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40 uppercase tracking-wider">Approved / Released</span>
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Released
+                                        </span>
                                     @elseif($loan->status === 'rejected')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-800/40 uppercase tracking-wider">Rejected</span>
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-[10px] font-bold border border-rose-200/60 dark:border-rose-800/40">
+                                            Rejected
+                                        </span>
                                     @elseif($loan->status === 'cancelled')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider">Cancelled</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold">
+                                            Cancelled
+                                        </span>
                                     @else
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/60 dark:border-blue-800/40 uppercase tracking-wider animate-pulse">Processing (Current: {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }})</span>
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 text-[10px] font-bold border border-sky-200/60 dark:border-sky-800/40 animate-pulse">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                            Processing ({{ ucwords(str_replace('_', ' ', $loan->current_stage)) }})
+                                        </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="btn-view-history-timeline text-2xs font-extrabold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline" 
+
+                                <!-- Timeline Trigger -->
+                                <td class="py-3 px-3.5 text-right">
+                                    <button type="button" class="btn-view-history-timeline inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer" 
                                             data-history="{{ json_encode($loan->approvals->map(function($appr) { return ['stage' => ucwords(str_replace('_', ' ', $appr->stage_role_slug)), 'actor' => $appr->actor->name, 'decision' => $appr->decision, 'remarks' => $appr->remarks, 'date' => $appr->created_at->format('M d, Y h:i A')]; })) }}">
-                                        View Signatories
+                                        <span>Signatories</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-400 dark:text-slate-500 font-semibold italic">
+                                <td colspan="5" class="py-10 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
                                     No historical endorsements recorded.
                                 </td>
                             </tr>
@@ -250,120 +308,216 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Mobile Card Stack for History (Fixes missing mobile view bug) -->
+            <div class="block md:hidden space-y-3">
+                @forelse($historicalRequests as $loan)
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 space-y-3 shadow-xs">
+                        <div class="flex items-start justify-between gap-2.5">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                    {{ strtoupper(substr($loan->borrower->name, 0, 2)) }}
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs truncate">{{ $loan->borrower->name }}</h4>
+                                    <p class="text-[10px] text-slate-400 dark:text-slate-500 font-mono mt-0.5">ID: {{ $loan->borrower->company_id ?: 'N/A' }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                @if($loan->status === 'approved')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40">
+                                        Released
+                                    </span>
+                                @elseif($loan->status === 'rejected')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-[10px] font-bold border border-rose-200/60 dark:border-rose-800/40">
+                                        Rejected
+                                    </span>
+                                @elseif($loan->status === 'cancelled')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold">
+                                        Cancelled
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 text-[10px] font-bold border border-sky-200/60 dark:border-sky-800/40">
+                                        In Review
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Loan Details Inset -->
+                        <div class="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60">
+                            <div>
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Facility</span>
+                                <span class="text-xs font-bold text-slate-900 dark:text-white block truncate mt-0.5">
+                                    {{ config("loans.{$loan->loan_category}.{$loan->loan_type}.name", ucwords(str_replace('_', ' ', $loan->loan_type))) }}
+                                </span>
+                            </div>
+                            <div class="border-l border-slate-200 dark:border-slate-700/80 pl-3">
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Principal</span>
+                                <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono block mt-0.5">
+                                    ₱{{ number_format($loan->requested_amount, 2) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Audit Action Button -->
+                        <div class="pt-1">
+                            <button type="button" class="btn-view-history-timeline w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold transition-all cursor-pointer" 
+                                    data-history="{{ json_encode($loan->approvals->map(function($appr) { return ['stage' => ucwords(str_replace('_', ' ', $appr->stage_role_slug)), 'actor' => $appr->actor->name, 'decision' => $appr->decision, 'remarks' => $appr->remarks, 'date' => $appr->created_at->format('M d, Y h:i A')]; })) }}">
+                                <span>View Signatories Trail</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <div class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
+                        No historical endorsements recorded.
+                    </div>
+                @endforelse
+            </div>
         </div>
+
     </div>
+
 </div>
 
-<!-- DRAWER: REVIEW & SIGN -->
-<div id="drawer-comaker-evaluate" class="fixed inset-0 z-50 hidden">
+<!-- RESPONSIVE DIALOG: REVIEW & SIGN (MODERN CREDIT GUARANTEE SHEET) -->
+<div id="drawer-comaker-evaluate" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-3 sm:p-4">
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none modal-overlay"></div>
+    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/70 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
     
-    <!-- Floating Premium Panel -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 overflow-hidden h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] sm:w-full sm:max-w-xl fixed right-4 top-4 bottom-4 z-50 transform translate-x-[calc(100%+2rem)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container p-6 sm:p-8 flex flex-col">
+    <!-- Modal Container -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl w-full max-w-xl relative z-10 p-4 sm:p-6 space-y-4 transform scale-95 opacity-0 transition-all duration-300 modal-container max-h-[90vh] overflow-y-auto">
         <!-- Header -->
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Evaluate Endorsement</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">ML Sako Digital Signature Portal</p>
+        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div class="space-y-1 min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h3 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug">
+                        Co-Maker Guarantee Endorsement
+                    </h3>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[9px] sm:text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40 flex-shrink-0">
+                        <i class="fa-solid fa-shield-halved text-[9px]"></i>
+                        <span>Bylaws Compliant</span>
+                    </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    <span class="flex items-center gap-1">
+                        Ref: <span id="display-app-ref" class="font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200/70 dark:border-slate-700">LN-00000</span>
+                    </span>
+                    <span class="text-slate-300 dark:text-slate-600 hidden xs:inline">•</span>
+                    <span class="truncate">ML Sako Credit Facility</span>
+                </div>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button type="button" class="modal-close p-1.5 -mr-1 -mt-1 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex-shrink-0" aria-label="Close modal">
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
-        <!-- Scrollable Content Container -->
-        <div class="flex-1 overflow-y-auto pr-1 -mr-1 space-y-6 mt-6">
-            <!-- Co-Maker Liability Notice -->
-            <div class="bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 p-4 rounded-xl flex items-start gap-3">
-                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-                <div class="space-y-1">
-                    <h5 class="text-xs font-semibold text-amber-800 dark:text-amber-400">Joint Liability Certification</h5>
-                    <p class="text-xs text-amber-700 dark:text-amber-500/90 leading-relaxed">
-                        Co-signing is a joint financial commitment. By authorizing this request, you agree to act as a co-guarantor, assuming shared responsibility for the outstanding balance should the primary borrower default.
+        <!-- Scrollable Body Content -->
+        <div class="space-y-4">
+            
+            <!-- Guaranteed Financial Exposure Banner -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-md relative overflow-hidden">
+                <!-- Subtle background watermark icon -->
+                <i class="fa-solid fa-file-contract absolute -right-3 -bottom-3 text-7xl text-white/5 pointer-events-none"></i>
+                
+                <div class="relative z-10 space-y-1">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
+                            Guaranteed Principal Exposure
+                        </span>
+                        <span class="text-[10px] text-slate-300 font-medium bg-white/10 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                            Joint &amp; Several Liability
+                        </span>
+                    </div>
+                    
+                    <div class="flex items-baseline justify-between pt-1">
+                        <h2 id="display-loan-amount" class="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">₱0.00</h2>
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Horizon</span>
+                            <span id="display-loan-term" class="text-xs font-bold font-mono text-emerald-300">0 Months</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unified Borrower Profile & Loan Specifications Brief -->
+            <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/70 dark:border-slate-800/70 p-3.5 rounded-2xl space-y-3">
+                <!-- Borrower Header row -->
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+                            <span id="display-borrower-initials">--</span>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Primary Borrower</span>
+                            <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate" id="display-borrower-name">--</h4>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Company ID</span>
+                        <span id="display-borrower-id" class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">--</span>
+                    </div>
+                </div>
+
+                <!-- Facility Details row -->
+                <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between text-xs">
+                    <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Facility Type:</span>
+                    <span id="display-loan-name" class="font-bold text-slate-800 dark:text-slate-200 text-xs">--</span>
+                </div>
+
+                <!-- Stated Purpose row -->
+                <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 space-y-1">
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Borrower Purpose / Note:</span>
+                    <p id="display-member-remarks" class="text-xs text-slate-600 dark:text-slate-300 italic pl-2.5 border-l-2 border-emerald-500 bg-white dark:bg-slate-900/60 p-2 rounded-r-lg leading-relaxed">
+                        --
                     </p>
                 </div>
             </div>
 
-            <!-- Borrower Profile Section -->
-            <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 p-4 rounded-xl flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-emerald-500/10 border border-white/10">
-                    <span id="display-borrower-initials"></span>
-                </div>
-                <div class="space-y-0.5">
-                    <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">Primary Borrower</span>
-                    <h4 class="text-base font-bold text-slate-900 dark:text-slate-100 leading-tight" id="display-borrower-name"></h4>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">Member ID: <span id="display-borrower-id" class="font-semibold text-slate-700 dark:text-slate-300"></span></p>
-                </div>
-            </div>
-
-            <!-- Loan Specifications -->
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-semibold text-slate-500 dark:text-slate-400">Loan Facility Details</h4>
-                    <span class="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 px-2.5 py-0.5 rounded-full">Vetted Facility</span>
-                </div>
-                <div class="bg-slate-50/50 dark:bg-slate-950/30 border border-slate-100 dark:border-slate-800 p-4 rounded-xl space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Product Category</span>
-                            <span class="font-semibold text-slate-900 dark:text-slate-150 block text-sm mt-0.5" id="display-loan-name"></span>
-                        </div>
-                        <div class="space-y-1">
-                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Repayment Horizon</span>
-                            <span class="font-semibold text-slate-900 dark:text-slate-150 block text-sm mt-0.5" id="display-loan-term"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
-                        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Principal Amount</span>
-                        <span class="font-bold text-slate-950 dark:text-white block text-xl tracking-tight font-mono mt-1" id="display-loan-amount"></span>
-                    </div>
-
-                    <div class="border-t border-slate-100 dark:border-slate-800 pt-3 space-y-1">
-                        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Statement of Purpose / Remarks</span>
-                        <blockquote class="text-xs text-slate-600 dark:text-slate-400 italic pl-3 border-l-2 border-emerald-500/50 leading-relaxed bg-slate-100/40 dark:bg-slate-900/40 p-3 rounded-r-lg mt-1" id="display-member-remarks">
-                        </blockquote>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Signatory Trial Timeline -->
-            <div class="space-y-3">
-                <h4 class="text-xs font-semibold text-slate-500 dark:text-slate-400 font-medium">Digital Validation Trail</h4>
-                <div class="space-y-3" id="comaker-history-timeline">
+            <!-- Signatory Audit Trail -->
+            <div class="space-y-2">
+                <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-list-check text-blue-500"></i>
+                    Signatory Audit Trail
+                </h4>
+                <div class="space-y-2 max-h-[140px] overflow-y-auto pr-1" id="comaker-history-timeline">
                     <!-- Populated via JS -->
                 </div>
             </div>
 
             <!-- Action Station -->
-            <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-bold text-rose-600 dark:text-rose-400">Co-Signer Decision Station</h4>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-normal">Please review carefully. Your decision will be logged permanently in the cooperative's ledger.</p>
-                </div>
-                
-                <form id="form-comaker-decision" method="POST" class="space-y-4">
+            <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <form id="form-comaker-decision" method="POST" class="space-y-3">
                     @csrf
-                    <div class="space-y-1.5">
+                    
+                    <!-- Verification Remarks Input -->
+                    <div class="space-y-1">
                         <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                            <span>Digital Certification Notes</span>
-                            <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">(Required)</span>
+                            <span>Digital Verification Remarks</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">(Required)</span>
                         </label>
-                        <textarea name="remarks" id="comaker-remarks" required rows="3" placeholder="State your verification notes or justification for endorsing/declining this request..." class="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/10 placeholder-slate-400 dark:placeholder-slate-600 transition-all duration-200 resize-none"></textarea>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-normal mt-1">
-                            ⚠️ Vetting confirmation: By signing, you certify that you have vetted the borrower's capacity to pay.
-                        </p>
+                        <textarea name="remarks" id="comaker-remarks" required rows="2" placeholder="State your verification notes (e.g. capacity confirmed, repayment plan reviewed)..." class="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 dark:placeholder-slate-500 transition-all resize-none"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3 pt-2">
-                        <button type="submit" id="btn-comaker-reject" class="bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40 font-semibold text-sm px-4 py-3 rounded-xl transition-all">
-                            Decline Request
+                    <!-- Legal Attestation Checkbox -->
+                    <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 cursor-pointer select-none group">
+                        <input type="checkbox" id="comaker-consent-checkbox" class="mt-0.5 rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 h-4 w-4 transition-colors flex-shrink-0 cursor-pointer">
+                        <span class="text-[11px] text-slate-600 dark:text-slate-400 leading-normal group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
+                            I certify that I have verified the borrower's capacity to pay and voluntarily authorize joint and several liability as co-guarantor under ML Sako bylaws.
+                        </span>
+                    </label>
+
+                    <!-- Decision Action Buttons -->
+                    <div class="grid grid-cols-2 gap-2.5 pt-1">
+                        <button type="submit" id="btn-comaker-reject" class="inline-flex items-center justify-center gap-1.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40 font-semibold text-xs py-2.5 px-3 rounded-xl transition-all cursor-pointer">
+                            <i class="fa-solid fa-ban text-xs"></i>
+                            <span>Decline Request</span>
                         </button>
-                        <button type="submit" id="btn-comaker-approve" class="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-semibold text-sm px-4 py-3 rounded-xl shadow-md shadow-emerald-600/15 dark:shadow-emerald-900/25 hover:-translate-y-0.5 transition-all duration-200">
-                            Authorize & Sign
+                        <button type="submit" id="btn-comaker-approve" class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-3 rounded-xl shadow-xs shadow-emerald-600/10 transition-all cursor-pointer">
+                            <i class="fa-solid fa-file-signature text-xs"></i>
+                            <span>Authorize &amp; Sign</span>
                         </button>
                     </div>
                 </form>
@@ -373,55 +527,59 @@
 </div>
 
 <!-- MODAL: VIEW SIGNATORIES -->
-<div id="modal-signatories" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-4">
+<div id="modal-signatories" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-3 sm:p-4">
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none modal-overlay"></div>
+    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/70 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
     
     <!-- Modal Container -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 overflow-hidden w-full max-w-md relative z-10 p-6 sm:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl w-full max-w-md relative z-10 p-5 sm:p-6 space-y-4 transform scale-95 opacity-0 transition-all duration-300 modal-container">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div>
-                <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Verification History</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Cooperative Audit Logs</p>
+                <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Signatory Audit Log</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Recorded digital endorsements</p>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button type="button" class="modal-close p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
         <!-- Timeline Steps Container -->
-        <div class="space-y-4" id="signatories-timeline-container">
+        <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1" id="signatories-timeline-container">
             <!-- Dynamically populated via JS -->
         </div>
 
-        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
-            <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">Close</button>
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+            <button type="button" class="modal-close px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Close</button>
         </div>
     </div>
 </div>
+
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         
-        // --- Tab Swappings ---
+        // --- Segmented Tab Switcher ---
         const tabInbox = document.getElementById("tab-inbox");
         const tabHistory = document.getElementById("tab-history");
         const contentInbox = document.getElementById("content-inbox");
         const contentHistory = document.getElementById("content-history");
 
+        const activeTabClass = "tab-btn active inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-150 text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-xs border border-slate-200/80 dark:border-slate-700";
+        const inactiveTabClass = "tab-btn inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all duration-150";
+
         if (tabInbox && tabHistory) {
             tabInbox.addEventListener("click", () => {
-                tabInbox.className = "tab-btn active px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-200/40 dark:border-slate-700";
-                tabHistory.className = "tab-btn px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-200";
+                tabInbox.className = activeTabClass;
+                tabHistory.className = inactiveTabClass;
                 contentInbox.classList.remove("hidden");
                 contentHistory.classList.add("hidden");
             });
 
             tabHistory.addEventListener("click", () => {
-                tabHistory.className = "tab-btn active px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 text-emerald-800 dark:text-emerald-400 bg-white dark:bg-slate-800 shadow-sm border border-slate-200/40 dark:border-slate-700";
-                tabInbox.className = "tab-btn px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all duration-200";
+                tabHistory.className = activeTabClass;
+                tabInbox.className = inactiveTabClass;
                 contentHistory.classList.remove("hidden");
                 contentInbox.classList.add("hidden");
             });
@@ -432,6 +590,7 @@
             const el = document.getElementById(id);
             if (!el) return;
             el.classList.remove("hidden");
+            el.classList.add("flex");
             
             const overlay = el.querySelector(".modal-overlay");
             const container = el.querySelector(".modal-container");
@@ -442,15 +601,10 @@
                     overlay.classList.add("opacity-100", "pointer-events-auto");
                 }
                 if (container) {
-                    if (id.startsWith("drawer-")) {
-                        container.classList.remove("translate-x-[calc(100%+2rem)]");
-                        container.classList.add("translate-x-0");
-                    } else {
-                        container.classList.remove("scale-95", "opacity-0");
-                        container.classList.add("scale-100", "opacity-100");
-                    }
+                    container.classList.remove("scale-95", "opacity-0");
+                    container.classList.add("scale-100", "opacity-100");
                 }
-            }, 50);
+            }, 30);
         }
 
         function closeDrawer(id) {
@@ -465,21 +619,17 @@
                 overlay.classList.remove("opacity-100", "pointer-events-auto");
             }
             if (container) {
-                if (id.startsWith("drawer-")) {
-                    container.classList.add("translate-x-[calc(100%+2rem)]");
-                    container.classList.remove("translate-x-0");
-                } else {
-                    container.classList.add("scale-95", "opacity-0");
-                    container.classList.remove("scale-100", "opacity-100");
-                }
+                container.classList.add("scale-95", "opacity-0");
+                container.classList.remove("scale-100", "opacity-100");
             }
             
             setTimeout(() => {
                 el.classList.add("hidden");
-            }, 500);
+                el.classList.remove("flex");
+            }, 250);
         }
 
-        // Bind escape keys & global overlays to close
+        // Close on overlay or close button clicks
         document.querySelectorAll(".modal-close, .modal-overlay").forEach(btn => {
             btn.addEventListener("click", function () {
                 const modal = this.closest('[id^="drawer-"], [id^="modal-"]');
@@ -487,35 +637,47 @@
             });
         });
 
-        // --- Render Timelines helper ---
+        // Close on Escape key
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                const openModal = document.querySelector('[id^="drawer-"]:not(.hidden), [id^="modal-"]:not(.hidden)');
+                if (openModal) closeDrawer(openModal.id);
+            }
+        });
+
+        // --- Render Timelines Helper ---
         function renderTimeline(timelineArray, targetContainerId) {
             const container = document.getElementById(targetContainerId);
             container.innerHTML = "";
 
             if (timelineArray.length === 0) {
-                container.innerHTML = '<p class="text-center py-4 text-slate-500 dark:text-slate-400 italic text-xs bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 rounded-xl">This request has no prior validations.</p>';
+                container.innerHTML = '<p class="text-center py-3 text-slate-500 dark:text-slate-400 italic text-xs bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl">This request has no prior validations recorded.</p>';
             } else {
                 timelineArray.forEach((step, idx) => {
                     const card = document.createElement("div");
-                    card.className = "flex gap-4 relative";
+                    card.className = "flex gap-2.5 relative";
                     
-                    const lineHtml = idx < timelineArray.length - 1 
-                        ? '<div class="absolute left-4.5 top-8 w-0.5 h-12 bg-emerald-100 dark:bg-emerald-950/30"></div>' 
-                        : '';
+                    const isApproved = step.decision === 'approved';
+                    const circleBadge = isApproved 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40' 
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40';
+
+                    const statusPill = isApproved
+                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300'
+                        : 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300';
 
                     card.innerHTML = `
-                        ${lineHtml}
-                        <div class="w-8.5 h-8.5 rounded-full ${step.decision === 'approved' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40' : 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40'} flex items-center justify-center flex-shrink-0 text-xs font-bold relative z-10">
+                        <div class="w-6 h-6 rounded-full ${circleBadge} flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-1">
                             ${idx + 1}
                         </div>
-                        <div class="flex-grow bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 p-4 rounded-xl text-xs leading-relaxed">
-                            <div class="flex justify-between items-start gap-4">
-                                <span class="font-semibold text-slate-900 dark:text-white">${step.stage}</span>
-                                <span class="text-[10px] font-semibold capitalize px-2.5 py-0.5 rounded-full ${step.decision === 'approved' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-150 dark:border-emerald-800/40' : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-150 dark:border-rose-800/40'}">${step.decision}</span>
+                        <div class="flex-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 p-2.5 rounded-xl text-xs leading-normal">
+                            <div class="flex justify-between items-center gap-2">
+                                <span class="font-bold text-slate-900 dark:text-white text-xs">${step.stage}</span>
+                                <span class="text-[9px] font-bold uppercase px-2 py-0.2 rounded-full ${statusPill}">${step.decision}</span>
                             </div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">By: <span class="font-semibold text-slate-700 dark:text-slate-300">${step.actor}</span></p>
-                            ${step.remarks ? `<p class="text-slate-600 dark:text-slate-400 italic mt-2 p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl leading-relaxed">"${step.remarks}"</p>` : ''}
-                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2 text-right font-medium">${step.date}</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">By: <strong class="text-slate-700 dark:text-slate-300">${step.actor}</strong></p>
+                            ${step.remarks ? `<p class="text-slate-600 dark:text-slate-300 italic mt-1.5 p-2 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-lg text-[11px] leading-relaxed">"${step.remarks}"</p>` : ''}
+                            <p class="text-[9px] text-slate-400 font-mono mt-1 text-right">${step.date}</p>
                         </div>
                     `;
                     container.appendChild(card);
@@ -547,10 +709,13 @@
 
                 // Configure dynamic loan texts
                 const category = loan.loan_category;
-                const type = loan.loan_type;
                 const requestedAmount = parseFloat(loan.requested_amount);
                 
-                // Set loan details
+                // Set loan details & reference
+                const appRefEl = document.getElementById("display-app-ref");
+                if (appRefEl) {
+                    appRefEl.textContent = "LN-" + String(loan.id).padStart(5, '0');
+                }
                 document.getElementById("display-loan-name").textContent = `${loan.loan_type.replace('_', ' ').toUpperCase()} (${category.toUpperCase()})`;
                 document.getElementById("display-loan-amount").textContent = "₱" + requestedAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
                 document.getElementById("display-loan-term").textContent = (loan.form_data.term_months || 'N/A') + " Months";
@@ -562,10 +727,24 @@
                 // Set up decision buttons & actions
                 const formDecision = document.getElementById("form-comaker-decision");
                 const txtRemarks = document.getElementById("comaker-remarks");
+                const chkConsent = document.getElementById("comaker-consent-checkbox");
                 const btnApprove = document.getElementById("btn-comaker-approve");
                 const btnReject = document.getElementById("btn-comaker-reject");
 
+                // Reset decision inputs & loading states
                 txtRemarks.value = "";
+                txtRemarks.readOnly = false;
+                if (chkConsent) {
+                    chkConsent.checked = false;
+                    chkConsent.disabled = false;
+                }
+
+                btnApprove.disabled = false;
+                btnReject.disabled = false;
+                btnApprove.classList.remove("opacity-80", "opacity-40", "cursor-wait", "pointer-events-none");
+                btnReject.classList.remove("opacity-80", "opacity-40", "cursor-wait", "pointer-events-none");
+                btnApprove.innerHTML = '<i class="fa-solid fa-file-signature text-xs"></i> <span>Authorize &amp; Sign</span>';
+                btnReject.innerHTML = '<i class="fa-solid fa-ban text-xs"></i> <span>Decline Request</span>';
 
                 btnApprove.onclick = function (e) {
                     e.preventDefault();
@@ -574,14 +753,38 @@
                             MLSAKOAlert.fire({
                                 icon: 'warning',
                                 title: 'Remarks Required',
-                                text: "Please enter brief digital verification remarks before endorsing.",
+                                text: "Please enter digital verification remarks before endorsing.",
                                 confirmButtonText: 'Understood'
                             });
                         } else {
-                            alert("Please enter brief digital verification remarks before endorsing.");
+                            alert("Please enter digital verification remarks before endorsing.");
                         }
                         return;
                     }
+                    if (chkConsent && !chkConsent.checked) {
+                        if (window.MLSAKOAlert) {
+                            MLSAKOAlert.fire({
+                                icon: 'warning',
+                                title: 'Legal Attestation Required',
+                                text: "Please acknowledge the co-guarantor joint liability certification before authorizing.",
+                                confirmButtonText: 'Understood'
+                            });
+                        } else {
+                            alert("Please acknowledge the co-guarantor joint liability certification before authorizing.");
+                        }
+                        return;
+                    }
+
+                    // Activate loading state
+                    btnApprove.disabled = true;
+                    btnReject.disabled = true;
+                    txtRemarks.readOnly = true;
+                    if (chkConsent) chkConsent.disabled = true;
+
+                    btnApprove.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Authorizing...</span>';
+                    btnApprove.classList.add("opacity-80", "cursor-wait");
+                    btnReject.classList.add("opacity-40", "pointer-events-none");
+
                     formDecision.action = `/loans/${loan.id}/approve`;
                     formDecision.submit();
                 };
@@ -601,6 +804,17 @@
                         }
                         return;
                     }
+
+                    // Activate loading state
+                    btnApprove.disabled = true;
+                    btnReject.disabled = true;
+                    txtRemarks.readOnly = true;
+                    if (chkConsent) chkConsent.disabled = true;
+
+                    btnReject.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Declining...</span>';
+                    btnReject.classList.add("opacity-80", "cursor-wait");
+                    btnApprove.classList.add("opacity-40", "pointer-events-none");
+
                     formDecision.action = `/loans/${loan.id}/reject`;
                     formDecision.submit();
                 };

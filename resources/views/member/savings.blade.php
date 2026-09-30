@@ -6,158 +6,189 @@
 @section('navbar_subtitle', 'Manage and track your cooperative capital and savings account balances.')
 
 @section('content')
-<div class="space-y-6 sm:space-y-8 animate-fade-in">
+<div class="space-y-5 sm:space-y-6 animate-fade-in">
 
     <!-- Top Action Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
-        <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold border border-emerald-200/60 dark:border-emerald-800/40">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                Savings Account: Active
+                Active Member
             </span>
-            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-200/80 dark:border-slate-700">
+                ID: <strong class="text-slate-700 dark:text-slate-200">{{ Auth::user()->company_id ?: 'N/A' }}</strong>
             </span>
         </div>
 
-        <div class="flex items-center gap-3">
-            <!-- Balance Toggle Button -->
-            <button id="toggle-balances-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-sm transition-all duration-200">
-                <!-- Eye Off Icon (Default: Hidden) -->
-                <svg id="eye-off-icon" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.993 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                </svg>
-                <!-- Eye Icon (Shown) -->
-                <svg id="eye-icon" class="w-4 h-4 flex-shrink-0" hidden="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.478 0 6.561 1.767 8.543 4.542m-17.086 0A11.026 11.026 0 001.054 12c1.378 4.057 5.168 7 9.636 7 3.478 0 6.561-1.767 8.543-4.542"/>
-                </svg>
+        <div class="flex items-center gap-2">
+            <!-- Balance Privacy Toggle Button -->
+            <button id="toggle-balances-btn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-xs font-semibold shadow-xs transition-all duration-150 cursor-pointer">
+                <!-- Eye Off Icon (Default: Balances are hidden) -->
+                <i id="eye-off-icon" class="fa-solid fa-eye-slash text-slate-500 dark:text-slate-400 text-xs"></i>
+                <!-- Eye Icon (When balances are visible) -->
+                <i id="eye-icon" class="fa-solid fa-eye text-slate-500 dark:text-slate-400 text-xs hidden"></i>
                 <span id="toggle-btn-text">Show Balances</span>
             </button>
         </div>
     </div>
 
-    <!-- Savings Cards Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Savings & Capital Cards Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
         
-        <!-- Card 1: Shared Capital (Locked Equity) -->
-        <div class="bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:shadow-md transition-all duration-300">
+        <!-- Card 1: Share Capital (Locked Equity Pool) -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-5 transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-600">
             <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-extrabold border border-slate-200 dark:border-slate-600">
-                        <svg class="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <!-- Header Badge & Status -->
+                <div class="flex items-center justify-between gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 text-[11px] font-bold border border-slate-200 dark:border-slate-600/70">
+                        <i class="fa-solid fa-vault text-slate-500 dark:text-slate-400 text-xs"></i>
                         Coop Equity Pool
                     </span>
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-extrabold tracking-widest uppercase">Share Capital</span>
+                    <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Share Capital</span>
                 </div>
                 
-                <div class="space-y-1">
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Contributed Share Capital</p>
-                    <h2 class="text-4xl font-black text-slate-900 dark:text-white serif-font">
+                <!-- Balance & Label -->
+                <div class="space-y-0.5">
+                    <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Contributed Share Capital</p>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-mono">
                         <span class="balance-masked">₱ ••••••</span>
                         <span class="balance-unmasked hidden">₱{{ number_format($sharedCapital, 2) }}</span>
                     </h2>
                 </div>
 
-                <!-- Custom warning alert notice for non-withdrawable capital with high-contrast text and border -->
-                <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500 text-amber-950 dark:text-amber-200 text-xs font-medium flex items-start gap-3">
-                    <svg class="w-5 h-5 text-amber-700 dark:text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                    <div class="space-y-1">
-                        <p class="font-extrabold text-amber-950 dark:text-amber-300 uppercase tracking-wider text-[11px]">Non-Withdrawable Equity Notice</p>
-                        <p class="leading-relaxed text-amber-900 dark:text-amber-400 text-xs font-semibold">This amount represents your permanent share capital (equity) in the cooperative. Under cooperative bylaws, this capital is <strong>strictly non-withdrawable</strong> during active membership. It grants you active voting rights and earns annual dividend payouts based on cooperative net surplus.</p>
+                <!-- Metrics Strip: Dividends & Shares -->
+                <div class="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60">
+                    <div class="space-y-0.5">
+                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Estimated Dividend</span>
+                        <p class="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400">7.50% p.a.</p>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block">Surplus distribution</span>
+                    </div>
+                    <div class="space-y-0.5 border-l border-slate-200 dark:border-slate-700/80 pl-3">
+                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Voting Rights</span>
+                        <p class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">500 Shares</p>
+                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block">Active voting status</span>
+                    </div>
+                </div>
+
+                <!-- Compact Policy Notice -->
+                <div class="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+                    <i class="fa-solid fa-circle-info text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5 text-xs"></i>
+                    <div class="text-[11px] leading-relaxed">
+                        <strong class="font-bold text-amber-950 dark:text-amber-300">Non-Withdrawable Equity:</strong> Permanent cooperative equity under bylaws. Non-withdrawable during active membership; qualifies you for voting and annual dividend yields.
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-bold">
-                <span>Earned Dividends: 7.5% p.a.</span>
-                <span class="text-slate-500 dark:text-slate-500">ID: {{ Auth::user()->company_id ?: 'N/A' }}</span>
+            <!-- Footer Action Link -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-700/70 flex items-center justify-between text-xs">
+                <span class="text-slate-400 dark:text-slate-500 text-[11px]">Updated via Monthly Payroll</span>
+                <a href="{{ route('member.deductions') }}" class="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
+                    <span>Adjust Contribution</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
             </div>
         </div>
 
-        <!-- Card 2: Savings Deposit (Withdrawable Account) -->
-        <div class="bg-gradient-to-br from-white to-emerald-50/20 dark:from-slate-800 dark:to-emerald-950/10 border-2 border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:shadow-md transition-all duration-300">
+        <!-- Card 2: Savings Deposit (Liquid Account) -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-5 transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-600">
             <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-400 text-xs font-extrabold border border-emerald-100 dark:border-emerald-800/40">
-                        <svg class="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4"/></svg>
+                <!-- Header Badge & Status -->
+                <div class="flex items-center justify-between gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold border border-emerald-200/60 dark:border-emerald-800/40">
+                        <i class="fa-solid fa-wallet text-emerald-600 dark:text-emerald-400 text-xs"></i>
                         Liquid Savings Pool
                     </span>
-                    <span class="text-xs text-emerald-800 dark:text-emerald-400 font-extrabold tracking-widest uppercase">Savings Deposit</span>
+                    <span class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Savings Deposit</span>
                 </div>
 
-                <div class="space-y-1">
-                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Cooperative Savings Balance</p>
-                    <h2 class="text-4xl font-black text-emerald-950 dark:text-emerald-400 serif-font">
+                <!-- Balance & Label -->
+                <div class="space-y-0.5">
+                    <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Savings Balance</p>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 tracking-tight font-mono">
                         <span class="balance-masked">₱ ••••••</span>
                         <span class="balance-unmasked hidden">₱{{ number_format($savingsDeposit, 2) }}</span>
                     </h2>
                 </div>
 
-                <!-- High legibility maintain balance & withdrawable metrics -->
-                <div class="grid grid-cols-2 gap-2 sm:gap-4 p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700 shadow-xs">
-                    <div class="space-y-1">
-                        <span class="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block leading-tight">Maintaining Balance</span>
-                        <p class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-200">₱{{ number_format($minBalance, 2) }}</p>
-                        <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold leading-none">Required minimum</p>
+                <!-- Split Metrics Box: Reserve vs. Available -->
+                <div class="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60">
+                    <div class="space-y-0.5">
+                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Maintaining Reserve</span>
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 font-mono">₱{{ number_format($minBalance, 2) }}</p>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block">Required minimum</span>
                     </div>
-                    <div class="space-y-1 border-l border-slate-200/80 dark:border-slate-700 pl-3 sm:pl-4">
-                        <span class="text-[10px] sm:text-xs font-extrabold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider block leading-tight">Withdrawable Amount</span>
-                        <p class="text-sm xs:text-base sm:text-xl font-black text-emerald-700 dark:text-emerald-300">
+                    <div class="space-y-0.5 border-l border-slate-200 dark:border-slate-700/80 pl-3">
+                        <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">Withdrawable</span>
+                        <p class="text-xs sm:text-sm font-extrabold text-emerald-700 dark:text-emerald-400 font-mono">
                             <span class="balance-masked">₱ ••••••</span>
                             <span class="balance-unmasked hidden">₱{{ number_format($withdrawableAmount, 2) }}</span>
                         </p>
-                        <p class="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-bold leading-none">Available for payout</p>
+                        <span class="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-medium block">Ready for payout</span>
                     </div>
                 </div>
 
-                <div class="text-xs text-slate-700 dark:text-slate-300 font-semibold leading-relaxed bg-slate-100/50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-200/40 dark:border-slate-700">
-                    💡 <strong>Maintaining Rule:</strong> To keep your savings pool active, a minimum remaining balance of <strong>₱500.00</strong> must be retained. Payout requests exceeding the withdrawable limit will be queued for administrator review.
+                <!-- Compact Maintaining Notice -->
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-700/60 flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5 text-xs"></i>
+                    <div class="text-[11px] leading-relaxed">
+                        <strong class="font-bold text-slate-800 dark:text-slate-200">Maintaining Rule:</strong> A minimum reserve of <strong>₱500.00</strong> remains in your account to preserve active status. Payouts process via M Lhuillier branches or MCash.
+                    </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 flex gap-3.5">
-                <a href="{{ route('member.withdrawals') }}" class="flex-1 inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-emerald-600/10">
-                    Withdraw Funds &rarr;
+            <!-- Footer Action Buttons -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-700/70 flex items-center gap-2">
+                <a href="{{ route('member.withdrawals') }}" class="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl transition-all duration-150 shadow-xs shadow-emerald-600/10">
+                    <span>Withdraw Funds</span>
+                    <i class="fa-solid fa-arrow-up-from-bracket text-xs"></i>
+                </a>
+                <a href="{{ route('member.deductions') }}" class="inline-flex items-center justify-center bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs py-2.5 px-3 rounded-xl transition-all duration-150" title="Adjust payroll deductions">
+                    <i class="fa-solid fa-sliders text-xs"></i>
                 </a>
             </div>
         </div>
 
     </div>
 
-    <!-- Savings Ledger Transactions with High-Contrast Header and Text -->
-    <div class="bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-100 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6">
-        <div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white serif-font">Savings Account Ledger</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Historical ledger of deposits, interest bonuses, and dividend postings.</p>
+    <!-- Savings Ledger Transactions Container -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-5 sm:p-6 shadow-xs space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-1 border-b border-slate-100 dark:border-slate-700/60">
+            <div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Savings Account Ledger</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Verified record of payroll deductions, interest bonuses, and pool allocations.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold">
+                    {{ count($ledgerEntries) }} Records
+                </span>
+            </div>
         </div>
 
-        <!-- Desktop Table (Visible on larger screens) -->
+        <!-- Desktop Table (Visible on md+ screens) -->
         <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                    <tr class="text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 uppercase tracking-wider text-[11px] font-extrabold">
-                        <th class="p-3.5 rounded-l-xl">Reference ID</th>
-                        <th class="p-3.5">Type</th>
-                        <th class="p-3.5">Channel</th>
-                        <th class="p-3.5">Date</th>
-                        <th class="p-3.5 text-right rounded-r-xl">Amount</th>
+                    <tr class="text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-900/40 border-b border-slate-200/70 dark:border-slate-700 uppercase tracking-wider text-[10px] font-bold">
+                        <th class="py-2.5 px-3 rounded-l-lg">Reference ID</th>
+                        <th class="py-2.5 px-3">Transaction Type</th>
+                        <th class="py-2.5 px-3">Disbursement Channel</th>
+                        <th class="py-2.5 px-3">Post Date</th>
+                        <th class="py-2.5 px-3 text-right rounded-r-lg">Credited Amount</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-700 font-semibold text-slate-700 dark:text-slate-300">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-slate-700 dark:text-slate-300 font-medium">
                     @foreach($ledgerEntries as $entry)
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                            <td class="p-3.5 font-bold text-slate-900 dark:text-white">{{ $entry['reference'] }}</td>
-                            <td class="p-3.5">
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-400 text-xs font-bold border border-emerald-200/50 dark:border-emerald-800/40">
+                        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors">
+                            <td class="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">{{ $entry['reference'] }}</td>
+                            <td class="py-3 px-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[11px] font-semibold border border-emerald-200/50 dark:border-emerald-800/40">
+                                    <span class="w-1 h-1 rounded-full bg-emerald-500"></span>
                                     {{ $entry['type'] }}
                                 </span>
                             </td>
-                            <td class="p-3.5 text-slate-600 dark:text-slate-400">{{ $entry['channel'] }}</td>
-                            <td class="p-3.5 text-slate-600 dark:text-slate-400">{{ $entry['date'] }}</td>
-                            <td class="p-3.5 text-right font-black text-emerald-700 dark:text-emerald-400 text-sm">
+                            <td class="py-3 px-3 text-slate-600 dark:text-slate-400">{{ $entry['channel'] }}</td>
+                            <td class="py-3 px-3 text-slate-500 dark:text-slate-400">{{ $entry['date'] }}</td>
+                            <td class="py-3 px-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
                                 <span class="balance-masked">+₱ ••••••</span>
                                 <span class="balance-unmasked hidden">+₱{{ number_format($entry['amount'], 2) }}</span>
                             </td>
@@ -167,30 +198,26 @@
             </table>
         </div>
 
-        <!-- Mobile Transactions List (Visible on mobile screens) -->
-        <div class="block md:hidden space-y-3">
+        <!-- Mobile Transactions List (Visible on <md screens) -->
+        <div class="block md:hidden space-y-2.5">
             @foreach($ledgerEntries as $entry)
-                <div class="bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/60 p-4 rounded-2xl flex items-center justify-between gap-4 transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/60">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/20 flex-shrink-0">
-                            <!-- Premium micro-icon -->
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-                            </svg>
+                <div class="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-700/60 p-3 rounded-xl flex items-center justify-between gap-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/70">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/30 flex-shrink-0">
+                            <!-- Inflow arrow icon -->
+                            <i class="fa-solid fa-arrow-down text-xs"></i>
                         </div>
-                        <div class="space-y-1">
-                            <span class="inline-flex px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-400 text-[10px] font-black uppercase border border-emerald-200/40 dark:border-emerald-800/20 leading-none">
-                                {{ $entry['type'] }}
-                            </span>
-                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-none">{{ $entry['date'] }} • via {{ $entry['channel'] }}</p>
+                        <div class="min-w-0 space-y-0.5">
+                            <p class="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">{{ $entry['type'] }}</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">{{ $entry['date'] }} • {{ $entry['channel'] }}</p>
                         </div>
                     </div>
-                    <div class="text-right space-y-1">
-                        <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 leading-none">ID: {{ $entry['reference'] }}</p>
-                        <p class="text-xs xs:text-sm font-black text-emerald-700 dark:text-emerald-400 leading-none">
+                    <div class="text-right space-y-0.5 flex-shrink-0">
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
                             <span class="balance-masked">+₱ ••••••</span>
                             <span class="balance-unmasked hidden">+₱{{ number_format($entry['amount'], 2) }}</span>
                         </p>
+                        <p class="text-[9px] font-mono text-slate-400 dark:text-slate-500">{{ $entry['reference'] }}</p>
                     </div>
                 </div>
             @endforeach
@@ -199,7 +226,7 @@
 
 </div>
 
-<!-- Self-Contained Vanilla JS Toggle script for Privacy balance masking -->
+<!-- Privacy Balance Masking Script -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const toggleBtn = document.getElementById("toggle-balances-btn");
@@ -210,21 +237,21 @@
         const maskedElements = document.querySelectorAll(".balance-masked");
         const unmaskedElements = document.querySelectorAll(".balance-unmasked");
 
-        let balancesVisible = false; // Default: Hidden
+        let balancesVisible = false; // Default: Masked/Hidden
 
         if (toggleBtn) {
             toggleBtn.addEventListener("click", function () {
                 balancesVisible = !balancesVisible;
 
                 if (balancesVisible) {
-                    // Show actual amounts
+                    // Show actual figures
                     maskedElements.forEach(el => el.classList.add("hidden"));
                     unmaskedElements.forEach(el => el.classList.remove("hidden"));
                     if (eyeIcon) eyeIcon.classList.remove("hidden");
                     if (eyeOffIcon) eyeOffIcon.classList.add("hidden");
                     if (btnText) btnText.textContent = "Hide Balances";
                 } else {
-                    // Mask/hide amounts
+                    // Hide/mask figures
                     maskedElements.forEach(el => el.classList.remove("hidden"));
                     unmaskedElements.forEach(el => el.classList.add("hidden"));
                     if (eyeIcon) eyeIcon.classList.add("hidden");

@@ -6,43 +6,49 @@
 @section('navbar_title', 'My Loans')
 @section('navbar_subtitle', 'Track your active loan applications, amortization schedules, and payment histories.')
 
+@push('styles')
+<style>
+    .btn-preview-pdf, .btn-view-ledger, .btn-replace-comaker {
+        cursor: pointer !important;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="space-y-6 sm:space-y-8 animate-fade-in">
+<div class="space-y-5 sm:space-y-6 animate-fade-in">
 
     <!-- Top Action Toolbar -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800/60">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
         <div class="flex flex-wrap items-center gap-2">
             @php
                 $approvedCount = $applications->where('status', 'approved')->count();
                 $pendingCount = $applications->where('status', 'pending')->count();
             @endphp
             @if($approvedCount > 0)
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-800/40">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold border border-emerald-200/60 dark:border-emerald-800/40">
                     <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                     Active Loans: {{ $approvedCount }} Released
                 </span>
             @endif
             @if($pendingCount > 0)
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 text-xs font-bold border border-amber-100 dark:border-amber-800/40">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200/60 dark:border-amber-800/40">
                     <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-                    {{ $pendingCount }} Pending Application{{ $pendingCount > 1 ? 's' : '' }}
+                    {{ $pendingCount }} In Review
                 </span>
             @endif
             @if($approvedCount === 0 && $pendingCount === 0)
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold border border-slate-200/80 dark:border-slate-700">
                     No Active Loans
                 </span>
             @endif
-            <span class="text-xs text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                ID: {{ Auth::user()->company_id ?: 'N/A' }}
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-200/80 dark:border-slate-700">
+                ID: <strong class="text-slate-700 dark:text-slate-200">{{ Auth::user()->company_id ?: 'N/A' }}</strong>
             </span>
         </div>
 
-        <div class="flex items-center gap-3">
-            <a href="{{ route('member.forms') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/10 transition-all duration-200">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                </svg>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('member.forms') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs shadow-emerald-600/10 transition-all duration-150">
+                <i class="fa-solid fa-plus text-xs"></i>
                 <span>Apply for a Loan</span>
             </a>
         </div>
@@ -50,26 +56,26 @@
 
     <!-- Flash Alert Feedbacks -->
     @if(session('success'))
-        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-emerald-500 rounded-r-xl text-emerald-800 dark:text-emerald-300 text-sm font-semibold flex items-center justify-between shadow-sm">
+        <div class="p-3.5 bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-emerald-500 rounded-r-xl text-emerald-800 dark:text-emerald-300 text-xs font-medium flex items-center justify-between shadow-xs">
             <span class="flex items-center gap-2">
-                <i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-lg flex-shrink-0"></i>
+                <i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-sm flex-shrink-0"></i>
                 {{ session('success') }}
             </span>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="p-4 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 rounded-r-xl text-rose-800 dark:text-rose-300 text-sm font-semibold flex items-center justify-between shadow-sm">
+        <div class="p-3.5 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 rounded-r-xl text-rose-800 dark:text-rose-300 text-xs font-medium flex items-center justify-between shadow-xs">
             <span class="flex items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400 text-lg flex-shrink-0"></i>
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400 text-sm flex-shrink-0"></i>
                 {{ session('error') }}
             </span>
         </div>
     @endif
 
     @if($errors->any())
-        <div class="p-4 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 rounded-r-xl text-rose-800 dark:text-rose-300 text-xs font-semibold space-y-1 shadow-sm">
-            <p class="font-bold text-sm">Please correct the following validation errors:</p>
+        <div class="p-3.5 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 rounded-r-xl text-rose-800 dark:text-rose-300 text-xs font-medium space-y-1 shadow-xs">
+            <p class="font-bold text-xs">Please review the following:</p>
             <ul class="list-disc list-inside">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -78,214 +84,256 @@
         </div>
     @endif
 
-    {{-- <!-- Active Loans Summary -->
-    <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6">
-        <div class="flex items-center justify-between border-b border-slate-50 dark:border-slate-700 pb-4">
-            <div>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white serif-font">Outstanding Amortization Balance</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-semibold">Your currently running salary loan repayment schedule.</p>
-            </div>
-            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold border border-emerald-100 dark:border-emerald-800/40">
-                Current Rate: 5% p.a.
-            </span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
-                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Original Loan Amount</span>
-                <p class="text-2xl font-black text-slate-800 dark:text-slate-200">₱30,000.00</p>
-                <p class="text-xs text-slate-600 dark:text-slate-500 font-bold block mt-1">Approved on Mar 15, 2026</p>
-            </div>
-            <div class="bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
-                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">Total Repaid Amount</span>
-                <p class="text-2xl font-black text-emerald-700 dark:text-emerald-300">₱14,800.00</p>
-                <p class="text-xs text-emerald-600 dark:text-emerald-500 font-bold block mt-1">12 of 24 months paid</p>
-            </div>
-            <div class="bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
-                <span class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider block">Remaining Balance</span>
-                <p class="text-2xl font-black text-amber-700 dark:text-amber-300">₱15,200.00</p>
-                <p class="text-xs text-amber-600 dark:text-amber-500 font-bold block mt-1">Next: ₱1,200.00 due Aug 15</p>
-            </div>
-        </div>
-
-        <!-- Progress bar -->
-        <div class="space-y-2">
-            <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
-                <span>Repayment Progress (49.33%)</span>
-                <span>₱14,800.00 Paid of ₱30,000.00</span>
-            </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-900 h-3 rounded-full overflow-hidden border border-slate-200/40 dark:border-slate-700">
-                <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 49.33%"></div>
-            </div>
-        </div>
-    </div> --}}
-
-    <!-- My Loan Applications Queue -->
+    <!-- KPI Summary Micro-Grid (Visible when applications exist) -->
     @if($applications->isNotEmpty())
-        <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6 animate-fade-in">
-            <div class="flex items-center justify-between border-b border-slate-50 dark:border-slate-700 pb-4">
+        @php
+            $releasedTotal = $applications->where('status', 'approved')->sum('requested_amount');
+            $pendingTotal = $applications->where('status', 'pending')->sum('requested_amount');
+            $actionRequiredCount = $applications->filter(function($app) {
+                $activeComakers = $app->form_data['comakers'] ?? [];
+                $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $app->comakers()->where('status', 'rejected')->whereIn('user_id', $activeComakers)->exists();
+                return $app->status === 'returned' || $hasRejectedComaker;
+            })->count();
+        @endphp
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <!-- Metric 1: Released Principal -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Released Principal</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                </div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono mt-1">
+                    ₱{{ number_format($releasedTotal, 2) }}
+                </p>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">{{ $approvedCount }} Approved Facility{{ $approvedCount === 1 ? '' : 's' }}</span>
+            </div>
+
+            <!-- Metric 2: Applications In Review -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">In Verification</span>
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                </div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono mt-1">
+                    ₱{{ number_format($pendingTotal, 2) }}
+                </p>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">{{ $pendingCount }} Pending Approval{{ $pendingCount === 1 ? '' : 's' }}</span>
+            </div>
+
+            <!-- Metric 3: Action Needed -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Action Items</span>
+                    <span class="w-2 h-2 rounded-full {{ $actionRequiredCount > 0 ? 'bg-rose-500 animate-pulse' : 'bg-slate-300 dark:bg-slate-600' }}"></span>
+                </div>
+                <p class="text-xl sm:text-2xl font-extrabold font-mono mt-1 {{ $actionRequiredCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-900 dark:text-white' }}">
+                    {{ $actionRequiredCount }}
+                </p>
+                <span class="text-[10px] {{ $actionRequiredCount > 0 ? 'text-amber-600 dark:text-amber-400 font-semibold' : 'text-slate-500 dark:text-slate-400' }} block mt-0.5">
+                    {{ $actionRequiredCount > 0 ? 'Requires your attention' : 'All workflows on track' }}
+                </span>
+            </div>
+        </div>
+    @endif
+
+    <!-- My Loan Applications Container -->
+    @if($applications->isNotEmpty())
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-5 sm:p-6 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-1 border-b border-slate-100 dark:border-slate-700/60">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white serif-font">My Loan Applications</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-semibold">Track the live progress of your submitted cooperative loan facilities.</p>
+                    <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Loan Applications Queue</h3>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Real-time status tracking, verification stages, and audit history.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold">
+                        {{ $applications->count() }} Application{{ $applications->count() === 1 ? '' : 's' }}
+                    </span>
                 </div>
             </div>
             
-            <!-- Desktop Table (Visible on larger screens) -->
+            <!-- Desktop Table (Visible on lg+ screens) -->
             <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-150 dark:border-slate-700 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                            <th class="px-6 py-4.5">Loan Type</th>
-                            <th class="px-6 py-4.5">Requested Amount</th>
-                            <th class="px-6 py-4.5">Compliance Docs</th>
-                            <th class="px-6 py-4.5">Accounting Files</th>
-                            <th class="px-6 py-4.5">Active Stage</th>
-                            <th class="px-6 py-4.5">Status</th>
-                            <th class="px-6 py-4.5">Submitted Date</th>
-                            <th class="px-6 py-4.5 text-right">Details</th>
+                        <tr class="text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-900/40 border-b border-slate-200/70 dark:border-slate-700 uppercase tracking-wider text-[10px] font-bold">
+                            <th class="py-2.5 px-3.5 rounded-l-lg">Facility &amp; Type</th>
+                            <th class="py-2.5 px-3.5">Requested</th>
+                            <th class="py-2.5 px-3.5">Current Stage &amp; Status</th>
+                            <th class="py-2.5 px-3.5">Documents</th>
+                            <th class="py-2.5 px-3.5">Submitted</th>
+                            <th class="py-2.5 px-3.5 text-right rounded-r-lg">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50 dark:divide-slate-700 font-medium text-slate-700 dark:text-slate-300">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-slate-700 dark:text-slate-300 font-medium">
                         @foreach($applications as $app)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="font-bold text-slate-900 dark:text-white block text-sm">
+                            @php
+                                $activeComakers = $app->form_data['comakers'] ?? [];
+                                $rejectedComakers = $app->comakers()
+                                    ->where('status', 'rejected')
+                                    ->whereIn('user_id', $activeComakers)
+                                    ->with('user')
+                                    ->get();
+                                $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $rejectedComakers->isNotEmpty();
+                            @endphp
+                            <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors">
+                                <!-- Facility & Type -->
+                                <td class="py-3 px-3.5">
+                                    <span class="font-bold text-slate-900 dark:text-white block text-xs">
                                         {{ config("loans.{$app->loan_category}.{$app->loan_type}.name", ucwords(str_replace('_', ' ', $app->loan_type))) }}
                                     </span>
-                                    <span class="text-[11px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider mt-0.5 block">{{ $app->loan_category }} Loan</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold">
+                                        {{ $app->loan_category }} Loan • LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 font-extrabold font-mono text-slate-900 dark:text-white">
+
+                                <!-- Requested Amount -->
+                                <td class="py-3 px-3.5 font-mono font-bold text-slate-900 dark:text-white text-xs">
                                     ₱{{ number_format($app->requested_amount, 2) }}
                                 </td>
-                                <!-- Compliance Docs Column -->
-                                <td class="px-6 py-4">
-                                    @if($app->documents->isNotEmpty())
-                                        <div class="flex flex-col gap-1">
-                                            @foreach($app->documents as $doc)
-                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-lg text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all truncate max-w-[150px] cursor-pointer shadow-3xs"
+
+                                <!-- Current Stage & Status -->
+                                <td class="py-3 px-3.5">
+                                    @if($app->status === 'approved')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[11px] font-semibold border border-emerald-200/60 dark:border-emerald-800/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Released / Completed
+                                        </span>
+                                    @elseif($app->status === 'returned')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-[11px] font-semibold border border-amber-200/60 dark:border-amber-800/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                            Returned for Revision
+                                        </span>
+                                    @elseif($app->status === 'rejected')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-[11px] font-semibold border border-rose-200/60 dark:border-rose-800/40">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                            Rejected
+                                        </span>
+                                    @elseif($app->status === 'cancelled')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[11px] font-semibold border border-slate-200 dark:border-slate-700">
+                                            Cancelled
+                                        </span>
+                                    @else
+                                        @if($hasRejectedComaker)
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-[11px] font-semibold border border-amber-200/60 dark:border-amber-800/40 animate-pulse">
+                                                <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                                                Co-maker Declined
+                                            </span>
+                                        @elseif($app->current_stage === 'sako_staff')
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 border border-sky-200/60 dark:border-sky-800/40 text-[11px] font-semibold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
+                                                Sako Staff Review
+                                            </span>
+                                        @elseif($app->current_stage === 'hrmd_staff')
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40 text-[11px] font-semibold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                                HRMD Verification
+                                            </span>
+                                        @elseif($app->current_stage === 'credit_committee')
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40 text-[11px] font-semibold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                                                Credit Comm Review
+                                            </span>
+                                        @elseif($app->current_stage === 'accounting')
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40 text-[11px] font-semibold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                Accounting Computations
+                                            </span>
+                                        @elseif($app->current_stage === 'releasing_officer')
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-200/60 dark:border-teal-800/40 text-[11px] font-semibold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+                                                Awaiting Disbursement
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 text-[11px] font-semibold">
+                                                {{ ucwords(str_replace('_', ' ', $app->current_stage)) }}
+                                            </span>
+                                        @endif
+                                    @endif
+                                </td>
+
+                                <!-- Documents -->
+                                <td class="py-3 px-3.5">
+                                    <div class="flex flex-wrap items-center gap-1.5 max-w-[200px]">
+                                        @if($app->documents->isNotEmpty())
+                                            @foreach($app->documents->take(2) as $doc)
+                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/60 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded text-[10px] font-semibold transition-all truncate max-w-[90px] cursor-pointer"
                                                     data-url="{{ $doc->file_url }}"
                                                     data-name="{{ $doc->original_name }}"
                                                     data-size="{{ $doc->formatted_file_size }}"
                                                     title="{{ $doc->original_name }}">
-                                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
+                                                    <i class="fa-solid fa-file-pdf text-rose-500 text-[9px]"></i>
                                                     <span class="truncate">{{ $doc->original_name }}</span>
                                                 </button>
                                             @endforeach
-                                        </div>
-                                    @else
-                                        <span class="text-[10px] text-slate-400 italic">None</span>
-                                    @endif
-                                </td>
-                                <!-- Accounting Files Column -->
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-col gap-1">
+                                            @if($app->documents->count() > 2)
+                                                <span class="text-[10px] text-slate-400 font-semibold">+{{ $app->documents->count() - 2 }}</span>
+                                            @endif
+                                        @endif
+
                                         @if($app->ledger_path)
-                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all max-w-[130px]"
+                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded text-[10px] font-bold border border-emerald-200/50 dark:border-emerald-800/40 cursor-pointer"
                                                 data-url="{{ $app->ledger_url }}"
                                                 data-name="Loan_Ledger_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
-                                                data-size="PDF">
-                                                <i class="fa-solid fa-book text-emerald-600 text-xs"></i>
+                                                data-size="PDF"
+                                                title="View Ledger">
+                                                <i class="fa-solid fa-book text-[9px]"></i>
                                                 <span>Ledger</span>
                                             </button>
                                         @endif
+
                                         @if($app->schedule_path)
-                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all max-w-[130px]"
+                                            <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 rounded text-[10px] font-bold border border-blue-200/50 dark:border-blue-800/40 cursor-pointer"
                                                 data-url="{{ $app->schedule_url }}"
                                                 data-name="Amortization_Schedule_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
-                                                data-size="PDF">
-                                                <i class="fa-solid fa-calendar-days text-blue-600 text-xs"></i>
+                                                data-size="PDF"
+                                                title="View Schedule">
+                                                <i class="fa-solid fa-calendar-days text-[9px]"></i>
                                                 <span>Schedule</span>
                                             </button>
                                         @endif
-                                        @if(!$app->ledger_path && !$app->schedule_path)
-                                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold italic">—</span>
+
+                                        @if($app->documents->isEmpty() && !$app->ledger_path && !$app->schedule_path)
+                                            <span class="text-[10px] text-slate-400 italic">—</span>
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">
-                                    @if($app->status === 'approved')
-                                        <span class="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1.5">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            Released / Completed
-                                        </span>
-                                    @elseif($app->status === 'returned')
-                                        <span class="text-amber-600 dark:text-amber-400 font-extrabold flex items-center gap-1.5">
-                                            <span class="w-2 h-2 rounded-full bg-amber-550 animate-pulse"></span>
-                                            Returned (Correction Required)
-                                        </span>
-                                    @elseif($app->status === 'rejected')
-                                        <span class="text-rose-600 dark:text-rose-400 font-bold">Rejected</span>
-                                    @elseif($app->status === 'cancelled')
-                                        <span class="text-slate-400 dark:text-slate-500 font-bold">Cancelled</span>
-                                    @else
-                                        @if($app->current_stage === 'sako_staff')
-                                            <span class="px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400 border border-sky-100/50 dark:border-sky-800/40 font-extrabold uppercase text-[10px]">Sako Staff Review</span>
-                                        @elseif($app->current_stage === 'hrmd_staff')
-                                            <span class="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100/50 dark:border-rose-800/40 font-extrabold uppercase text-[10px]">HRMD Verification</span>
-                                        @elseif($app->current_stage === 'credit_committee')
-                                            <span class="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-800/40 font-extrabold uppercase text-[10px]">Credit Comm Review</span>
-                                        @elseif($app->current_stage === 'accounting')
-                                            <span class="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-100/50 dark:border-amber-800/40 font-extrabold uppercase text-[10px]">Accounting Computations</span>
-                                        @elseif($app->current_stage === 'releasing_officer')
-                                            <span class="px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/40 font-extrabold uppercase text-[10px]">Awaiting Disbursement</span>
-                                        @else
-                                            <span class="px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-100/50 dark:border-slate-600/50 font-extrabold uppercase text-[10px]">{{ ucwords(str_replace('_', ' ', $app->current_stage)) }}</span>
-                                        @endif
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4">
-                                    @if($app->status === 'approved')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40 uppercase tracking-wider">Approved</span>
-                                    @elseif($app->status === 'rejected')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-800/40 uppercase tracking-wider">Rejected</span>
-                                    @elseif($app->status === 'cancelled')
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider">Cancelled</span>
-                                    @else
-                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/60 dark:border-blue-800/40 uppercase tracking-wider animate-pulse">Pending</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-400 font-bold">
+
+                                <!-- Submitted Date -->
+                                <td class="py-3 px-3.5 text-slate-500 dark:text-slate-400 text-xs">
                                     {{ $app->created_at->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex flex-col items-end gap-1.5">
-                                        <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer flex items-center gap-1" 
+
+                                <!-- Actions -->
+                                <td class="py-3 px-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button type="button" class="btn-view-ledger inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors cursor-pointer"
                                             data-ledger="{{ json_encode($workflowService->getWorkflowDetails($app)) }}"
                                             data-activities="{{ json_encode($app->activities) }}"
                                             data-documents="{{ json_encode($app->documents->map(fn($d) => ['name' => $d->original_name, 'size' => $d->formatted_file_size, 'url' => $d->file_url])) }}"
                                             data-ledger-url="{{ $app->ledger_url }}"
                                             data-schedule-url="{{ $app->schedule_url }}"
                                             data-app-id="{{ $app->id }}">
-                                            <span>View Timeline</span>
+                                            <span>Timeline</span>
                                             <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                         </button>
 
                                         @if($app->status === 'returned')
-                                            <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="mt-1 px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1.5 cursor-pointer">
+                                            <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="px-2.5 py-1 text-[10px] font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-md shadow-xs transition-all flex items-center gap-1 cursor-pointer" title="Modify and resubmit this loan application">
                                                 <i class="fa-solid fa-rotate-left"></i>
-                                                <span>Modify &amp; Resubmit</span>
+                                                <span>Revise</span>
                                             </a>
                                         @endif
-                                        
-                                        @php
-                                            $activeComakers = $app->form_data['comakers'] ?? [];
-                                            $rejectedComakers = $app->comakers()
-                                                ->where('status', 'rejected')
-                                                ->whereIn('user_id', $activeComakers)
-                                                ->with('user')
-                                                ->get();
-                                            $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $rejectedComakers->isNotEmpty();
-                                        @endphp
-                                        
+
                                         @if($hasRejectedComaker)
                                             @foreach($rejectedComakers as $rc)
-                                                <button class="btn-replace-comaker mt-1 px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5" 
+                                                <button type="button" class="btn-replace-comaker px-2 py-1 text-[10px] font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-md shadow-xs transition-all flex items-center gap-1 cursor-pointer"
                                                     data-app-id="{{ $app->id }}"
                                                     data-old-id="{{ $rc->user_id }}"
                                                     data-old-name="{{ $rc->user->name }}"
-                                                    data-active-comakers="{{ json_encode($activeComakers) }}">
+                                                    data-active-comakers="{{ json_encode($activeComakers) }}"
+                                                    title="Replace declined co-maker {{ $rc->user->name }}">
                                                     <i class="fa-solid fa-user-pen"></i>
-                                                    <span>Replace Co-maker ({{ $rc->user->name }})</span>
+                                                    <span>Replace ({{ Str::limit($rc->user->name, 10) }})</span>
                                                 </button>
                                             @endforeach
                                         @endif
@@ -297,138 +345,138 @@
                 </table>
             </div>
 
-            <!-- Mobile Applications Card Stack (Visible on mobile viewports) -->
-            <div class="block lg:hidden space-y-4">
+            <!-- Mobile Applications Card Stack (Visible on <lg screens) -->
+            <div class="block lg:hidden space-y-3">
                 @foreach($applications as $app)
-                    <div class="bg-slate-50/40 dark:bg-slate-900/40 border-2 border-slate-100 dark:border-slate-700/60 p-5 rounded-2xl space-y-4 transition-all duration-200">
+                    @php
+                        $activeComakers = $app->form_data['comakers'] ?? [];
+                        $rejectedComakers = $app->comakers()
+                            ->where('status', 'rejected')
+                            ->whereIn('user_id', $activeComakers)
+                            ->with('user')
+                            ->get();
+                        $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $rejectedComakers->isNotEmpty();
+                    @endphp
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-4 space-y-3 shadow-xs">
                         
-                        <!-- Top header row: Loan Name & Status -->
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <span class="font-bold text-slate-900 dark:text-white block text-sm leading-tight">
+                        <!-- Header Row: Loan Name + Status -->
+                        <div class="flex items-start justify-between gap-2.5">
+                            <div class="min-w-0 flex-1">
+                                <span class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm block leading-snug truncate">
                                     {{ config("loans.{$app->loan_category}.{$app->loan_type}.name", ucwords(str_replace('_', ' ', $app->loan_type))) }}
                                 </span>
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">{{ $app->loan_category }} Loan</span>
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold block mt-0.5">
+                                    {{ $app->loan_category }} Loan • LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}
+                                </span>
                             </div>
                             
-                            <!-- Status Badge -->
-                            <div>
+                            <!-- Unified Status Badge -->
+                            <div class="flex-shrink-0">
                                 @if($app->status === 'approved')
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40 uppercase tracking-wider">Approved</span>
-                                @elseif($app->status === 'rejected')
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-800/40 uppercase tracking-wider">Rejected</span>
-                                @elseif($app->status === 'cancelled')
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider">Cancelled</span>
-                                @else
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/60 dark:border-blue-800/40 uppercase tracking-wider animate-pulse">Pending</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Inner Metadata Card grid (Requested Amount & Submitted Date) -->
-                        <div class="grid grid-cols-2 gap-4 p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80">
-                            <div>
-                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Requested Amount</span>
-                                <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block">₱{{ number_format($app->requested_amount, 2) }}</span>
-                            </div>
-                            <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
-                                <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Submitted Date</span>
-                                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $app->created_at->format('M d, Y') }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Active Stage bar -->
-                        <div class="flex items-center justify-between gap-3 text-xs">
-                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Active Stage:</span>
-                            <div>
-                                @if($app->status === 'approved')
-                                    <span class="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Released / Completed
+                                        Released
                                     </span>
                                 @elseif($app->status === 'returned')
-                                    <span class="text-amber-600 dark:text-amber-400 font-extrabold flex items-center gap-1.5">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-550 animate-pulse"></span>
-                                        Returned (Correction)
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-[10px] font-bold border border-amber-200/60 dark:border-amber-800/40">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        Returned
                                     </span>
                                 @elseif($app->status === 'rejected')
-                                    <span class="text-rose-600 dark:text-rose-400 font-bold">Rejected</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-[10px] font-bold border border-rose-200/60 dark:border-rose-800/40">
+                                        Rejected
+                                    </span>
                                 @elseif($app->status === 'cancelled')
-                                    <span class="text-slate-400 dark:text-slate-500 font-bold">Cancelled</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold">
+                                        Cancelled
+                                    </span>
                                 @else
-                                    @if($app->current_stage === 'sako_staff')
-                                        <span class="px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-950/20 text-sky-700 dark:text-sky-400 border border-sky-100/50 dark:border-sky-800/20 font-bold uppercase text-[9px]">Sako Staff Review</span>
-                                    @elseif($app->current_stage === 'hrmd_staff')
-                                        <span class="px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-100/50 dark:border-rose-800/20 font-bold uppercase text-[9px]">HRMD Verification</span>
-                                    @elseif($app->current_stage === 'credit_committee')
-                                        <span class="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-800/20 font-bold uppercase text-[9px]">Credit Comm Review</span>
-                                    @elseif($app->current_stage === 'accounting')
-                                        <span class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border border-amber-100/50 dark:border-amber-800/20 font-bold uppercase text-[9px]">Accounting Computations</span>
-                                    @elseif($app->current_stage === 'releasing_officer')
-                                        <span class="px-2 py-0.5 rounded bg-teal-50 dark:bg-teal-950/20 text-teal-700 dark:text-teal-400 border border-teal-100/50 dark:border-teal-800/20 font-bold uppercase text-[9px]">Awaiting Disbursement</span>
-                                    @else
-                                        <span class="px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-100/50 dark:border-slate-600/50 font-bold uppercase text-[9px]">{{ ucwords(str_replace('_', ' ', $app->current_stage)) }}</span>
-                                    @endif
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 text-[10px] font-bold border border-sky-200/60 dark:border-sky-800/40 animate-pulse">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                        Pending
+                                    </span>
                                 @endif
                             </div>
                         </div>
 
-                        <!-- Attached Documents Deck (Mobile) -->
-                        @if($app->documents->isNotEmpty() || $app->ledger_path || $app->schedule_path)
-                            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                                @if($app->documents->isNotEmpty())
-                                    <div class="space-y-1.5">
-                                        <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none flex items-center gap-1.5">
-                                            <i class="fa-solid fa-paperclip text-slate-400"></i> Compliance Documents ({{ $app->documents->count() }})
-                                        </span>
-                                        <div class="flex flex-wrap gap-1.5">
-                                            @foreach($app->documents as $doc)
-                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-lg text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all truncate max-w-[220px] cursor-pointer shadow-3xs"
-                                                    data-url="{{ $doc->file_url }}"
-                                                    data-name="{{ $doc->original_name }}"
-                                                    data-size="{{ $doc->formatted_file_size }}"
-                                                    title="{{ $doc->original_name }}">
-                                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
-                                                    <span class="truncate">{{ $doc->original_name }}</span>
-                                                </button>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
+                        <!-- Amount & Date Inset Box -->
+                        <div class="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60">
+                            <div>
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Requested</span>
+                                <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-0.5 block">
+                                    ₱{{ number_format($app->requested_amount, 2) }}
+                                </span>
+                            </div>
+                            <div class="border-l border-slate-200 dark:border-slate-700/80 pl-3">
+                                <span class="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Submitted</span>
+                                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-0.5 block">
+                                    {{ $app->created_at->format('M d, Y') }}
+                                </span>
+                            </div>
+                        </div>
 
-                                @if($app->ledger_path || $app->schedule_path)
-                                    <div class="space-y-1.5 pt-1">
-                                        <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none flex items-center gap-1.5">
-                                            <i class="fa-solid fa-file-invoice text-emerald-500"></i> Accounting Official Files
-                                        </span>
-                                        <div class="flex flex-wrap gap-1.5">
-                                            @if($app->ledger_path)
-                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all"
-                                                    data-url="{{ $app->ledger_url }}"
-                                                    data-name="Loan_Ledger_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
-                                                    data-size="PDF">
-                                                    <i class="fa-solid fa-book text-emerald-600"></i>
-                                                    <span>Official Ledger</span>
-                                                </button>
-                                            @endif
-                                            @if($app->schedule_path)
-                                                <button type="button" class="btn-preview-pdf inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 rounded-lg text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all"
-                                                    data-url="{{ $app->schedule_url }}"
-                                                    data-name="Amortization_Schedule_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
-                                                    data-size="PDF">
-                                                    <i class="fa-solid fa-calendar-days text-blue-600"></i>
-                                                    <span>Payment Schedule</span>
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </div>
+                        <!-- Active Workflow Stage Pill (Mobile) -->
+                        <div class="flex items-center justify-between text-xs gap-2">
+                            <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Stage:</span>
+                            <div class="text-right">
+                                @if($hasRejectedComaker)
+                                    <span class="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        Co-maker Declined
+                                    </span>
+                                @elseif($app->status === 'approved')
+                                    <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Funds Disbursed</span>
+                                @elseif($app->status === 'returned')
+                                    <span class="text-[10px] font-bold text-amber-600 dark:text-amber-400">Needs Modification</span>
+                                @else
+                                    <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                                        {{ ucwords(str_replace('_', ' ', $app->current_stage)) }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Attached Files Quick Chips (if available) -->
+                        @if($app->documents->isNotEmpty() || $app->ledger_path || $app->schedule_path)
+                            <div class="flex flex-wrap gap-1.5 pt-1 border-t border-slate-100 dark:border-slate-700/60">
+                                @foreach($app->documents->take(3) as $doc)
+                                    <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 rounded-md text-[10px] font-semibold truncate max-w-[140px] cursor-pointer"
+                                        data-url="{{ $doc->file_url }}"
+                                        data-name="{{ $doc->original_name }}"
+                                        data-size="{{ $doc->formatted_file_size }}">
+                                        <i class="fa-solid fa-file-pdf text-rose-500 text-[9px]"></i>
+                                        <span class="truncate">{{ $doc->original_name }}</span>
+                                    </button>
+                                @endforeach
+                                @if($app->documents->count() > 3)
+                                    <span class="inline-flex items-center px-1.5 py-0.5 text-[9px] font-semibold text-slate-400">
+                                        +{{ $app->documents->count() - 3 }} more
+                                    </span>
+                                @endif
+                                @if($app->ledger_path)
+                                    <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-md text-[10px] font-bold border border-emerald-200/50 dark:border-emerald-800/40 cursor-pointer"
+                                        data-url="{{ $app->ledger_url }}"
+                                        data-name="Loan_Ledger_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                        data-size="PDF">
+                                        <i class="fa-solid fa-book text-[9px]"></i>
+                                        <span>Ledger</span>
+                                    </button>
+                                @endif
+                                @if($app->schedule_path)
+                                    <button type="button" class="btn-preview-pdf inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 rounded-md text-[10px] font-bold border border-blue-200/50 dark:border-blue-800/40 cursor-pointer"
+                                        data-url="{{ $app->schedule_url }}"
+                                        data-name="Amortization_Schedule_LN-{{ str_pad($app->id, 5, '0', STR_PAD_LEFT) }}.pdf"
+                                        data-size="PDF">
+                                        <i class="fa-solid fa-calendar-days text-[9px]"></i>
+                                        <span>Schedule</span>
+                                    </button>
                                 @endif
                             </div>
                         @endif
 
-                        <!-- Action buttons row -->
-                        <div class="pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-2 items-center justify-between">
-                            <button class="btn-view-ledger text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline cursor-pointer flex items-center gap-1" 
+                        <!-- Action Buttons Row (Mobile) -->
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
+                            <button type="button" class="btn-view-ledger flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold transition-all cursor-pointer"
                                 data-ledger="{{ json_encode($workflowService->getWorkflowDetails($app)) }}"
                                 data-activities="{{ json_encode($app->activities) }}"
                                 data-documents="{{ json_encode($app->documents->map(fn($d) => ['name' => $d->original_name, 'size' => $d->formatted_file_size, 'url' => $d->file_url])) }}"
@@ -440,31 +488,21 @@
                             </button>
 
                             @if($app->status === 'returned')
-                                <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="px-3 py-1.5 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-1.5 cursor-pointer">
-                                    <i class="fa-solid fa-rotate-left"></i>
-                                    <span>Modify &amp; Resubmit</span>
+                                <a href="{{ route('member.forms') }}?resubmit_id={{ $app->id }}" class="inline-flex items-center gap-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer">
+                                    <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                                    <span>Revise</span>
                                 </a>
                             @endif
-                            
-                            @php
-                                $activeComakers = $app->form_data['comakers'] ?? [];
-                                $rejectedComakers = $app->comakers()
-                                    ->where('status', 'rejected')
-                                    ->whereIn('user_id', $activeComakers)
-                                    ->with('user')
-                                    ->get();
-                                $hasRejectedComaker = $app->current_stage === 'comakers' && $app->status === 'pending' && $rejectedComakers->isNotEmpty();
-                            @endphp
-                            
+
                             @if($hasRejectedComaker)
                                 @foreach($rejectedComakers as $rc)
-                                    <button class="btn-replace-comaker px-2.5 py-1 text-[10px] font-extrabold bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5" 
+                                    <button type="button" class="btn-replace-comaker inline-flex items-center gap-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
                                         data-app-id="{{ $app->id }}"
                                         data-old-id="{{ $rc->user_id }}"
                                         data-old-name="{{ $rc->user->name }}"
                                         data-active-comakers="{{ json_encode($activeComakers) }}">
-                                        <i class="fa-solid fa-user-pen"></i>
-                                        <span>Replace Co-maker ({{ $rc->user->name }})</span>
+                                        <i class="fa-solid fa-user-pen text-[10px]"></i>
+                                        <span>Replace</span>
                                     </button>
                                 @endforeach
                             @endif
@@ -474,88 +512,108 @@
                 @endforeach
             </div>
         </div>
+    @else
+        <!-- Empty State Container -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 p-8 sm:p-12 text-center shadow-xs space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-file-signature"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white">No Loan Applications Found</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+                    You haven't submitted any cooperative loan requests yet. Explore flexible salary, emergency, or appliance loan facilities.
+                </p>
+            </div>
+            <div class="pt-2">
+                <a href="{{ route('member.forms') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs shadow-emerald-600/10 transition-all">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Apply for a Loan</span>
+                </a>
+            </div>
+        </div>
     @endif
+
 </div>
 
 <!-- MODAL: VIEW APPROVAL TIMELINE -->
-<div id="modal-ledger" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-4">
+<div id="modal-ledger" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-3 sm:p-4">
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none modal-overlay"></div>
+    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/70 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
     
     <!-- Modal Container -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl shadow-slate-950/15 dark:shadow-slate-950/50 w-full max-w-md sm:max-w-5xl relative z-10 p-4 sm:p-6 lg:p-8 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl w-full max-w-4xl relative z-10 p-5 sm:p-6 lg:p-7 space-y-5 transform scale-95 opacity-0 transition-all duration-300 modal-container max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div>
-                <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approval Timeline &amp; History</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Live Workflow Stages, Activity Audit Log, and Compliance Documents</p>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">Loan Approval Timeline &amp; History</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Live workflow progression, activity audit trail, and compliance files.</p>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200 cursor-pointer">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button type="button" class="modal-close p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-5">
             <!-- PART 1: Workflow Steps -->
-            <div class="space-y-3">
-                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <div class="space-y-2.5">
+                <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-list-check text-emerald-500"></i>
                     Workflow Stages
                 </h4>
-                <div class="relative min-h-[140px] flex items-center justify-center bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl p-4">
+                <div class="relative min-h-[120px] flex items-center justify-center bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-3 sm:p-4">
                     <!-- Background connecting line (visible on large screens) -->
-                    <div class="hidden sm:block absolute top-[1rem] left-[4.5rem] right-[4.5rem] h-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
+                    <div class="hidden sm:block absolute top-[1.25rem] left-[4.5rem] right-[4.5rem] h-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
                     
                     <!-- Vertical connecting line (visible on mobile only) -->
-                    <div class="block sm:hidden absolute top-6 bottom-6 left-[2rem] w-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
+                    <div class="block sm:hidden absolute top-6 bottom-6 left-[1.75rem] w-0.5 bg-slate-200 dark:bg-slate-800 z-0"></div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-2 w-full relative z-10" id="ledger-timeline-container">
+                    <div class="grid grid-cols-1 sm:grid-cols-6 gap-3 sm:gap-2 w-full relative z-10" id="ledger-timeline-container">
                         <!-- Dynamically populated via JS -->
                     </div>
                 </div>
             </div>
 
             <!-- PART 2: Activity Log Timeline -->
-            <div class="space-y-3">
-                <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <div class="space-y-2.5">
+                <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-clock-rotate-left text-blue-500"></i>
-                    Activity Log Timeline
+                    Activity Audit Log
                 </h4>
-                <div class="bg-slate-50/40 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800/50 rounded-2xl pl-6 pr-4 py-6 max-h-[260px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
-                    <div id="activity-timeline-log" class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 space-y-6">
+                <div class="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl pl-5 pr-4 py-4 max-h-[220px] overflow-y-auto">
+                    <div id="activity-timeline-log" class="relative pl-5 border-l-2 border-slate-200 dark:border-slate-800 space-y-4">
                         <!-- Dynamically populated via JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- PART 3: Attached Loan Documents (Compliance & Accounting) -->
-            <div class="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <!-- PART 3: Attached Loan Documents -->
+            <div class="space-y-2.5 pt-1 border-t border-slate-100 dark:border-slate-800">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-folder-open text-emerald-500"></i>
                         Attached Loan Documents
                     </h4>
                     <span id="modal-docs-count-badge" class="text-[10px] font-mono text-slate-400 font-bold"></span>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <!-- Column A: Compliance Documents -->
-                    <div class="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 space-y-3">
-                        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
+                    <div class="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-3.5 space-y-2">
+                        <span class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-id-card text-emerald-500"></i>
-                            Compliance Documents (Company ID &amp; Payslips)
+                            Compliance Files (ID &amp; Payslips)
                         </span>
-                        <div id="modal-compliance-docs-list" class="space-y-2">
+                        <div id="modal-compliance-docs-list" class="space-y-1.5">
                             <!-- Populated dynamically -->
                         </div>
                     </div>
 
                     <!-- Column B: Accounting Documents -->
-                    <div class="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 space-y-3">
-                        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
+                    <div class="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-3.5 space-y-2">
+                        <span class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-file-invoice text-blue-500"></i>
                             Accounting Official Files
                         </span>
-                        <div id="modal-accounting-docs-list" class="space-y-2">
+                        <div id="modal-accounting-docs-list" class="space-y-1.5">
                             <!-- Populated dynamically -->
                         </div>
                     </div>
@@ -563,26 +621,26 @@
             </div>
         </div>
 
-        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
-            <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer">Close</button>
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+            <button type="button" class="modal-close px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Close</button>
         </div>
     </div>
 </div>
 
 <!-- MODAL: REPLACE REJECTED CO-MAKER -->
-<div id="modal-replace-comaker" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-4">
+<div id="modal-replace-comaker" class="fixed inset-0 z-50 hidden overflow-y-auto flex items-center justify-center p-3 sm:p-4">
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none modal-overlay"></div>
+    <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/70 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
     
     <!-- Modal Container -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl overflow-visible w-full max-w-md relative z-10 p-6 space-y-6 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] modal-container">
-        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-visible w-full max-w-md relative z-10 p-5 sm:p-6 space-y-5 transform scale-95 opacity-0 transition-all duration-300 modal-container">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div>
-                <h3 class="text-lg font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Replace Co-maker</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Designate a new co-maker for your loan application</p>
+                <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Replace Co-maker</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Designate an eligible member as replacement.</p>
             </div>
-            <button class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-200 cursor-pointer">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button type="button" class="modal-close p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
@@ -592,16 +650,16 @@
             <input type="hidden" name="old_comaker_id" id="replace-old-id">
             
             <div class="space-y-4">
-                <div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/40 rounded-xl p-3 text-xs text-amber-800 dark:text-amber-400 leading-normal">
-                    <span class="font-extrabold block mb-0.5"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Replaced Co-maker:</span>
-                    <span id="replace-old-name" class="font-semibold"></span> has declined your request. Please select a replacement below.
+                <div class="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-xl p-3 text-xs text-amber-900 dark:text-amber-300 leading-normal">
+                    <span class="font-bold block mb-0.5"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Co-maker Declined:</span>
+                    <span id="replace-old-name" class="font-bold"></span> has declined your request. Please select another co-maker below to keep your application moving.
                 </div>
 
                 <div class="space-y-1.5 relative" id="searchable-comaker-wrapper">
-                    <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Select New Co-maker</label>
+                    <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Select Replacement Member</label>
                     
                     <!-- Selected Value Trigger Button -->
-                    <button type="button" id="comaker-select-trigger" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all text-slate-700 dark:text-slate-300 flex items-center justify-between cursor-pointer">
+                    <button type="button" id="comaker-select-trigger" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all text-slate-700 dark:text-slate-300 flex items-center justify-between">
                         <span id="comaker-select-label" class="text-slate-400 dark:text-slate-500">Select a member...</span>
                         <i class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
                     </button>
@@ -614,13 +672,13 @@
                         <!-- Search Box -->
                         <div class="p-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-2">
                             <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs pl-2"></i>
-                            <input type="text" id="comaker-search-input" placeholder="Search by name or member ID..." class="w-full px-2 py-1.5 text-xs border-0 bg-transparent outline-none text-slate-900 dark:text-slate-100">
+                            <input type="text" id="comaker-search-input" placeholder="Search by name or company ID..." class="w-full px-2 py-1 text-xs border-0 bg-transparent outline-none text-slate-900 dark:text-slate-100">
                         </div>
                         
                         <!-- Options Scroll Area -->
                         <ul id="comaker-select-options" class="flex-1 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-700/50">
                             @foreach($members as $m)
-                                <li data-value="{{ $m->id }}" data-search="{{ strtolower($m->name . ' ' . $m->company_id) }}" class="comaker-option-item px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-emerald-50 hover:text-emerald-800 dark:hover:bg-slate-700/80 dark:hover:text-white cursor-pointer transition-colors flex items-center justify-between">
+                                <li data-value="{{ $m->id }}" data-search="{{ strtolower($m->name . ' ' . $m->company_id) }}" class="comaker-option-item px-3.5 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-emerald-50 hover:text-emerald-800 dark:hover:bg-slate-700/80 dark:hover:text-white cursor-pointer transition-colors flex items-center justify-between">
                                     <span class="font-semibold">{{ $m->name }}</span>
                                     <span class="text-[10px] font-mono opacity-60">ID: {{ $m->company_id ?: 'N/A' }}</span>
                                 </li>
@@ -632,9 +690,9 @@
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 mt-6">
-                <button type="button" class="modal-close px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer">Cancel</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-500/10 hover:shadow-emerald-600/20 transition-all cursor-pointer">Submit Replacement</button>
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">
+                <button type="button" class="modal-close px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs shadow-emerald-600/10 transition-all">Submit Replacement</button>
             </div>
         </form>
     </div>
@@ -647,12 +705,11 @@
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Parse the exact php loan configurations dynamically
-        const loanConfig = @json($loanConfig);
 
-        // Drawer toggles
+        // Modal Drawer toggles
         function openDrawer(drawerId) {
             const drawer = document.getElementById(drawerId);
+            if (!drawer) return;
             const overlay = drawer.querySelector(".modal-overlay");
             const container = drawer.querySelector(".modal-container");
             
@@ -664,19 +721,15 @@
                     overlay.classList.add("opacity-100", "pointer-events-auto");
                 }
                 if (container) {
-                    if (drawerId === "drawer-apply") {
-                        container.classList.remove("translate-x-full");
-                        container.classList.add("translate-x-0");
-                    } else {
-                        container.classList.remove("scale-95", "opacity-0");
-                        container.classList.add("scale-100", "opacity-100");
-                    }
+                    container.classList.remove("scale-95", "opacity-0");
+                    container.classList.add("scale-100", "opacity-100");
                 }
-            }, 50);
+            }, 30);
         }
 
         function closeDrawer(drawerId) {
             const drawer = document.getElementById(drawerId);
+            if (!drawer) return;
             const overlay = drawer.querySelector(".modal-overlay");
             const container = drawer.querySelector(".modal-container");
             
@@ -685,21 +738,16 @@
                 overlay.classList.remove("opacity-100", "pointer-events-auto");
             }
             if (container) {
-                if (drawerId === "drawer-apply") {
-                    container.classList.add("translate-x-full");
-                    container.classList.remove("translate-x-0");
-                } else {
-                    container.classList.add("scale-95", "opacity-0");
-                    container.classList.remove("scale-100", "opacity-100");
-                }
+                container.classList.add("scale-95", "opacity-0");
+                container.classList.remove("scale-100", "opacity-100");
             }
             setTimeout(() => {
                 drawer.classList.add("hidden");
                 drawer.classList.remove("flex");
-            }, 300);
+            }, 250);
         }
 
-        // Close click events
+        // Close click events on all modals
         document.querySelectorAll(".modal-close, .modal-overlay").forEach(btn => {
             btn.addEventListener("click", function() {
                 const drawer = this.closest('[id^="drawer-"], [id^="modal-"]');
@@ -709,284 +757,7 @@
             });
         });
 
-        // Trigger action buttons
-        const btnOpenApply = document.getElementById("btn-open-application");
-        const btnOpenCalc = document.getElementById("btn-open-calculator");
-        
-        if (btnOpenApply) {
-            btnOpenApply.addEventListener("click", () => openDrawer("drawer-apply"));
-        }
-        if (btnOpenCalc) {
-            btnOpenCalc.addEventListener("click", () => openDrawer("drawer-apply"));
-        }
-
-        // State variables for package limit checks
-        let currentMaxLimit = 0;
-        let currentMaxTerm = 24;
-        let requiredComakersCount = 0;
-
-        // Step 1 Event Listeners: Dynamic drop-downs populated from config/loans.php
-        const selectCategory = document.getElementById("loan-category");
-        const selectType = document.getElementById("loan-type");
-
-        if (selectCategory) {
-            selectCategory.addEventListener("change", function() {
-                const category = this.value;
-                if (selectType) {
-                    selectType.innerHTML = '<option value="" disabled selected>Select package...</option>';
-                    
-                    if (loanConfig[category]) {
-                        selectType.removeAttribute("disabled");
-                        Object.keys(loanConfig[category]).forEach(key => {
-                            const option = document.createElement("option");
-                            option.value = key;
-                            option.textContent = loanConfig[category][key].name;
-                            selectType.appendChild(option);
-                        });
-                    } else {
-                        selectType.setAttribute("disabled", "true");
-                    }
-                }
-
-                // Reset inputs
-                resetInteractiveWizard();
-            });
-        }
-
-        if (selectType) {
-            selectType.addEventListener("change", function() {
-                const category = selectCategory ? selectCategory.value : '';
-                const type = this.value;
-                const config = loanConfig[category] ? loanConfig[category][type] : null;
-
-                if (config) {
-                    // Parse package limits
-                    currentMaxLimit = typeof config.loanable_amount === 'number' ? config.loanable_amount : 100000; // fallback for complex formulas
-                    currentMaxTerm = config.max_term_months || 24;
-                    
-                    // Show dynamic card details
-                    const nameEl = document.getElementById("info-package-name");
-                    if (nameEl) nameEl.textContent = config.name;
-                    const limitEl = document.getElementById("info-limit");
-                    if (limitEl) limitEl.textContent = typeof config.loanable_amount === 'number' ? "₱" + currentMaxLimit.toLocaleString() : config.loanable_amount;
-                    const termEl = document.getElementById("info-max-term");
-                    if (termEl) termEl.textContent = currentMaxTerm + " Months";
-                    const depositEl = document.getElementById("info-deposit");
-                    if (depositEl) depositEl.textContent = config.fixed_deposit ? "₱" + config.fixed_deposit.toLocaleString() : "None";
-
-                    // Handle conditional comakers count
-                    requiredComakersCount = typeof config.comakers === 'number' ? config.comakers : 0;
-                    const comakersEl = document.getElementById("info-comakers");
-                    if (comakersEl) comakersEl.textContent = requiredComakersCount || "None";
-
-                    // Populate and reveal dynamic form components
-                    const infoCard = document.getElementById("package-info-card");
-                    if (infoCard) infoCard.classList.remove("hidden");
-
-                    // Enable parameters
-                    const inputAmount = document.getElementById("loan-amount");
-                    const inputTerm = document.getElementById("loan-term");
-                    
-                    if (inputAmount) {
-                        inputAmount.removeAttribute("disabled");
-                        inputAmount.value = "";
-                        inputAmount.max = currentMaxLimit;
-                    }
-                    if (inputTerm) {
-                        inputTerm.removeAttribute("disabled");
-                        inputTerm.value = "";
-                        inputTerm.max = currentMaxTerm;
-                    }
-
-                    // Handle Acquisition Partners (optical, jewelry, appliances)
-                    const partnerSection = document.getElementById("partner-product-section");
-                    const selectPartner = document.getElementById("loan-partner");
-                    if (selectPartner) {
-                        selectPartner.innerHTML = '<option value="" selected>Select partner...</option>';
-
-                        if (config.partner) {
-                            if (partnerSection) partnerSection.classList.remove("hidden");
-                            if (Array.isArray(config.partner)) {
-                                config.partner.forEach(p => {
-                                    const opt = document.createElement("option");
-                                    opt.value = p;
-                                    opt.textContent = p;
-                                    selectPartner.appendChild(opt);
-                                });
-                            } else {
-                                const opt = document.createElement("option");
-                                opt.value = config.partner;
-                                opt.textContent = config.partner;
-                                selectPartner.appendChild(opt);
-                            }
-                        } else {
-                            if (partnerSection) partnerSection.classList.add("hidden");
-                        }
-                    }
-
-                    // Handle dynamic products lists (ADTEL)
-                    const inputProduct = document.getElementById("loan-product");
-                    if (config.products && Array.isArray(config.products)) {
-                        if (partnerSection) partnerSection.classList.remove("hidden");
-                        const wrapper = document.getElementById("product-input-wrapper");
-                        if (wrapper) {
-                            wrapper.innerHTML = '<label class="text-2xs font-extrabold uppercase text-slate-500 tracking-wider">Product Option</label>' +
-                                '<select name="product" id="loan-product" required class="w-full px-3 py-2.5 text-xs border border-slate-200 rounded-lg bg-white outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"></select>';
-                        }
-                        const productSelect = document.getElementById("loan-product");
-                        if (productSelect) {
-                            config.products.forEach(prod => {
-                                const opt = document.createElement("option");
-                                opt.value = prod;
-                                opt.textContent = prod;
-                                productSelect.appendChild(opt);
-                            });
-                        }
-                    }
-
-                    // Display comakers checklist section if required
-                    const comakersSection = document.getElementById("comakers-selection-section");
-                    if (requiredComakersCount > 0) {
-                        if (comakersSection) comakersSection.classList.remove("hidden");
-                        const reqComakersCountEl = document.getElementById("required-comaker-count");
-                        if (reqComakersCountEl) reqComakersCountEl.textContent = requiredComakersCount;
-                        const comakerWarn = document.getElementById("comaker-warning");
-                        if (comakerWarn) comakerWarn.classList.remove("hidden");
-                    } else {
-                        if (comakersSection) comakersSection.classList.add("hidden");
-                        const comakerWarn = document.getElementById("comaker-warning");
-                        if (comakerWarn) comakerWarn.classList.add("hidden");
-                    }
-                }
-            });
-        }
-
-        // Live calculator triggers
-        const inputAmount = document.getElementById("loan-amount");
-        const inputTerm = document.getElementById("loan-term");
-
-        if (inputAmount) {
-            inputAmount.addEventListener("input", performAmortizationCalculation);
-        }
-        if (inputTerm) {
-            inputTerm.addEventListener("input", performAmortizationCalculation);
-        }
-
-        function performAmortizationCalculation() {
-            if (!inputAmount || !inputTerm) return;
-            const amount = parseFloat(inputAmount.value) || 0;
-            const term = parseInt(inputTerm.value) || 0;
-            const calcPreview = document.getElementById("calculator-preview");
-
-            // Evaluate comaker limits dynamically for Instant and Petty Cash loans
-            const category = selectCategory ? selectCategory.value : '';
-            const type = selectType ? selectType.value : '';
-            const config = loanConfig[category]?.[type];
-
-            if (config && typeof config.comakers === 'object' && !Array.isArray(config.comakers)) {
-                // Dynamic limits, e.g. Petty Cash limits <=10000, >10000
-                requiredComakersCount = 0;
-                Object.keys(config.comakers).forEach(rangeKey => {
-                    if (rangeKey.startsWith("≤") || rangeKey.startsWith("<=")) {
-                        const threshold = parseFloat(rangeKey.replace("≤", "").replace("<=", ""));
-                        if (amount <= threshold) requiredComakersCount = config.comakers[rangeKey];
-                    } else if (rangeKey.startsWith(">")) {
-                        const threshold = parseFloat(rangeKey.replace(">", ""));
-                        if (amount > threshold) requiredComakersCount = config.comakers[rangeKey];
-                    }
-                });
-                
-                // Refresh comakers UI warning dynamically based on request amount!
-                const comakersSection = document.getElementById("comakers-selection-section");
-                if (requiredComakersCount > 0) {
-                    if (comakersSection) comakersSection.classList.remove("hidden");
-                    const countEl = document.getElementById("required-comaker-count");
-                    if (countEl) countEl.textContent = requiredComakersCount;
-                    const comakerWarn = document.getElementById("comaker-warning");
-                    if (comakerWarn) comakerWarn.classList.remove("hidden");
-                } else {
-                    if (comakersSection) comakersSection.classList.add("hidden");
-                    const comakerWarn = document.getElementById("comaker-warning");
-                    if (comakerWarn) comakerWarn.classList.add("hidden");
-                }
-            }
-
-            if (amount > 0 && term > 0) {
-                if (calcPreview) calcPreview.classList.remove("hidden");
-                
-                // Resolve specific interest rate for the chosen term
-                let appliedRate = config ? (config.interest_rate || 5.0) : 5.0;
-                if (config && config.available_terms && config.available_terms.length > 0) {
-                    const matched = config.available_terms.find(t => t.months === term);
-                    if (matched) {
-                        appliedRate = matched.interest_rate;
-                    }
-                }
-
-                // Amortization formulas
-                const principalMonthly = amount / term;
-                const interestMonthly = (amount * (appliedRate / 100)) / 12;
-                const totalMonthly = principalMonthly + interestMonthly;
-
-                const princEl = document.getElementById("calc-monthly-principal");
-                if (princEl) princEl.textContent = "₱" + principalMonthly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const intEl = document.getElementById("calc-monthly-interest");
-                if (intEl) intEl.textContent = "₱" + interestMonthly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const totEl = document.getElementById("calc-monthly-total");
-                if (totEl) totEl.textContent = "₱" + totalMonthly.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            } else {
-                if (calcPreview) calcPreview.classList.add("hidden");
-            }
-        }
-
-        function resetInteractiveWizard() {
-            const pkgInfoCard = document.getElementById("package-info-card");
-            if (pkgInfoCard) pkgInfoCard.classList.add("hidden");
-            const calcPreview = document.getElementById("calculator-preview");
-            if (calcPreview) calcPreview.classList.add("hidden");
-            const partnerSect = document.getElementById("partner-product-section");
-            if (partnerSect) partnerSect.classList.add("hidden");
-            const comakersSect = document.getElementById("comakers-selection-section");
-            if (comakersSect) comakersSect.classList.add("hidden");
-            if (inputAmount) inputAmount.setAttribute("disabled", "true");
-            if (inputTerm) inputTerm.setAttribute("disabled", "true");
-        }
-
-        // Form submission logic validating dynamic constraints
-        const loanForm = document.getElementById("loan-wizard-form");
-        if (loanForm) {
-            loanForm.addEventListener("submit", function(e) {
-                if (!inputAmount || !inputTerm) return;
-                const amount = parseFloat(inputAmount.value) || 0;
-                const term = parseInt(inputTerm.value) || 0;
-
-                // Validate Limit Max Bounds
-                if (currentMaxLimit > 0 && amount > currentMaxLimit) {
-                    e.preventDefault();
-                    alert("The requested amount exceeds the maximum limit of ₱" + currentMaxLimit.toLocaleString() + " for this package.");
-                    return;
-                }
-
-                // Validate Term Max Bounds
-                if (term > currentMaxTerm) {
-                    e.preventDefault();
-                    alert("The selected repayment term exceeds the maximum term of " + currentMaxTerm + " months allowed.");
-                    return;
-                }
-
-                // Validate Comakers selection count
-                if (requiredComakersCount > 0) {
-                    const checkedComakers = document.querySelectorAll(".comaker-checkbox:checked").length;
-                    if (checkedComakers !== requiredComakersCount) {
-                        e.preventDefault();
-                        alert("This loan package requires exactly " + requiredComakersCount + " comakers. You currently have selected " + checkedComakers + ".");
-                        return;
-                    }
-                }
-            });
-        }
-
-        // Trigger tracking ledger modals
+        // Trigger tracking ledger & timeline modal
         document.querySelectorAll(".btn-view-ledger").forEach(btn => {
             btn.addEventListener("click", function() {
                 const ledger = JSON.parse(this.getAttribute("data-ledger") || "[]");
@@ -994,11 +765,11 @@
                 container.innerHTML = "";
 
                 if (ledger.length === 0) {
-                    container.innerHTML = '<div class="col-span-6 text-center py-6 text-slate-500 dark:text-slate-400 font-bold italic text-xs bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 rounded-xl">This application has no active workflow stages.</div>';
+                    container.innerHTML = '<div class="col-span-6 text-center py-6 text-slate-500 dark:text-slate-400 font-semibold italic text-xs bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 rounded-xl">This application has no active workflow stages.</div>';
                 } else {
                     ledger.forEach((log, index) => {
                         const stepCard = document.createElement("div");
-                        stepCard.className = "flex flex-row sm:flex-col items-center gap-2 sm:gap-2.5 relative z-10";
+                        stepCard.className = "flex flex-row sm:flex-col items-center gap-2 sm:gap-2 relative z-10";
 
                         let circleClass = '';
                         let containerClass = '';
@@ -1010,50 +781,50 @@
                         switch (log.status) {
                             case 'approved':
                             case 'completed':
-                                circleClass = 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40 font-extrabold';
-                                containerClass = 'bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-900/30';
-                                badgeClass = 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40';
+                                circleClass = 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 font-extrabold';
+                                containerClass = 'bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40';
+                                badgeClass = 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300';
                                 statusText = log.status === 'completed' ? 'Released' : 'Approved';
                                 detailText = log.actor ? `Approved by: ${log.actor}` : 'Stage completed';
                                 break;
                             case 'rejected':
-                                circleClass = 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40 font-extrabold';
-                                containerClass = 'bg-rose-500/5 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-900/30';
-                                badgeClass = 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-800/40';
+                                circleClass = 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800 font-extrabold';
+                                containerClass = 'bg-rose-50/40 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40';
+                                badgeClass = 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300';
                                 statusText = 'Rejected';
                                 detailText = log.actor ? `Declined by: ${log.actor}` : 'Stage declined';
                                 break;
                             case 'skipped':
-                                circleClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200/60 dark:border-slate-700/60 font-semibold';
-                                containerClass = 'bg-slate-50/50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-800';
-                                badgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+                                circleClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 font-semibold';
+                                containerClass = 'bg-slate-50 dark:bg-slate-950/20 border border-slate-200/60 dark:border-slate-800';
+                                badgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-500';
                                 statusText = 'Skipped';
                                 detailText = 'Not required';
-                                cardOpacity = 'opacity-65';
+                                cardOpacity = 'opacity-60';
                                 break;
                             case 'current':
-                                circleClass = 'bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-700/60 animate-pulse font-extrabold';
-                                containerClass = 'bg-sky-500/5 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-900/30 ring-1 ring-sky-500/10';
-                                badgeClass = 'bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400 border border-sky-100/50 dark:border-sky-800/40 animate-pulse';
+                                circleClass = 'bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 border-2 border-sky-400 dark:border-sky-600 animate-pulse font-extrabold';
+                                containerClass = 'bg-sky-50/40 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/60 ring-1 ring-sky-500/20';
+                                badgeClass = 'bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-300 animate-pulse';
                                 statusText = 'Under Review';
                                 detailText = 'Awaiting decision';
                                 break;
                             case 'cancelled':
-                                circleClass = 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 border border-slate-200/60 dark:border-slate-700/60';
-                                containerClass = 'bg-slate-50/20 dark:bg-slate-950/10 border border-slate-100/50 dark:border-slate-800/50';
-                                badgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700';
+                                circleClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-700';
+                                containerClass = 'bg-slate-50/40 dark:bg-slate-950/20 border border-slate-200/40 dark:border-slate-800/40';
+                                badgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400';
                                 statusText = 'Cancelled';
                                 detailText = 'Workflow halted';
                                 cardOpacity = 'opacity-40';
                                 break;
                             case 'pending':
                             default:
-                                circleClass = 'bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 border border-slate-100 dark:border-slate-800';
-                                containerClass = 'bg-slate-50/20 dark:bg-slate-950/10 border border-slate-100/50 dark:border-slate-850/50';
-                                badgeClass = 'bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800';
+                                circleClass = 'bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 border border-slate-200 dark:border-slate-800';
+                                containerClass = 'bg-slate-50/30 dark:bg-slate-950/10 border border-slate-200/40 dark:border-slate-800/40';
+                                badgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-400';
                                 statusText = 'Pending';
                                 detailText = 'Future stage';
-                                cardOpacity = 'opacity-45';
+                                cardOpacity = 'opacity-50';
                                 break;
                         }
 
@@ -1062,32 +833,31 @@
 
                         stepCard.innerHTML = `
                             <!-- Circle Node -->
-                            <div class="w-8 h-8 rounded-full ${circleClass} flex items-center justify-center flex-shrink-0 relative z-10 shadow-sm transition-all duration-300">
-                                <span class="text-xs font-black">${index + 1}</span>
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full ${circleClass} flex items-center justify-center flex-shrink-0 relative z-10 shadow-xs transition-all">
+                                <span class="text-xs font-bold">${index + 1}</span>
                             </div>
                             
                             <!-- Info Card -->
-                            <div class="flex-1 sm:flex-grow-0 sm:w-full ${containerClass} p-2 rounded-xl transition-all duration-300 text-left sm:text-center flex flex-col justify-between sm:min-h-[110px] text-2xs ${cardOpacity}">
+                            <div class="flex-1 sm:flex-grow-0 sm:w-full ${containerClass} p-2 rounded-xl transition-all text-left sm:text-center flex flex-col justify-between sm:min-h-[100px] ${cardOpacity}">
                                 <div class="space-y-0.5">
-                                    <h4 class="font-extrabold text-slate-900 dark:text-slate-100 text-[9px] sm:text-[10px] uppercase tracking-wider line-clamp-1 leading-tight">${log.label}</h4>
+                                    <h4 class="font-bold text-slate-900 dark:text-slate-100 text-[10px] uppercase tracking-wider line-clamp-1 leading-tight">${log.label}</h4>
                                     <div>
-                                        <span class="text-[7.5px] px-1.5 py-0.5 rounded-full ${badgeClass} font-extrabold uppercase tracking-wide inline-block leading-none">${statusText}</span>
+                                        <span class="text-[8px] px-1.5 py-0.5 rounded-full ${badgeClass} font-bold uppercase tracking-wide inline-block leading-none">${statusText}</span>
                                     </div>
                                 </div>
                                 
-                                <div class="mt-1.5 border-t border-slate-100 dark:border-slate-800/80 pt-1.5 space-y-0.5 flex-1 flex flex-col justify-end">
-                                    <p class="text-[8.5px] text-slate-500 dark:text-slate-400 font-bold line-clamp-2 leading-tight">${detailText}</p>
-                                    ${dateStr ? `<p class="text-[8px] text-slate-400 dark:text-slate-500 font-bold leading-none">${dateStr}</p>` : ''}
+                                <div class="mt-1 border-t border-slate-200/60 dark:border-slate-800/80 pt-1 space-y-0.5 flex-1 flex flex-col justify-end">
+                                    <p class="text-[9px] text-slate-500 dark:text-slate-400 font-medium line-clamp-2 leading-tight">${detailText}</p>
+                                    ${dateStr ? `<p class="text-[8px] text-slate-400 dark:text-slate-500 font-mono leading-none">${dateStr}</p>` : ''}
                                 </div>
                                 
                                 ${log.remarks ? `
-                                    <div class="mt-1.5 pt-1 border-t border-slate-150 dark:border-slate-800/80 group relative">
-                                        <span class="text-[8.5px] font-extrabold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer flex items-center justify-center gap-1 sm:text-center">
+                                    <div class="mt-1 pt-1 border-t border-slate-200/60 dark:border-slate-800/80 group relative">
+                                        <span class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer flex items-center justify-center gap-1">
                                             <i class="fa-solid fa-comment-dots text-[10px]"></i>
                                             <span>Remarks</span>
                                         </span>
-                                        <!-- Hover Tooltip -->
-                                        <div class="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-48 bg-slate-950 text-white dark:bg-slate-900 dark:border dark:border-slate-800 p-2.5 rounded-xl text-[9px] leading-relaxed shadow-xl z-50">
+                                        <div class="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 bottom-full mb-1.5 hidden group-hover:block w-48 bg-slate-900 text-white dark:bg-slate-950 dark:border dark:border-slate-800 p-2 rounded-lg text-[10px] leading-relaxed shadow-xl z-50">
                                             "${log.remarks}"
                                         </div>
                                     </div>
@@ -1104,25 +874,21 @@
                 activityContainer.innerHTML = "";
 
                 if (activities.length === 0) {
-                    activityContainer.innerHTML = '<div class="text-slate-500 dark:text-slate-400 font-bold italic text-xs pl-2">No timeline activity logged yet for this application.</div>';
+                    activityContainer.innerHTML = '<div class="text-slate-500 dark:text-slate-400 font-medium italic text-xs pl-2">No timeline activity logged yet for this application.</div>';
                 } else {
                     activities.forEach((act) => {
                         const actEl = document.createElement("div");
                         actEl.className = "relative group";
-                        
-                        // Circle node on left border line
-                        const nodeDot = document.createElement("span");
-                        nodeDot.className = "absolute -left-[31px] top-1.5 w-4.5 h-4.5 rounded-full border-4 border-white dark:border-slate-900 bg-emerald-500 group-hover:bg-emerald-600 transition-colors shadow-sm";
                         
                         const dateText = new Date(act.created_at).toLocaleString('en-US', {
                             month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
                         });
 
                         actEl.innerHTML = `
-                            ${nodeDot.outerHTML}
+                            <span class="absolute -left-[27px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 bg-emerald-500 group-hover:bg-emerald-600 transition-colors shadow-xs"></span>
                             <div class="text-xs">
-                                <span class="font-extrabold text-slate-900 dark:text-slate-100 text-[13px]">${act.description}</span>
-                                <div class="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-1">
+                                <span class="font-bold text-slate-900 dark:text-slate-100 text-xs">${act.description}</span>
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
                                     <span>${dateText}</span>
                                     ${act.actor ? `<span>•</span> <span>By: ${act.actor.name}</span>` : ''}
                                 </div>
@@ -1152,16 +918,16 @@
                     if (documents.length > 0) {
                         documents.forEach(doc => {
                             const docEl = document.createElement("div");
-                            docEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                            docEl.className = "flex items-center justify-between p-2 bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 rounded-lg text-xs";
                             docEl.innerHTML = `
                                 <div class="flex items-center gap-2 truncate pr-2">
-                                    <i class="fa-solid fa-file-pdf text-rose-500 text-sm"></i>
-                                    <span class="font-bold text-slate-800 dark:text-slate-200 truncate" title="${doc.name}">${doc.name}</span>
-                                    <span class="text-[9.5px] font-mono text-slate-400">(${doc.size})</span>
+                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
+                                    <span class="font-semibold text-slate-800 dark:text-slate-200 truncate" title="${doc.name}">${doc.name}</span>
+                                    <span class="text-[9px] font-mono text-slate-400">(${doc.size})</span>
                                 </div>
-                                <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                                <button type="button" class="btn-preview-pdf px-2 py-0.5 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40 transition-colors flex items-center gap-1 flex-shrink-0"
                                     data-url="${doc.url}" data-name="${doc.name}" data-size="${doc.size}">
-                                    <i class="fa-solid fa-eye text-2xs"></i>
+                                    <i class="fa-solid fa-eye text-[9px]"></i>
                                     <span>Preview</span>
                                 </button>
                             `;
@@ -1179,15 +945,15 @@
                     if (ledgerUrl) {
                         hasAccounting = true;
                         const ledgerEl = document.createElement("div");
-                        ledgerEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                        ledgerEl.className = "flex items-center justify-between p-2 bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 rounded-lg text-xs";
                         ledgerEl.innerHTML = `
                             <div class="flex items-center gap-2 truncate pr-2">
-                                <i class="fa-solid fa-book text-emerald-600 text-sm"></i>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate">General Ledger</span>
+                                <i class="fa-solid fa-book text-emerald-600 text-xs"></i>
+                                <span class="font-semibold text-slate-800 dark:text-slate-200 truncate">General Ledger</span>
                             </div>
-                            <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 dark:text-emerald-400 text-[10px] font-extrabold cursor-pointer border border-emerald-200/50 dark:border-emerald-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                            <button type="button" class="btn-preview-pdf px-2 py-0.5 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 text-[10px] font-bold border border-emerald-200/60 dark:border-emerald-800/40 transition-colors flex items-center gap-1 flex-shrink-0"
                                 data-url="${ledgerUrl}" data-name="Loan_Ledger_LN-${appId}.pdf" data-size="PDF">
-                                <i class="fa-solid fa-eye text-2xs"></i>
+                                <i class="fa-solid fa-eye text-[9px]"></i>
                                 <span>Preview</span>
                             </button>
                         `;
@@ -1197,15 +963,15 @@
                     if (scheduleUrl) {
                         hasAccounting = true;
                         const schedEl = document.createElement("div");
-                        schedEl.className = "flex items-center justify-between p-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-3xs text-xs";
+                        schedEl.className = "flex items-center justify-between p-2 bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 rounded-lg text-xs";
                         schedEl.innerHTML = `
                             <div class="flex items-center gap-2 truncate pr-2">
-                                <i class="fa-solid fa-calendar-days text-blue-600 text-sm"></i>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate">Payment Schedule</span>
+                                <i class="fa-solid fa-calendar-days text-blue-600 text-xs"></i>
+                                <span class="font-semibold text-slate-800 dark:text-slate-200 truncate">Payment Schedule</span>
                             </div>
-                            <button type="button" class="btn-preview-pdf px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 dark:text-blue-400 text-[10px] font-extrabold cursor-pointer border border-blue-200/50 dark:border-blue-800/40 shadow-3xs transition-all flex items-center gap-1 flex-shrink-0"
+                            <button type="button" class="btn-preview-pdf px-2 py-0.5 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 text-[10px] font-bold border border-blue-200/60 dark:border-blue-800/40 transition-colors flex items-center gap-1 flex-shrink-0"
                                 data-url="${scheduleUrl}" data-name="Amortization_Schedule_LN-${appId}.pdf" data-size="PDF">
-                                <i class="fa-solid fa-eye text-2xs"></i>
+                                <i class="fa-solid fa-eye text-[9px]"></i>
                                 <span>Preview</span>
                             </button>
                         `;
@@ -1217,7 +983,7 @@
                     }
                 }
 
-                // Re-bind preview triggers
+                // Re-bind preview triggers within newly injected dynamic modal elements
                 document.querySelectorAll(".btn-preview-pdf").forEach(pBtn => {
                     pBtn.onclick = function(e) {
                         e.preventDefault();
@@ -1278,6 +1044,10 @@
                 const ledgerModal = document.getElementById("modal-ledger");
                 if (ledgerModal && !ledgerModal.classList.contains("hidden")) {
                     closeDrawer("modal-ledger");
+                }
+                const comakerModal = document.getElementById("modal-replace-comaker");
+                if (comakerModal && !comakerModal.classList.contains("hidden")) {
+                    closeDrawer("modal-replace-comaker");
                 }
             }
         });
@@ -1347,7 +1117,6 @@
                 if (!dropdown.classList.contains("hidden")) {
                     searchInput.value = "";
                     searchInput.focus();
-                    // Show all options (except the hidden old co-maker) and hide noResults
                     options.forEach(opt => {
                         if (opt.classList.contains("hidden-old-comaker")) {
                             opt.classList.add("hidden");

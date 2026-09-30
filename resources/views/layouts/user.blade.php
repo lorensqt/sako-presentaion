@@ -212,94 +212,93 @@
             </div> --}}
 
             <!-- Sidebar Navigation -->
-            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto overflow-x-hidden sidebar-nav">
-                <!-- My Savings -->
-                <a href="{{ route('member.savings') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span class="sidebar-text">My Savings</span>
-                    <span class="sidebar-tooltip hidden lg:block">My Savings</span>
-                </a>
+            <nav class="flex-1 px-3 py-4 space-y-4 overflow-y-auto overflow-x-hidden sidebar-nav">
+                
+                <!-- GROUP 1: ACCOUNTS & SAVINGS -->
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-3 pb-1 select-none">
+                        Accounts &amp; Savings
+                    </p>
 
-                <!-- My Loans -->
-                <a href="{{ route('member.loans') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <span class="sidebar-text flex-1">My Loans</span>
-                    @if ($rejectedComakersLoansCount > 0)
-                        <span
-                            class="sidebar-text bg-amber-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded-full animate-bounce">{{ $rejectedComakersLoansCount }}</span>
-                    @endif
-                    <span class="sidebar-tooltip hidden lg:block">My Loans</span>
-                </a>
+                    <!-- My Savings -->
+                    <a href="{{ route('member.savings') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-wallet w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.savings') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">My Savings</span>
+                        <span class="sidebar-tooltip hidden lg:block">My Savings</span>
+                    </a>
 
-                <!-- Co-Maker Requests -->
-                <a href="{{ route('member.comaker_requests') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    <span class="sidebar-text flex-1">Co-Maker Requests</span>
-                    @if ($pendingComakerCount > 0)
-                        <span
-                            class="sidebar-text bg-rose-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded-full">{{ $pendingComakerCount }}</span>
-                    @endif
-                    <span class="sidebar-tooltip hidden lg:block">Co-Maker Requests</span>
-                </a>
+                    <!-- Payroll Deduction -->
+                    <a href="{{ route('member.deductions') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Payroll Deduction</span>
+                        <span class="sidebar-tooltip hidden lg:block">Payroll Deduction</span>
+                    </a>
+                </div>
 
-                <!-- My Withdrawals -->
-                <a href="{{ route('member.withdrawals') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    <span class="sidebar-text">My Withdrawals</span>
-                    <span class="sidebar-tooltip hidden lg:block">My Withdrawals</span>
-                </a>
+                <!-- GROUP 2: FINANCING & CREDIT -->
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-3 pt-2 pb-1 select-none">
+                        Credit &amp; Loans
+                    </p>
 
-                <!-- Payroll Deduction -->
-                <a href="{{ route('member.deductions') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                    </svg>
-                    <span class="sidebar-text">Payroll Deduction</span>
-                    <span class="sidebar-tooltip hidden lg:block">Payroll Deduction</span>
-                </a>
+                    <!-- My Loans -->
+                    <a href="{{ route('member.loans') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">My Loans</span>
+                        @if ($rejectedComakersLoansCount > 0)
+                            <span class="sidebar-text bg-amber-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-bounce shadow-xs">{{ $rejectedComakersLoansCount }}</span>
+                        @endif
+                        <span class="sidebar-tooltip hidden lg:block">My Loans</span>
+                    </a>
 
-                <!-- Loans -->
-                <a href="{{ route('member.forms') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span class="sidebar-text">Loans</span>
-                    <span class="sidebar-tooltip hidden lg:block">Loans</span>
-                </a>
+                    <!-- Apply for Loan -->
+                    <a href="{{ route('member.forms') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-circle-plus w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.forms') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Apply for Loan</span>
+                        <span class="sidebar-tooltip hidden lg:block">Apply for Loan</span>
+                    </a>
 
-                <!-- Elections -->
-                <a href="{{ route('member.elections.index') }}"
-                    class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded-xl {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                    </svg>
-                    <span class="sidebar-text flex-1">Elections</span>
-                    @if ($activeUnvotedElectionsCount > 0)
-                        <span class="sidebar-text bg-rose-500 dark:bg-rose-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full shadow-sm shadow-rose-500/10 animate-pulse">Vote Now!</span>
-                    @endif
-                    <span class="sidebar-tooltip hidden lg:block">Elections</span>
-                </a>
+                    <!-- Co-Maker Requests -->
+                    <a href="{{ route('member.comaker_requests') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.comaker_requests') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Co-Maker Requests</span>
+                        @if ($pendingComakerCount > 0)
+                            <span class="sidebar-text bg-rose-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-pulse shadow-xs">{{ $pendingComakerCount }}</span>
+                        @endif
+                        <span class="sidebar-tooltip hidden lg:block">Co-Maker Requests</span>
+                    </a>
+
+                    <!-- My Withdrawals -->
+                    <a href="{{ route('member.withdrawals') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">My Withdrawals</span>
+                        <span class="sidebar-tooltip hidden lg:block">My Withdrawals</span>
+                    </a>
+                </div>
+
+                <!-- GROUP 3: GOVERNANCE -->
+                <div class="space-y-1">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-3 pt-2 pb-1 select-none">
+                        Cooperative Governance
+                    </p>
+
+                    <!-- Elections -->
+                    <a href="{{ route('member.elections.index') }}"
+                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                        <span class="sidebar-text flex-1 truncate">Elections &amp; Voting</span>
+                        @if ($activeUnvotedElectionsCount > 0)
+                            <span class="sidebar-text bg-rose-500 dark:bg-rose-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-xs animate-pulse">Vote Now!</span>
+                        @endif
+                        <span class="sidebar-tooltip hidden lg:block">Elections &amp; Voting</span>
+                    </a>
+                </div>
             </nav>
 
             <!-- Sidebar Footer -->
@@ -308,10 +307,7 @@
                     @csrf
                     <button type="submit"
                         class="relative w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium text-rose-600 rounded-xl hover:bg-rose-50 hover:text-rose-700 transition-all duration-200 text-left focus:outline-none">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
                         <span class="sidebar-text">Sign Out</span>
                         <span class="sidebar-tooltip hidden lg:block">Sign Out</span>
                     </button>
@@ -336,101 +332,91 @@
                     </a>
                     <button id="mobile-sidebar-close"
                         class="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-700/50 transition-all">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
 
-                {{-- <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60">
-                    <div class="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700 flex flex-col shadow-sm">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">Welcome back,</p>
-                        <p class="text-sm text-slate-800 dark:text-slate-200 font-bold truncate max-w-[180px] mt-0.5">{{ Auth::check() ? Auth::user()->name : 'Member' }}</p>
+                <div class="flex-1 px-3 py-4 space-y-4 overflow-y-auto sidebar-nav">
+                    
+                    <!-- GROUP 1: ACCOUNTS & SAVINGS -->
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-3 pb-1 select-none">
+                            Accounts &amp; Savings
+                        </p>
+
+                        <!-- My Savings -->
+                        <a href="{{ route('member.savings') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-wallet w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.savings') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">My Savings</span>
+                        </a>
+
+                        <!-- Payroll Deduction -->
+                        <a href="{{ route('member.deductions') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">Payroll Deduction</span>
+                        </a>
                     </div>
-                </div> --}}
 
-                <div class="flex-1 px-4 py-4 space-y-1 overflow-y-auto sidebar-nav">
-                    <!-- My Savings -->
-                    <a href="{{ route('member.savings') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" />
-                        </svg>
-                        <span>My Savings</span>
-                    </a>
+                    <!-- GROUP 2: CREDIT & LOANS -->
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-3 pt-2 pb-1 select-none">
+                            Credit &amp; Loans
+                        </p>
 
-                    <!-- My Loans -->
-                    <a href="{{ route('member.loans') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span class="flex-1">My Loans</span>
-                        @if ($rejectedComakersLoansCount > 0)
-                            <span
-                                class="bg-amber-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded-full animate-bounce">{{ $rejectedComakersLoansCount }}</span>
-                        @endif
-                    </a>
+                        <!-- My Loans -->
+                        <a href="{{ route('member.loans') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">My Loans</span>
+                            @if ($rejectedComakersLoansCount > 0)
+                                <span class="bg-amber-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-bounce shadow-xs">{{ $rejectedComakersLoansCount }}</span>
+                            @endif
+                        </a>
 
-                    <!-- Co-Maker Requests -->
-                    <a href="{{ route('member.comaker_requests') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        <span class="flex-1">Co-Maker Requests</span>
-                        @if ($pendingComakerCount > 0)
-                            <span
-                                class="bg-rose-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded-full">{{ $pendingComakerCount }}</span>
-                        @endif
-                    </a>
+                        <!-- Apply for Loan -->
+                        <a href="{{ route('member.forms') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-circle-plus w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.forms') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">Apply for Loan</span>
+                        </a>
 
-                    <!-- My Withdrawals -->
-                    <a href="{{ route('member.withdrawals') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <span>My Withdrawals</span>
-                    </a>
+                        <!-- Co-Maker Requests -->
+                        <a href="{{ route('member.comaker_requests') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.comaker_requests') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">Co-Maker Requests</span>
+                            @if ($pendingComakerCount > 0)
+                                <span class="bg-rose-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-pulse shadow-xs">{{ $pendingComakerCount }}</span>
+                            @endif
+                        </a>
 
-                    <!-- Payroll Deduction -->
-                    <a href="{{ route('member.deductions') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                        </svg>
-                        <span>Payroll Deduction</span>
-                    </a>
+                        <!-- My Withdrawals -->
+                        <a href="{{ route('member.withdrawals') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">My Withdrawals</span>
+                        </a>
+                    </div>
 
-                    <!-- Loans -->
-                    <a href="{{ route('member.forms') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Loans</span>
-                    </a>
+                    <!-- GROUP 3: GOVERNANCE -->
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-3 pt-2 pb-1 select-none">
+                            Cooperative Governance
+                        </p>
 
-                    <!-- Elections -->
-                    <a href="{{ route('member.elections.index') }}"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/15' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100' }} transition-all duration-200 text-left">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                        </svg>
-                        <span class="flex-1">Elections</span>
-                        @if ($activeUnvotedElectionsCount > 0)
-                            <span class="bg-rose-500 dark:bg-rose-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full shadow-sm shadow-rose-500/10 animate-pulse">Vote Now!</span>
-                        @endif
-                    </a>
+                        <!-- Elections -->
+                        <a href="{{ route('member.elections.index') }}"
+                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
+                            <span class="flex-1 truncate">Elections &amp; Voting</span>
+                            @if ($activeUnvotedElectionsCount > 0)
+                                <span class="bg-rose-500 dark:bg-rose-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-xs animate-pulse">Vote Now!</span>
+                            @endif
+                        </a>
+                    </div>
+
                 </div>
             </nav>
         </div>
@@ -465,7 +451,7 @@
                     @hasSection('navbar_title')
                         <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block flex-shrink-0"></div>
                         <div class="flex flex-col justify-center min-w-0">
-                            <h1 class="text-xs xs:text-sm sm:text-base font-bold sm:font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight truncate">
+                            <h1 class="text-base sm:text-lg font-bold sm:font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight truncate">
                                 @yield('navbar_title')
                             </h1>
                             @hasSection('navbar_subtitle')
@@ -478,43 +464,16 @@
                 </div>
 
                 <!-- Right Toolbar -->
-                <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-                    <!-- Theme Switcher Button (80% Size) -->
-                    <button id="theme-toggle" type="button"
-                        class="relative inline-flex h-6.5 w-11 flex-shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-sky-400 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-black dark:focus:ring-offset-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]"
-                        role="switch" aria-checked="false" title="Toggle Theme">
-
-                        <span class="sr-only">Toggle Theme</span>
-
-                        <!-- Sliding handle -->
-                        <span
-                            class="pointer-events-none relative inline-flex h-5 w-5 transform items-center justify-center transition duration-300 ease-in-out translate-x-0 dark:translate-x-4.5">
-
-                            <!-- Sun Icon (for light mode) -->
-                            <img src="https://img.icons8.com/?size=100&id=8EUmYhfLPTCF&format=png&color=000000"
-                                alt="Sun"
-                                class="absolute h-4.5 w-4.5 object-contain transition-all duration-300 opacity-100 scale-100 dark:opacity-0 dark:scale-50">
-
-                            <!-- Moon Icon (for dark mode) -->
-                            <img src="https://img.icons8.com/?size=100&id=13477&format=png&color=000000"
-                                alt="Moon"
-                                class="absolute h-4.5 w-4.5 object-contain transition-all duration-300 opacity-0 scale-50 dark:opacity-100 dark:scale-100">
-
-                        </span>
-                    </button>
-
-                    <!-- Divider -->
-                    <span class="w-px h-6 bg-slate-100 dark:bg-slate-700"></span>
-
+                <div class="flex items-center gap-2 flex-shrink-0">
                     <!-- Profile Dropdown Wrapper -->
                     <div class="relative" id="profile-dropdown-wrapper">
                         <!-- Profile Dropdown Trigger -->
                         <button id="profile-dropdown-trigger" type="button"
-                            class="group flex items-center gap-2.5 rounded-lg p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            class="group flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
 
                             <!-- Avatar -->
                             <div
-                                class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-600 font-bold text-sm text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-bold text-sm text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
                                 {{ Auth::check() ? strtoupper(substr(Auth::user()->name, 0, 2)) : 'ME' }}
                             </div>
 
@@ -524,34 +483,41 @@
                                     class="text-xs font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-snug">
                                     {{ Auth::check() ? Auth::user()->name : 'Member User' }}
                                 </p>
-                                <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                                     {{ Auth::check() && Auth::user()->role === 'super_admin' ? 'Super Admin' : (Auth::check() && Auth::user()->role === 'admin' ? 'Coop Admin' : 'Regular Member') }}
                                 </p>
                             </div>
 
                             <!-- Chevron Icon -->
-                            <i class="fa-solid fa-chevron-down text-[11px] text-slate-400 transition-transform duration-200 group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200 group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                         </button>
 
                         <!-- Dropdown Menu -->
                         <div id="profile-dropdown-menu"
-                            class="hidden absolute right-0 z-50 mt-2 w-56 transform origin-top-right rounded-xl border border-slate-200/80 bg-white py-1.5 shadow-xl transition-all duration-150 dark:border-slate-700/80 dark:bg-slate-800 dark:shadow-2xl">
+                            class="hidden absolute right-0 z-50 mt-2 w-56 sm:w-60 transform origin-top-right rounded-2xl border border-slate-200/80 bg-white p-1.5 shadow-xl transition-all duration-150 dark:border-slate-700/80 dark:bg-slate-800 dark:shadow-2xl">
 
-                            <!-- User Info Header (Mobile View) -->
-                            <div class="border-b border-slate-100 px-4 py-2.5 dark:border-slate-700/60 md:hidden">
-                                <p class="text-xs font-bold text-slate-900 dark:text-slate-100">
+                            <!-- User Info Header -->
+                            <div class="border-b border-slate-100 dark:border-slate-700/60 px-3.5 py-2.5">
+                                <p class="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                                     {{ Auth::check() ? Auth::user()->name : 'Member User' }}
                                 </p>
-                                <p class="mt-0.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                                    {{ Auth::check() && Auth::user()->role === 'super_admin' ? 'Super Admin' : (Auth::check() && Auth::user()->role === 'admin' ? 'Coop Admin' : 'Regular Member') }}
-                                </p>
+                                <div class="flex items-center justify-between gap-2 mt-0.5">
+                                    <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                                        {{ Auth::check() && Auth::user()->role === 'super_admin' ? 'Super Admin' : (Auth::check() && Auth::user()->role === 'admin' ? 'Coop Admin' : 'Regular Member') }}
+                                    </p>
+                                    @if(Auth::check() && Auth::user()->company_id)
+                                        <span class="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-200/50 dark:border-emerald-800/40">
+                                            {{ Auth::user()->company_id }}
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
 
-                            <!-- Navigation Links -->
+                            <!-- Navigation Links & Settings -->
                             <div class="py-1">
                                 <!-- Settings -->
                                 <a href="{{ route('member.settings') }}"
-                                    class="group flex items-center gap-3 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                                    class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
                                     <i class="fa-solid fa-gear fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                                     <span>Settings</span>
                                 </a>
@@ -559,11 +525,36 @@
                                 @if(Auth::check() && in_array(Auth::user()->role, ['admin', 'super_admin']))
                                     <!-- Switch to Admin Console -->
                                     <a href="{{ route('admin.dashboard') }}"
-                                        class="group flex items-center gap-3 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
+                                        class="group flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-700/50">
                                         <i class="fa-solid fa-shield-halved fa-fw text-sm text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-200"></i>
                                         <span>Admin Console</span>
                                     </a>
                                 @endif
+
+                                <!-- Theme Switcher Row -->
+                                <div id="theme-toggle-row"
+                                    class="group flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer select-none">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-700/70 flex items-center justify-center text-slate-500 dark:text-amber-400">
+                                            <!-- Moon icon for light mode, Sun for dark mode -->
+                                            <svg class="w-3.5 h-3.5 block dark:hidden text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                            </svg>
+                                            <svg class="w-3.5 h-3.5 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </div>
+                                        <span>Dark Mode</span>
+                                    </div>
+
+                                    <!-- Switch Toggle Pill -->
+                                    <button id="theme-toggle" type="button"
+                                        class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-slate-300 dark:bg-emerald-600 transition-colors duration-200 ease-in-out focus:outline-none"
+                                        role="switch" aria-checked="false" title="Toggle Theme">
+                                        <span class="sr-only">Toggle Theme</span>
+                                        <span class="pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out translate-x-0.5 dark:translate-x-4.5"></span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="my-1 border-t border-slate-100 dark:border-slate-700/60"></div>
@@ -572,7 +563,7 @@
                             <form action="{{ route('logout') }}" method="POST" class="m-0">
                                 @csrf
                                 <button type="submit"
-                                    class="group flex w-full items-center gap-3 px-4 py-2 text-left text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50/80 focus:outline-none dark:text-rose-400 dark:hover:bg-rose-950/30">
+                                    class="group flex w-full items-center gap-3 px-3.5 py-2 rounded-xl text-left text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50/80 focus:outline-none dark:text-rose-400 dark:hover:bg-rose-950/30">
                                     <i class="fa-solid fa-right-from-bracket fa-fw text-sm text-rose-500 transition-colors group-hover:text-rose-600 dark:text-rose-400 dark:group-hover:text-rose-300"></i>
                                     <span>Sign Out</span>
                                 </button>
@@ -682,17 +673,32 @@
 
             // Theme Toggle Logic
             const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleRow = document.getElementById('theme-toggle-row');
+
+            function toggleTheme() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (themeToggleBtn) themeToggleBtn.setAttribute('aria-checked', 'false');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (themeToggleBtn) themeToggleBtn.setAttribute('aria-checked', 'true');
+                }
+            }
 
             if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', function() {
-                    // Toggle dark class and save preference
-                    if (document.documentElement.classList.contains('dark')) {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    } else {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    }
+                themeToggleBtn.setAttribute('aria-checked', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+                themeToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleTheme();
+                });
+            }
+
+            if (themeToggleRow) {
+                themeToggleRow.addEventListener('click', function(e) {
+                    if (e.target.closest('#theme-toggle')) return;
+                    toggleTheme();
                 });
             }
 
@@ -705,6 +711,15 @@
                 dropdownTrigger.addEventListener("click", function(e) {
                     e.stopPropagation();
                     dropdownMenu.classList.toggle("hidden");
+                });
+
+                // Close dropdown only when a link or form submit is clicked inside the menu
+                dropdownMenu.addEventListener("click", function(e) {
+                    if (e.target.closest('a') || e.target.closest('button[type="submit"]')) {
+                        dropdownMenu.classList.add("hidden");
+                    } else {
+                        e.stopPropagation();
+                    }
                 });
 
                 document.addEventListener("click", function(e) {

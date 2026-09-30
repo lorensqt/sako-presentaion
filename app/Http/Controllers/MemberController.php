@@ -155,6 +155,7 @@ class MemberController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric|min:100|max:' . $withdrawableAmount,
             'channel' => 'required|string',
+            'mcash_account' => 'nullable|string|max:50',
             'reason' => 'required|string|max:1000',
             'pin' => 'required|string|size:6',
         ]);
@@ -198,10 +199,15 @@ class MemberController extends Controller
         // Reset attempts if correct
         $user->update(['pin_attempts' => 0]);
 
+        $channel = $validated['channel'];
+        if (str_starts_with($channel, 'MCash') && !empty($request->mcash_account)) {
+            $channel = 'MCash (' . trim($request->mcash_account) . ')';
+        }
+
         $withdrawal = \App\Models\WithdrawalRequest::create([
             'user_id' => Auth::id(),
             'amount' => $validated['amount'],
-            'channel' => $validated['channel'],
+            'channel' => $channel,
             'reason' => $validated['reason'] ?? null,
             'status' => 'pending',
         ]);
