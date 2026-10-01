@@ -305,6 +305,77 @@ class AdminController extends Controller
     }
 
     /**
+     * Force reset password and/or security PIN for a cooperative member.
+     */
+    public function resetMemberCredentials(Request $request, User $user)
+    {
+        if (auth()->id() === $user->id) {
+            return redirect()->route('admin.members')->with('error', 'Security Violation: You cannot force-reset your own session credentials through this panel.');
+        }
+
+        if ($user->role !== 'member') {
+            return redirect()->route('admin.members')->with('error', 'Action restricted: Only cooperative members can be managed from this directory.');
+        }
+
+        if (!$request->boolean('reset_password') && !$request->boolean('reset_pin')) {
+            return back()->withErrors(['reset_error' => 'Please select at least one credential option to reset (Password or PIN).']);
+        }
+
+        $request->validate([
+            'reset_password' => 'nullable|boolean',
+            'password' => 'required_if:reset_password,1|nullable|string|min:6',
+            'reset_pin' => 'nullable|boolean',
+            'pin_mode' => 'required_if:reset_pin,1|nullable|string|in:clear,manual',
+            'pin' => 'required_if:pin_mode,manual|nullable|digits:6',
+        ]);
+
+        $oldPinConfigured = !is_null($user->pin);
+        $oldPinAttempts = $user->pin_attempts;
+        $actionsTaken = [];
+
+        if ($request->boolean('reset_password')) {
+            $user->password = Hash::make($request->input('password'));
+            $actionsTaken[] = 'Password';
+        }
+
+        if ($request->boolean('reset_pin')) {
+            $pinMode = $request->input('pin_mode');
+            if ($pinMode === 'clear') {
+                $user->pin = null;
+                $actionsTaken[] = 'Security PIN cleared (User will configure on next login)';
+            } elseif ($pinMode === 'manual') {
+                $user->pin = Hash::make($request->input('pin'));
+                $actionsTaken[] = 'Security PIN updated';
+            }
+            $user->pin_attempts = 0;
+        } elseif ($request->boolean('reset_password')) {
+            // Also reset PIN attempts to lift lockout if user forgot credentials
+            $user->pin_attempts = 0;
+        }
+
+        $user->save();
+
+        AuditLogger::log(
+            'member_credential_reset',
+            "Admin " . auth()->user()->name . " force-reset credentials for member {$user->name} (" . implode(', ', $actionsTaken) . ").",
+            'warning',
+            $user,
+            [
+                'pin_configured' => $oldPinConfigured,
+                'pin_attempts' => $oldPinAttempts,
+            ],
+            [
+                'password_reset' => $request->boolean('reset_password'),
+                'pin_reset' => $request->boolean('reset_pin'),
+                'pin_mode' => $request->input('pin_mode', null),
+                'pin_attempts' => 0,
+            ]
+        );
+
+        return redirect()->route('admin.members')->with('success', "Credentials for {$user->name} updated successfully (" . implode(', ', $actionsTaken) . ").");
+    }
+
+    /**
      * Display the System Administrators & Staff management page (Super Admin only).
      */
     public function administrators(Request $request)
@@ -581,6 +652,76 @@ class AdminController extends Controller
         AuditLogger::log('admin_deleted', "Super Admin " . auth()->user()->name . " removed administrator {$oldValues['name']}.", 'danger', null, $oldValues, null);
 
         return redirect()->route('admin.administrators')->with('success', 'Administrator account removed successfully.');
+    }
+
+    /**
+     * Force reset password and/or security PIN for an administrator account (Super Admin only).
+     */
+    public function resetAdminCredentials(Request $request, User $user)
+    {
+        if (auth()->id() === $user->id) {
+            return redirect()->route('admin.administrators')->with('error', 'Security Protection: You cannot reset your own credentials through this panel.');
+        }
+
+        if (!in_array($user->role, ['admin', 'super_admin'], true)) {
+            return redirect()->route('admin.administrators')->with('error', 'Account is not an administrator.');
+        }
+
+        if (!$request->boolean('reset_password') && !$request->boolean('reset_pin')) {
+            return back()->withErrors(['reset_error' => 'Please select at least one credential option to reset (Password or PIN).']);
+        }
+
+        $request->validate([
+            'reset_password' => 'nullable|boolean',
+            'password' => 'required_if:reset_password,1|nullable|string|min:6',
+            'reset_pin' => 'nullable|boolean',
+            'pin_mode' => 'required_if:reset_pin,1|nullable|string|in:clear,manual',
+            'pin' => 'required_if:pin_mode,manual|nullable|digits:6',
+        ]);
+
+        $oldPinConfigured = !is_null($user->pin);
+        $oldPinAttempts = $user->pin_attempts;
+        $actionsTaken = [];
+
+        if ($request->boolean('reset_password')) {
+            $user->password = Hash::make($request->input('password'));
+            $actionsTaken[] = 'Password';
+        }
+
+        if ($request->boolean('reset_pin')) {
+            $pinMode = $request->input('pin_mode');
+            if ($pinMode === 'clear') {
+                $user->pin = null;
+                $actionsTaken[] = 'Security PIN cleared (Operator will configure on next login)';
+            } elseif ($pinMode === 'manual') {
+                $user->pin = Hash::make($request->input('pin'));
+                $actionsTaken[] = 'Security PIN updated';
+            }
+            $user->pin_attempts = 0;
+        } elseif ($request->boolean('reset_password')) {
+            $user->pin_attempts = 0;
+        }
+
+        $user->save();
+
+        AuditLogger::log(
+            'admin_credential_reset',
+            "Super Admin " . auth()->user()->name . " force-reset credentials for administrator {$user->name} (" . implode(', ', $actionsTaken) . ").",
+            'warning',
+            $user,
+            [
+                'pin_configured' => $oldPinConfigured,
+                'pin_attempts' => $oldPinAttempts,
+            ],
+            [
+                'password_reset' => $request->boolean('reset_password'),
+                'pin_reset' => $request->boolean('reset_pin'),
+                'pin_mode' => $request->input('pin_mode', null),
+                'pin_attempts' => 0,
+            ]
+        );
+
+        return redirect()->route('admin.administrators')->with('success', "Credentials for administrator {$user->name} updated successfully (" . implode(', ', $actionsTaken) . ").");
     }
 
     /**

@@ -83,6 +83,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/administrators', [AdminController::class, 'administrators'])->name('admin.administrators');
         Route::post('/administrators', [AdminController::class, 'storeAdministrator'])->name('admin.administrators.store');
         Route::put('/administrators/{user}', [AdminController::class, 'updateAdministrator'])->name('admin.administrators.update');
+        Route::post('/administrators/{user}/reset-credentials', [AdminController::class, 'resetAdminCredentials'])->name('admin.administrators.reset_credentials');
         Route::delete('/administrators/{user}', [AdminController::class, 'deleteAdministrator'])->name('admin.administrators.destroy');
     });
     
@@ -91,6 +92,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/members', [AdminController::class, 'members'])->name('admin.members');
         Route::post('/members', [AdminController::class, 'storeMember'])->name('admin.members.store');
         Route::put('/members/{user}', [AdminController::class, 'updateMember'])->name('admin.members.update');
+        Route::post('/members/{user}/reset-credentials', [AdminController::class, 'resetMemberCredentials'])->name('admin.members.reset_credentials');
         Route::delete('/members/{user}', [AdminController::class, 'deleteMember'])->name('admin.members.destroy');
         Route::get('/members/{user}/pdf', [AdminController::class, 'exportMemberPdf'])->name('admin.members.pdf');
     });

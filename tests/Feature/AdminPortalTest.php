@@ -133,7 +133,6 @@ class AdminPortalTest extends TestCase
             'name' => 'Updated Name',
             'email' => 'updated.email@example.com',
             'company_id' => '20241111', // Unchanged ID but needs validation check bypass
-            'role' => 'admin',          // Promote
             'contact_number' => '09171112222',
             'address' => 'Mandaue City, Cebu',
         ]);
@@ -145,7 +144,7 @@ class AdminPortalTest extends TestCase
             'id' => $member->id,
             'name' => 'Updated Name',
             'email' => 'updated.email@example.com',
-            'role' => 'admin',
+            'role' => 'member',
         ]);
     }
 
@@ -618,5 +617,205 @@ class AdminPortalTest extends TestCase
         $this->assertEquals(3.00, $loan->getInterestRateForTerm(3));
         $this->assertEquals(5.00, $loan->getInterestRateForTerm(6));
         $this->assertEquals(7.50, $loan->getInterestRateForTerm(12));
+    }
+
+    /**
+     * Test that an admin can force reset a member's password and clear their security PIN.
+     */
+    public function test_admin_can_force_reset_member_password_and_clear_pin(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('password'),
+        ]);
+
+        $member = User::factory()->create([
+            'role' => 'member',
+            'password' => Hash::make('oldpassword'),
+            'pin' => Hash::make('112233'),
+            'pin_attempts' => 2,
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/members/{$member->id}/reset-credentials", [
+            'reset_password' => 1,
+            'password' => 'NewSecur3P@ss',
+            'reset_pin' => 1,
+            'pin_mode' => 'clear',
+        ]);
+
+        $response->assertRedirect('/admin/members');
+        $response->assertSessionHas('success');
+
+        $member->refresh();
+        $this->assertTrue(Hash::check('NewSecur3P@ss', $member->password));
+        $this->assertNull($member->pin);
+        $this->assertEquals(0, $member->pin_attempts);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'member_credential_reset',
+            'user_id' => $admin->id,
+            'auditable_type' => User::class,
+            'auditable_id' => $member->id,
+            'severity' => 'warning',
+        ]);
+    }
+
+    /**
+     * Test that an admin can manually assign a 6-digit security PIN to a member.
+     */
+    public function test_admin_can_manually_assign_member_pin(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('password'),
+        ]);
+
+        $member = User::factory()->create([
+            'role' => 'member',
+            'password' => Hash::make('password'),
+            'pin' => null,
+            'pin_attempts' => 0,
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/members/{$member->id}/reset-credentials", [
+            'reset_pin' => 1,
+            'pin_mode' => 'manual',
+            'pin' => '987654',
+        ]);
+
+        $response->assertRedirect('/admin/members');
+        $response->assertSessionHas('success');
+
+        $member->refresh();
+        $this->assertNotNull($member->pin);
+        $this->assertTrue(Hash::check('987654', $member->pin));
+        $this->assertEquals(0, $member->pin_attempts);
+    }
+
+    /**
+     * Test that resetting credentials clears existing account lockout attempts.
+     */
+    public function test_force_reset_clears_member_account_lockout(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('password'),
+        ]);
+
+        $member = User::factory()->create([
+            'role' => 'member',
+            'password' => Hash::make('password'),
+            'pin' => Hash::make('123456'),
+            'pin_attempts' => 3, // Locked out
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/members/{$member->id}/reset-credentials", [
+            'reset_password' => 1,
+            'password' => 'UnlockedPassword123',
+        ]);
+
+        $response->assertRedirect('/admin/members');
+        $member->refresh();
+        $this->assertEquals(0, $member->pin_attempts);
+        $this->assertTrue(Hash::check('UnlockedPassword123', $member->password));
+    }
+
+    /**
+     * Test that a super admin can force reset an administrator's credentials.
+     */
+    public function test_super_admin_can_force_reset_administrator_credentials(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $superAdmin = User::factory()->create([
+            'role' => 'super_admin',
+            'password' => Hash::make('password'),
+        ]);
+
+        $targetAdmin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('adminoldpass'),
+            'pin' => Hash::make('111222'),
+            'pin_attempts' => 3,
+        ]);
+
+        $response = $this->actingAs($superAdmin)->post("/admin/administrators/{$targetAdmin->id}/reset-credentials", [
+            'reset_password' => 1,
+            'password' => 'AdminNewPass2026',
+            'reset_pin' => 1,
+            'pin_mode' => 'clear',
+        ]);
+
+        $response->assertRedirect('/admin/administrators');
+        $response->assertSessionHas('success');
+
+        $targetAdmin->refresh();
+        $this->assertTrue(Hash::check('AdminNewPass2026', $targetAdmin->password));
+        $this->assertNull($targetAdmin->pin);
+        $this->assertEquals(0, $targetAdmin->pin_attempts);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'action' => 'admin_credential_reset',
+            'user_id' => $superAdmin->id,
+            'auditable_type' => User::class,
+            'auditable_id' => $targetAdmin->id,
+            'severity' => 'warning',
+        ]);
+    }
+
+    /**
+     * Test that a regular admin cannot reset another administrator's credentials.
+     */
+    public function test_regular_admin_cannot_reset_administrator_credentials(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $regularAdmin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('password'),
+        ]);
+
+        $targetAdmin = User::factory()->create([
+            'role' => 'admin',
+            'password' => Hash::make('adminoldpass'),
+        ]);
+
+        $response = $this->actingAs($regularAdmin)->post("/admin/administrators/{$targetAdmin->id}/reset-credentials", [
+            'reset_password' => 1,
+            'password' => 'HackedPassword123',
+        ]);
+
+        $response->assertRedirect('/admin/dashboard');
+        $targetAdmin->refresh();
+        $this->assertTrue(Hash::check('adminoldpass', $targetAdmin->password));
+    }
+
+    /**
+     * Test that an administrator cannot reset their own credentials through this panel.
+     */
+    public function test_admin_cannot_reset_own_credentials_through_panel(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $superAdmin = User::factory()->create([
+            'role' => 'super_admin',
+            'password' => Hash::make('superpassword'),
+        ]);
+
+        $response = $this->actingAs($superAdmin)->post("/admin/administrators/{$superAdmin->id}/reset-credentials", [
+            'reset_password' => 1,
+            'password' => 'ShouldNotWork123',
+        ]);
+
+        $response->assertRedirect('/admin/administrators');
+        $response->assertSessionHas('error');
+        $superAdmin->refresh();
+        $this->assertTrue(Hash::check('superpassword', $superAdmin->password));
     }
 }

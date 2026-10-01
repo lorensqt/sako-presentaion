@@ -153,8 +153,21 @@
                                         data-contact_number="{{ $user->contact_number }}"
                                         data-address="{{ $user->address }}"
                                         data-signature="{{ $user->signature_url ?? '' }}"
+                                        data-has_pin="{{ !is_null($user->pin) ? '1' : '0' }}"
+                                        data-pin_attempts="{{ $user->pin_attempts }}"
                                         title="Edit Member Details">
                                         <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                    </button>
+
+                                    <button class="btn-reset-credentials p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors cursor-pointer"
+                                        data-id="{{ $user->id }}"
+                                        data-name="{{ $user->name }}"
+                                        data-email="{{ $user->email }}"
+                                        data-company_id="{{ $user->company_id }}"
+                                        data-has_pin="{{ !is_null($user->pin) ? '1' : '0' }}"
+                                        data-pin_attempts="{{ $user->pin_attempts }}"
+                                        title="Force Reset Password & PIN">
+                                        <i class="fa-solid fa-key text-xs"></i>
                                     </button>
                                     
                                     @if(auth()->id() !== $user->id)
@@ -397,6 +410,154 @@
     </div>
 </div>
 
+<!-- MODAL: FORCE RESET CREDENTIALS -->
+<div id="modal-reset-credentials" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity modal-overlay"></div>
+    
+    <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-2xl overflow-hidden w-full max-w-lg max-h-[92dvh] sm:max-h-[88vh] flex flex-col relative z-10 transform scale-95 opacity-0 transition-all duration-300 modal-container">
+        
+        <!-- Pinned Header -->
+        <div class="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 flex-shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 flex items-center justify-center flex-shrink-0 text-amber-600 dark:text-amber-400 text-base shadow-2xs">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 truncate">Force Reset Credentials</h3>
+                    <p class="text-[10px] text-amber-600 dark:text-amber-400 font-extrabold uppercase tracking-wider truncate">Administrative Security Override</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer flex-shrink-0" aria-label="Close modal">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+        </div>
+
+        <form id="form-reset-credentials" method="POST" class="flex-1 flex flex-col min-h-0 overflow-hidden">
+            @csrf
+
+            <!-- Scrollable Body -->
+            <div class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-4">
+                
+                <!-- Target User Profile Banner (Responsive Flex-Col on narrow screens) -->
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-950/50 rounded-xl sm:rounded-2xl border border-slate-200/70 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-xs uppercase flex-shrink-0 shadow-2xs" id="reset-user-avatar">
+                            U
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 truncate" id="reset-user-name">Member Name</h4>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate" id="reset-user-email">email@example.com</p>
+                        </div>
+                    </div>
+                    <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60 dark:border-slate-800">
+                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 inline-block" id="reset-user-company-id">ID: 20241001</span>
+                        <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 inline-block" id="reset-user-pin-status">PIN: Configured</span>
+                    </div>
+                </div>
+
+                <!-- Option 1: Reset Password -->
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs space-y-3">
+                    <label class="flex items-center justify-between cursor-pointer select-none">
+                        <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2.5">
+                            <input type="checkbox" name="reset_password" value="1" id="cb-reset-password" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-700 dark:bg-slate-950 cursor-pointer">
+                            <span>Reset Login Password</span>
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">Min. 6 chars</span>
+                    </label>
+
+                    <div id="password-field-container" class="space-y-2.5 pt-1">
+                        <div class="relative flex items-center">
+                            <input type="password" name="password" id="input-new-password" value="password" placeholder="Enter new password" class="w-full px-3.5 py-2.5 pr-24 text-base sm:text-sm font-mono font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 placeholder-slate-400 transition-all">
+                            
+                            <div class="absolute right-1.5 flex items-center gap-1">
+                                <button type="button" id="btn-toggle-password-visibility" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center cursor-pointer" title="Toggle visibility" aria-label="Toggle password visibility">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </button>
+                                <button type="button" id="btn-copy-password" class="w-8 h-8 rounded-lg text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors flex items-center justify-center cursor-pointer" title="Copy to clipboard" aria-label="Copy password">
+                                    <i class="fa-solid fa-copy text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Presets -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-0.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Quick Fill:</span>
+                                <span id="copy-feedback-badge" class="hidden text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded animate-fade-in">Copied!</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" id="btn-preset-default-pwd" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer text-center">
+                                    'password'
+                                </button>
+                                <button type="button" id="btn-generate-strong-pwd" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 transition-colors cursor-pointer flex items-center justify-center gap-1.5 text-center">
+                                    <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
+                                    <span>Generate Strong</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 2: Reset Security PIN -->
+                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs space-y-3">
+                    <label class="flex items-center justify-between cursor-pointer select-none">
+                        <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2.5">
+                            <input type="checkbox" name="reset_pin" value="1" id="cb-reset-pin" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-700 dark:bg-slate-950 cursor-pointer">
+                            <span>Reset 6-Digit Security PIN</span>
+                        </span>
+                        <span class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded" id="reset-lockout-badge">Lifts Lockouts</span>
+                    </label>
+
+                    <div id="pin-field-container" class="space-y-2.5 pt-1">
+                        <div class="space-y-2">
+                            <!-- Radio Clear -->
+                            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950/40 cursor-pointer transition-colors select-none group">
+                                <input type="radio" name="pin_mode" value="clear" id="pin-mode-clear" checked class="mt-0.5 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+                                <div class="min-w-0">
+                                    <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors block">Require setup on next login (Recommended)</span>
+                                    <span class="text-[11px] text-slate-400 leading-normal block mt-0.5">Clears current PIN and resets failed attempts. Member will be prompted by the security overlay upon signing in.</span>
+                                </div>
+                            </label>
+
+                            <!-- Radio Manual -->
+                            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950/40 cursor-pointer transition-colors select-none group">
+                                <input type="radio" name="pin_mode" value="manual" id="pin-mode-manual" class="mt-0.5 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+                                <div class="flex-1 min-w-0">
+                                    <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors block">Assign manual temporary 6-digit PIN</span>
+                                    <span class="text-[11px] text-slate-400 block mb-2">Directly set an initial 6-digit numeric PIN for the member.</span>
+                                    
+                                    <div class="relative flex items-center max-w-[200px]">
+                                        <input type="password" name="pin" id="input-manual-pin" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="••••••" disabled class="w-full px-3 py-2 pr-10 text-base sm:text-sm font-mono font-bold tracking-widest text-center border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-800 transition-all">
+                                        <button type="button" id="btn-toggle-manual-pin-visibility" class="absolute right-1 w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center justify-center cursor-pointer" title="Toggle PIN visibility">
+                                            <i class="fa-solid fa-eye text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer Notice -->
+                <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 flex items-start gap-2.5 text-amber-700 dark:text-amber-300 text-xs leading-relaxed">
+                    <i class="fa-solid fa-circle-exclamation mt-0.5 flex-shrink-0 text-amber-600 dark:text-amber-400"></i>
+                    <span>This action immediately overrides account credentials, resets failed attempts, and is logged in the official security audit trail.</span>
+                </div>
+
+            </div>
+
+            <!-- Pinned Footer (Stacked full width on mobile, row on sm+) -->
+            <div class="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/90 backdrop-blur-md flex-shrink-0 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5">
+                <button type="button" class="modal-close w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-colors cursor-pointer text-center">Cancel</button>
+                <button type="submit" id="btn-submit-reset" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-xs"></i>
+                    <span>Confirm Force Reset</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -537,6 +698,225 @@
                 form.action = `/admin/members/${id}`;
 
                 openModal("modal-delete-member");
+            });
+        });
+
+        // --- Force Reset Credentials Handler ---
+        const formResetCreds = document.getElementById("form-reset-credentials");
+        const cbResetPwd = document.getElementById("cb-reset-password");
+        const cbResetPin = document.getElementById("cb-reset-pin");
+        const pwdContainer = document.getElementById("password-field-container");
+        const pinContainer = document.getElementById("pin-field-container");
+        const inputNewPwd = document.getElementById("input-new-password");
+        const inputManualPin = document.getElementById("input-manual-pin");
+        const pinModeClear = document.getElementById("pin-mode-clear");
+        const pinModeManual = document.getElementById("pin-mode-manual");
+        const btnSubmitReset = document.getElementById("btn-submit-reset");
+        const btnTogglePwd = document.getElementById("btn-toggle-password-visibility");
+        const btnCopyPwd = document.getElementById("btn-copy-password");
+        const btnPresetDefaultPwd = document.getElementById("btn-preset-default-pwd");
+        const btnGenerateStrongPwd = document.getElementById("btn-generate-strong-pwd");
+
+        function updateResetFormState() {
+            if (!cbResetPwd || !cbResetPin) return;
+
+            if (cbResetPwd.checked) {
+                pwdContainer.classList.remove("hidden");
+                inputNewPwd.disabled = false;
+            } else {
+                pwdContainer.classList.add("hidden");
+                inputNewPwd.disabled = true;
+            }
+
+            if (cbResetPin.checked) {
+                pinContainer.classList.remove("hidden");
+                if (pinModeManual.checked) {
+                    inputManualPin.disabled = false;
+                } else {
+                    inputManualPin.disabled = true;
+                }
+            } else {
+                pinContainer.classList.add("hidden");
+                inputManualPin.disabled = true;
+            }
+
+            const atLeastOne = cbResetPwd.checked || cbResetPin.checked;
+            btnSubmitReset.disabled = !atLeastOne;
+            if (!atLeastOne) {
+                btnSubmitReset.classList.add("opacity-50", "cursor-not-allowed");
+            } else {
+                btnSubmitReset.classList.remove("opacity-50", "cursor-not-allowed");
+            }
+        }
+
+        if (cbResetPwd) cbResetPwd.addEventListener("change", updateResetFormState);
+        if (cbResetPin) cbResetPin.addEventListener("change", updateResetFormState);
+        if (pinModeClear) pinModeClear.addEventListener("change", updateResetFormState);
+        if (pinModeManual) {
+            pinModeManual.addEventListener("change", function() {
+                updateResetFormState();
+                if (pinModeManual.checked) inputManualPin.focus();
+            });
+        }
+
+        if (btnTogglePwd) {
+            btnTogglePwd.addEventListener("click", function() {
+                const icon = this.querySelector("i");
+                if (inputNewPwd.type === "password") {
+                    inputNewPwd.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    inputNewPwd.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            });
+        }
+
+        if (btnPresetDefaultPwd) {
+            btnPresetDefaultPwd.addEventListener("click", function() {
+                inputNewPwd.value = "password";
+                inputNewPwd.type = "text";
+                const icon = btnTogglePwd.querySelector("i");
+                if (icon) {
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                }
+            });
+        }
+
+        if (btnGenerateStrongPwd) {
+            btnGenerateStrongPwd.addEventListener("click", function() {
+                const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+                let randomPart = "";
+                for (let i = 0; i < 4; i++) {
+                    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                inputNewPwd.value = `Sako#${randomPart}`;
+                inputNewPwd.type = "text";
+                const icon = btnTogglePwd.querySelector("i");
+                if (icon) {
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                }
+            });
+        }
+
+        const btnToggleManualPin = document.getElementById("btn-toggle-manual-pin-visibility");
+        if (btnToggleManualPin) {
+            btnToggleManualPin.addEventListener("click", function() {
+                const icon = this.querySelector("i");
+                if (inputManualPin.type === "password") {
+                    inputManualPin.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    inputManualPin.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            });
+        }
+
+        const copyFeedbackBadge = document.getElementById("copy-feedback-badge");
+        if (btnCopyPwd) {
+            btnCopyPwd.addEventListener("click", function() {
+                if (!inputNewPwd.value) return;
+                navigator.clipboard.writeText(inputNewPwd.value).then(() => {
+                    const icon = this.querySelector("i");
+                    icon.classList.remove("fa-copy");
+                    icon.classList.add("fa-check", "text-emerald-600");
+                    if (copyFeedbackBadge) {
+                        copyFeedbackBadge.classList.remove("hidden");
+                    }
+                    setTimeout(() => {
+                        icon.classList.remove("fa-check", "text-emerald-600");
+                        icon.classList.add("fa-copy");
+                        if (copyFeedbackBadge) {
+                            copyFeedbackBadge.classList.add("hidden");
+                        }
+                    }, 1500);
+                });
+            });
+        }
+
+        if (formResetCreds) {
+            formResetCreds.addEventListener("submit", function(e) {
+                if (cbResetPwd.checked && (!inputNewPwd.value || inputNewPwd.value.length < 6)) {
+                    e.preventDefault();
+                    alert("Please provide a password with at least 6 characters.");
+                    inputNewPwd.focus();
+                    return;
+                }
+
+                if (cbResetPin.checked && pinModeManual.checked) {
+                    const pinVal = inputManualPin.value.trim();
+                    if (!/^\d{6}$/.test(pinVal)) {
+                        e.preventDefault();
+                        alert("The manual PIN must be exactly 6 numeric digits.");
+                        inputManualPin.focus();
+                        return;
+                    }
+                }
+            });
+        }
+
+        document.querySelectorAll(".btn-reset-credentials").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const name = this.getAttribute("data-name");
+                const email = this.getAttribute("data-email");
+                const companyId = this.getAttribute("data-company_id");
+                const hasPin = this.getAttribute("data-has_pin") === "1";
+                const pinAttempts = parseInt(this.getAttribute("data-pin_attempts") || "0", 10);
+
+                document.getElementById("reset-user-name").textContent = name;
+                document.getElementById("reset-user-email").textContent = email;
+                document.getElementById("reset-user-company-id").textContent = `ID: ${companyId || 'N/A'}`;
+                document.getElementById("reset-user-avatar").textContent = (name || 'U').charAt(0).toUpperCase();
+
+                const pinStatusEl = document.getElementById("reset-user-pin-status");
+                if (hasPin) {
+                    pinStatusEl.textContent = "PIN: Configured";
+                    pinStatusEl.className = "text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5 inline-block";
+                } else {
+                    pinStatusEl.textContent = "PIN: Not Configured";
+                    pinStatusEl.className = "text-[9px] font-semibold text-slate-400 mt-0.5 inline-block";
+                }
+
+                const lockoutBadge = document.getElementById("reset-lockout-badge");
+                if (pinAttempts >= 3) {
+                    lockoutBadge.textContent = `Account Locked (${pinAttempts}/3 failed PINs) - Will Unlock`;
+                    lockoutBadge.className = "text-[9px] text-rose-600 dark:text-rose-400 font-bold";
+                } else if (pinAttempts > 0) {
+                    lockoutBadge.textContent = `${pinAttempts}/3 Failed PINs (Will Reset)`;
+                    lockoutBadge.className = "text-[9px] text-amber-600 dark:text-amber-400 font-semibold";
+                } else {
+                    lockoutBadge.textContent = "Lifts Account Lockouts";
+                    lockoutBadge.className = "text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold";
+                }
+
+                formResetCreds.action = `/admin/members/${id}/reset-credentials`;
+
+                // Reset inputs to clean defaults
+                cbResetPwd.checked = true;
+                cbResetPin.checked = true;
+                pinModeClear.checked = true;
+                pinModeManual.checked = false;
+                inputManualPin.value = "";
+                inputNewPwd.value = "password";
+                inputNewPwd.type = "password";
+                if (btnTogglePwd) {
+                    const toggleIcon = btnTogglePwd.querySelector("i");
+                    if (toggleIcon) {
+                        toggleIcon.classList.remove("fa-eye-slash");
+                        toggleIcon.classList.add("fa-eye");
+                    }
+                }
+
+                updateResetFormState();
+                openModal("modal-reset-credentials");
             });
         });
 
