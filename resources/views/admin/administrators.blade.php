@@ -525,11 +525,6 @@
                     </div>
                     <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
                 </div>
-                        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-normal">
-                            Determines sequential order of review when this admin evaluates loans at the HRMD stage. Approvals advance sequentially (1 to last) before moving to Credit Committee.
-                        </p>
-                    </div>
-                </div>
             </div>
 
             <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2 mt-3">
