@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Cooperative Members Directory - Sako Cooperative')
+@section('page_title', 'Members Directory')
+@section('page_subtitle', 'Browse, register, search, and manage cooperative member profiles, contact credentials, and registered e-signatures.')
 
 @push('styles')
 <style>
@@ -9,25 +11,6 @@
     }
 </style>
 @endpush
-
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2.5">
-            <i class="fa-solid fa-users text-emerald-600 dark:text-emerald-400 text-xl"></i>
-            <span>Cooperative Members Directory</span>
-        </h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
-            Browse, register, search, and manage cooperative member profiles, contact credentials, and registered e-signatures.
-        </p>
-    </div>
-
-    <button id="btn-add-member" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer self-start sm:self-auto">
-        <i class="fa-solid fa-user-plus text-xs"></i>
-        <span>Register Member</span>
-    </button>
-</div>
-@endsection
 
 @section('content')
 <div class="space-y-5 sm:space-y-6 animate-fade-in">
@@ -44,11 +27,16 @@
             @endif
         </form>
 
-        <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200/80 dark:border-slate-600">
+        <div class="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between sm:justify-end gap-3">
+            <span class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200/80 dark:border-slate-600">
                 <i class="fa-solid fa-users text-slate-500 text-xs"></i>
-                <span>Showing {{ $users->firstItem() ?? 0 }}-{{ $users->lastItem() ?? 0 }} of {{ number_format($users->total()) }} Registered Members</span>
+                <span>Showing {{ $users->firstItem() ?? 0 }}-{{ $users->lastItem() ?? 0 }} of {{ number_format($users->total()) }} Members</span>
             </span>
+
+            <button id="btn-add-member" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex-shrink-0">
+                <i class="fa-solid fa-user-plus text-xs"></i>
+                <span>Register Member</span>
+            </button>
         </div>
     </div>
 
@@ -57,38 +45,13 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-100/90 dark:bg-slate-800/95 border-b-2 border-slate-200/90 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-user text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Cooperative Member
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-id-badge text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Company ID
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-signature text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                E-Signature
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-phone text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Contact Number
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-location-dot text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Permanent Address
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5 text-right">Actions</th>
+                    <tr class="bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200/70 dark:border-slate-700/60 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <th class="px-5 py-3">Member</th>
+                        <th class="px-5 py-3">Company ID</th>
+                        <th class="px-5 py-3">E-Signature</th>
+                        <th class="px-5 py-3">Contact Number</th>
+                        <th class="px-5 py-3">Permanent Address</th>
+                        <th class="px-5 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300">

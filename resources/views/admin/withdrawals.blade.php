@@ -1,15 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Withdrawals Decision Board - Sako Cooperative')
-
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">Withdrawals Decision Board</h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Review savings payout requests, acknowledge processing tasks, and release completed disbursements.</p>
-    </div>
-</div>
-@endsection
+@section('page_title', 'Withdrawals Decision Board')
+@section('page_subtitle', 'Review savings payout requests, acknowledge processing tasks, and release completed disbursements.')
 
 @section('content')
 <div class="space-y-6 animate-fade-in">

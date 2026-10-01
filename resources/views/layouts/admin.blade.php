@@ -78,6 +78,13 @@
             padding-left: 0 !important;
             padding-right: 0 !important;
         }
+        #sidebar.collapsed .sidebar-collapsed-affiliations {
+            display: flex !important;
+        }
+        #sidebar.collapsed .sidebar-collapsed-affiliations:hover .sidebar-tooltip {
+            opacity: 1;
+            transform: translateX(0.25rem);
+        }
         
         /* Tooltip implementation */
         .sidebar-tooltip {
@@ -186,6 +193,40 @@
                     </span>
                     <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-black tracking-wider uppercase border border-emerald-500/20 sidebar-text">{{ $authUser && $authUser->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</span>
                 </a>
+            </div>
+
+            <!-- Affiliations Card (Desktop Sidebar) -->
+            <div class="px-3.5 py-3 border-b border-slate-200/80 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-800/50">
+                <!-- Expanded State -->
+                <div class="sidebar-text space-y-1.5 p-2.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/70 shadow-2xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9.5px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                            <i class="fa-solid fa-users-gear text-emerald-600 text-[10px]"></i>
+                            <span>My Affiliations</span>
+                        </span>
+                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500">({{ count($userRoles) }})</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                        @forelse($userRoles as $slug)
+                            <span class="text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/40 px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider transition-all hover:bg-emerald-100 dark:hover:bg-emerald-950/70" title="Committee: {{ ucwords(str_replace('_', ' ', $slug)) }}">
+                                {{ str_replace('_', ' ', $slug) }}
+                            </span>
+                        @empty
+                            <span class="text-slate-400 dark:text-slate-500 font-semibold italic text-[9px]">Auditor</span>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Collapsed State: Icon with Tooltip -->
+                <div class="sidebar-collapsed-affiliations hidden group relative justify-center py-0.5">
+                    <div class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-2xs cursor-pointer">
+                        <i class="fa-solid fa-users-gear text-xs"></i>
+                    </div>
+                    <div class="sidebar-tooltip">
+                        <span class="font-extrabold block text-[10px] text-emerald-400 mb-0.5 uppercase tracking-wider">My Affiliations</span>
+                        <span class="text-xs">{{ implode(', ', array_map(fn($s) => ucwords(str_replace('_', ' ', $s)), $userRoles)) ?: 'Auditor' }}</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Sidebar Navigation -->
@@ -408,6 +449,28 @@
                     </button>
                 </div>
 
+                <!-- Affiliations Card (Mobile Sidebar) -->
+                <div class="px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-800/50">
+                    <div class="space-y-1.5 p-2.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/70 shadow-2xs">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9.5px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                                <i class="fa-solid fa-users-gear text-emerald-600 text-[10px]"></i>
+                                <span>My Affiliations</span>
+                            </span>
+                            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500">({{ count($userRoles) }})</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            @forelse($userRoles as $slug)
+                                <span class="text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/40 px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider">
+                                    {{ str_replace('_', ' ', $slug) }}
+                                </span>
+                            @empty
+                                <span class="text-slate-400 dark:text-slate-500 font-semibold italic text-[9px]">Auditor</span>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex-1 px-4 py-4 space-y-4 overflow-y-auto sidebar-nav">
                     @if($canOverview)
                     <!-- Group: Core -->
@@ -611,23 +674,32 @@
                         </svg>
                     </button>
 
-                    <!-- My Affiliations (Moved here globally next to toggle) -->
-                    <div class="hidden sm:flex items-center gap-2 border-l border-slate-100 dark:border-slate-700 pl-3">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 whitespace-nowrap">My Affiliations:</span>
-                        <div class="flex flex-wrap gap-1">
-                            @forelse($userRoles as $slug)
-                                <span class="text-emerald-700 dark:text-emerald-400 font-extrabold bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100/40 dark:border-emerald-900/30 px-2 py-0.5 rounded-lg text-[9px] uppercase tracking-wider transition-all hover:bg-emerald-100 dark:hover:bg-emerald-950/50">
-                                    {{ str_replace('_', ' ', $slug) }}
-                                </span>
-                            @empty
-                                <span class="text-slate-400 dark:text-slate-550 font-semibold italic text-[9px] bg-slate-100 dark:bg-slate-900/50 px-2 py-0.5 rounded-lg border border-slate-200/40 dark:border-slate-800/40">Auditor</span>
-                            @endforelse
+                    <!-- Page Title & Subtitle in Topbar Header -->
+                    <div class="flex items-center gap-3 border-l border-slate-200/80 dark:border-slate-700/80 pl-3 min-w-0">
+                        <div class="min-w-0">
+                            @hasSection('page_title')
+                                <h1 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight truncate leading-tight">
+                                    @yield('page_title')
+                                </h1>
+                                @hasSection('page_subtitle')
+                                    <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate hidden md:block max-w-md lg:max-w-xl">
+                                        @yield('page_subtitle')
+                                    </p>
+                                @endif
+                            @else
+                                <h1 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight truncate leading-tight">
+                                    {{ explode(' - ', trim($__env->yieldContent('title', 'Admin Console')))[0] }}
+                                </h1>
+                            @endif
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Toolbar -->
-                <div class="flex items-center gap-2 flex-shrink-0">
+                <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                    <!-- Page Header Actions Slot -->
+                    @yield('header_actions')
+
                     <!-- Profile Dropdown Wrapper -->
                     <div class="relative" id="profile-dropdown-wrapper">
                         <!-- Profile Dropdown Trigger -->
@@ -738,10 +810,12 @@
 
             <!-- Scrollable Content Window -->
             <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-slate-900">
-                <!-- Page Title Header -->
-                <div class="mb-8">
-                    @yield('header')
-                </div>
+                <!-- Backward-compatible Page Title Header (only if page still defines @section('header')) -->
+                @hasSection('header')
+                    <div class="mb-6">
+                        @yield('header')
+                    </div>
+                @endif
 
                 <!-- Main Content Slot -->
                 @yield('content')

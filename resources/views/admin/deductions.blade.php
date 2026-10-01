@@ -1,15 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Deduction Adjustments - Sako Cooperative')
-
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight serif-font">Deduction Adjustments</h1>
-        <p class="text-xs text-slate-550 dark:text-slate-400 mt-1 font-semibold">Review, approve, or reject cooperative member payroll contribution adjustment filings.</p>
-    </div>
-</div>
-@endsection
+@section('page_title', 'Deduction Adjustments')
+@section('page_subtitle', 'Review, approve, or reject cooperative member payroll contribution adjustment filings.')
 
 @section('content')
 <div class="space-y-8 animate-fade-in">

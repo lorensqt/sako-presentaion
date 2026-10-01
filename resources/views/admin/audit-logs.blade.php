@@ -1,15 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'System Audit & Security Logs - Sako Cooperative')
-
-@section('header')
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div>
-        <p class="text-xs text-emerald-600 dark:text-emerald-400 font-extrabold tracking-wider uppercase">Compliance Ledger</p>
-        <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mt-0.5">System Audit & Security Logs</h1>
-    </div>
-</div>
-@endsection
+@section('page_title', 'System Audit & Security Logs')
+@section('page_subtitle', 'Comprehensive compliance ledger tracking administrative decisions, user authentications, and critical security events.')
 
 @section('content')
 <div class="space-y-6">

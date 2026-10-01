@@ -1,13 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Loans Archives & Directory - Sako Cooperative')
-
-@section('header')
-<div>
-    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loans Directory & Archives</h1>
-    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Exhaustive ledger of all member loan applications, legal contracts, and historical records.</p>
-</div>
-@endsection
+@section('page_title', 'Loans Directory & Archives')
+@section('page_subtitle', 'Exhaustive ledger of all member loan applications, legal contracts, and historical records.')
 
 @section('content')
 <div class="space-y-6 animate-fade-in">

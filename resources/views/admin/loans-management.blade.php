@@ -1,20 +1,15 @@
 @extends('layouts.admin')
 
 @section('title', 'Loans Management - Sako Cooperative')
+@section('page_title', 'Loans Management')
+@section('page_subtitle', 'Configure active loan facilities, interest rates, borrowing limits, co-maker matrix configs, and approval flow requirements.')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loans Management</h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Configure active loan facilities, interest rates, borrowing limits, co-maker matrix configs, and approval flow requirements.</p>
-    </div>
-    <div>
-        <button id="btn-add-loan-product" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            Create Loan Facility
-        </button>
-    </div>
-</div>
+@section('header_actions')
+<button id="btn-add-loan-product" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+    <span class="hidden sm:inline">Create Loan Facility</span>
+    <span class="sm:hidden">Create</span>
+</button>
 @endsection
 
 @section('content')

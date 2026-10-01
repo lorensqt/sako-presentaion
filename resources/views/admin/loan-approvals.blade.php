@@ -1,13 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Loan Approvals - Sako Cooperative')
-
-@section('header')
-<div>
-    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight serif-font">Loan Approvals Board</h1>
-    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Oversee, inspect, and approve cooperative loan applications through sequential organizational review stages.</p>
-</div>
-@endsection
+@section('title', 'Loan Approvals Board - Sako Cooperative')
+@section('page_title', 'Loan Approvals Board')
+@section('page_subtitle', 'Oversee, inspect, and approve cooperative loan applications through sequential organizational review stages.')
 
 @section('content')
 <div class="space-y-6 animate-fade-in">

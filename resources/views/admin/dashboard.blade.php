@@ -1,22 +1,18 @@
 @extends('layouts.admin')
 
 @section('title', 'Admin Overview Panel - Sako Cooperative')
+@section('page_title', 'Overview Panel')
+@section('page_subtitle', 'Real-time indicators, operational stats, and general configuration health of the cooperative.')
 
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight serif-font">Overview Panel</h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Real-time indicators, operational stats, and general configuration health of the cooperative.</p>
-    </div>
-    <div class="flex items-center gap-2.5">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-100/50 dark:border-emerald-900/30">
-            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-            Node Status: Stable
-        </span>
-        <span class="text-xs text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-            System Admin Root
-        </span>
-    </div>
+@section('header_actions')
+<div class="flex items-center gap-2">
+    <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 text-xs font-bold border border-emerald-200/50 dark:border-emerald-900/40 shadow-2xs">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span>Node Status: Stable</span>
+    </span>
+    <span class="hidden md:inline-block text-[11px] text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-700">
+        System Admin Root
+    </span>
 </div>
 @endsection
 

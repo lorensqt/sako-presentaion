@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'System Administrators & Staff - Sako Cooperative')
+@section('page_title', 'System Administrators & Staff')
+@section('page_subtitle', 'Super Administrator exclusive console to configure internal system operators, credentials, e-signatures, and granular admin tab permissions.')
 
 @push('styles')
 <style>
@@ -9,25 +11,6 @@
     }
 </style>
 @endpush
-
-@section('header')
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2.5">
-            <i class="fa-solid fa-user-shield text-emerald-600 dark:text-emerald-400 text-xl"></i>
-            <span>System Administrators &amp; Staff Console</span>
-        </h1>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
-            Super Administrator exclusive console to configure internal system operators, credentials, e-signatures, and granular admin tab permissions.
-        </p>
-    </div>
-
-    <button id="btn-add-admin" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer self-start sm:self-auto">
-        <i class="fa-solid fa-user-shield text-xs"></i>
-        <span>Register Administrator</span>
-    </button>
-</div>
-@endsection
 
 @section('content')
 <div class="space-y-5 sm:space-y-6 animate-fade-in">
@@ -44,11 +27,16 @@
             @endif
         </form>
 
-        <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200/80 dark:border-slate-600">
+        <div class="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between sm:justify-end gap-3">
+            <span class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200/80 dark:border-slate-600">
                 <i class="fa-solid fa-user-shield text-slate-500 text-xs"></i>
-                <span>Showing {{ $users->firstItem() ?? 0 }}-{{ $users->lastItem() ?? 0 }} of {{ number_format($users->total()) }} System Administrators</span>
+                <span>Showing {{ $users->firstItem() ?? 0 }}-{{ $users->lastItem() ?? 0 }} of {{ number_format($users->total()) }} Administrators</span>
             </span>
+
+            <button id="btn-add-admin" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs shadow-emerald-600/10 hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex-shrink-0">
+                <i class="fa-solid fa-user-shield text-xs"></i>
+                <span>Register Administrator</span>
+            </button>
         </div>
     </div>
 
@@ -129,44 +117,14 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-100/90 dark:bg-slate-800/95 border-b-2 border-slate-200/90 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-shield text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Administrator Name
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-id-badge text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Login Identifier
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-signature text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                E-Signature
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-shield-halved text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Privilege Tier
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-lock-open text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Accessible Admin Modules
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-users-gear text-slate-500 dark:text-slate-400 text-[11px]"></i>
-                                Approval Committees
-                            </span>
-                        </th>
-                        <th class="px-5 py-3.5 text-right">Actions</th>
+                    <tr class="bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200/70 dark:border-slate-700/60 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        <th class="px-5 py-3">Administrator</th>
+                        <th class="px-5 py-3">Login ID</th>
+                        <th class="px-5 py-3">E-Signature</th>
+                        <th class="px-5 py-3">Privilege Tier</th>
+                        <th class="px-5 py-3">Module Access</th>
+                        <th class="px-5 py-3">Approval Committees</th>
+                        <th class="px-5 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60 text-xs font-medium text-slate-700 dark:text-slate-300">
