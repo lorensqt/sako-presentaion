@@ -24,6 +24,7 @@ class LoanApplication extends Model
         'service_charge',
         'net_proceeds',
         'current_stage',
+        'current_hrmd_sequence',
         'status',
         'release_date',
         'maturity_date',
@@ -43,6 +44,7 @@ class LoanApplication extends Model
         'monthly_amortization' => 'decimal:2',
         'service_charge' => 'decimal:2',
         'net_proceeds' => 'decimal:2',
+        'current_hrmd_sequence' => 'integer',
         'release_date' => 'date',
         'maturity_date' => 'date',
     ];

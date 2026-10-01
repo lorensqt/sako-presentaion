@@ -48,6 +48,70 @@ class LoanWorkflowService
 
         foreach ($flow as $index => $stage) {
             $skipped = $this->shouldSkipStage($stage, $application);
+
+            // Special handling for sequential HRMD stage: if HRMD users have sequences defined, render each sequence step
+            if ($stage === 'hrmd_staff' && !$skipped) {
+                $hrmdUsers = \App\Models\User::whereHas('roles', fn($q) => $q->where('slug', 'hrmd_staff'))
+                    ->whereNotNull('hrmd_sequence')
+                    ->orderBy('hrmd_sequence', 'asc')
+                    ->get();
+
+                if ($hrmdUsers->isNotEmpty()) {
+                    $distinctSequences = $hrmdUsers->pluck('hrmd_sequence')->unique()->values()->all();
+                    $activeHrmdSeq = $application->current_hrmd_sequence ?? min($distinctSequences);
+
+                    foreach ($distinctSequences as $seq) {
+                        $seqUsers = $hrmdUsers->where('hrmd_sequence', $seq)->pluck('name')->implode(', ');
+                        $seqApproval = $application->approvals
+                            ->where('stage_role_slug', 'hrmd_staff')
+                            ->first(fn($item) => (int) $item->hrmd_sequence === (int) $seq);
+
+                        $stepStatus = 'pending';
+                        $actor = null;
+                        $decision = null;
+                        $remarks = null;
+                        $date = null;
+
+                        if ($seqApproval) {
+                            $stepStatus = $seqApproval->decision;
+                            $actor = $seqApproval->actor ? $seqApproval->actor->name : 'HRMD Staff';
+                            $decision = $seqApproval->decision;
+                            $remarks = $seqApproval->remarks;
+                            $date = $seqApproval->created_at->format('M d, Y h:i A');
+                        } elseif ($isRejected) {
+                            $stepStatus = 'cancelled';
+                        } elseif (in_array($application->status, ['approved', 'released'], true)) {
+                            $stepStatus = 'completed';
+                        } elseif ($currentStageIndex !== false && $index < $currentStageIndex) {
+                            $stepStatus = 'completed';
+                        } elseif ($application->current_stage === 'hrmd_staff') {
+                            if ((int) $activeHrmdSeq === (int) $seq) {
+                                $stepStatus = 'current';
+                            } elseif ((int) $seq < (int) $activeHrmdSeq) {
+                                $stepStatus = 'completed';
+                            } else {
+                                $stepStatus = 'pending';
+                            }
+                        } else {
+                            $stepStatus = 'pending';
+                        }
+
+                        $steps[] = [
+                            'stage' => 'hrmd_staff',
+                            'hrmd_sequence' => $seq,
+                            'label' => "HRMD (Seq #{$seq}" . ($seqUsers ? ": {$seqUsers}" : "") . ")",
+                            'status' => $stepStatus,
+                            'skipped' => false,
+                            'actor' => $actor,
+                            'decision' => $decision,
+                            'remarks' => $remarks,
+                            'date' => $date,
+                        ];
+                    }
+                    continue;
+                }
+            }
+
             $approval = $approvals->get($stage);
 
             $status = 'pending'; // default
@@ -91,6 +155,16 @@ class LoanWorkflowService
         }
 
         return $steps;
+    }
+
+    /**
+     * Get the initial HRMD sequence for an application entering the HRMD stage.
+     */
+    public function getInitialHrmdSequence(): int
+    {
+        return \App\Models\User::whereHas('roles', fn($q) => $q->where('slug', 'hrmd_staff'))
+            ->whereNotNull('hrmd_sequence')
+            ->min('hrmd_sequence') ?? 1;
     }
 
     /**

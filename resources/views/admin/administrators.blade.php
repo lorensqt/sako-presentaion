@@ -52,6 +52,78 @@
         </div>
     </div>
 
+    <!-- HRMD SEQUENTIAL APPROVAL CHAIN HIERARCHY OVERVIEW -->
+    @if(isset($hrmdStaffList) && $hrmdStaffList->isNotEmpty())
+        <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-200/80 dark:border-amber-900/50 p-4 sm:p-5 rounded-2xl shadow-xs space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs font-black shadow-xs">
+                        <i class="fa-solid fa-arrow-down-1-9"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                            <span>HRMD Approval Chain Hierarchy</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300/40">
+                                Sequential Order: 1 &rarr; Last
+                            </span>
+                        </h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                            Loans passing through HRMD verification strictly require sequential sign-offs in the exact numerical order shown below before moving to Credit Committee.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                        Next Suggested Sequence:
+                        <strong class="text-amber-600 dark:text-amber-400 font-extrabold">#{{ ($hrmdStaffList->whereNotNull('hrmd_sequence')->max('hrmd_sequence') ?? 0) + 1 }}</strong>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Steps Ribbon / Flow -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+                @php $hasHrmdWithSequence = false; @endphp
+                @foreach($hrmdStaffList->whereNotNull('hrmd_sequence')->sortBy('hrmd_sequence') as $hrUser)
+                    @php $hasHrmdWithSequence = true; @endphp
+                    <div class="flex items-center gap-1.5">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-300/80 dark:border-amber-800/80 shadow-2xs">
+                            <span class="w-5 h-5 rounded-lg bg-amber-500 text-white font-black text-[10px] flex items-center justify-center">
+                                {{ $hrUser->hrmd_sequence }}
+                            </span>
+                            <div class="text-left leading-tight">
+                                <span class="text-xs font-bold text-slate-900 dark:text-slate-100 block">{{ $hrUser->name }}</span>
+                                <span class="text-[9px] text-slate-400 font-mono">ID: {{ $hrUser->company_id }}</span>
+                            </div>
+                        </div>
+                        @if(!$loop->last)
+                            <i class="fa-solid fa-arrow-right text-[10px] text-amber-500/70"></i>
+                        @endif
+                    </div>
+                @endforeach
+
+                @if(!$hasHrmdWithSequence)
+                    <span class="text-xs text-amber-700 dark:text-amber-400 italic">No HRMD staff have been assigned an approval sequence number yet. Assign sequence numbers using the Edit button below.</span>
+                @endif
+
+                <!-- Unassigned HRMD staff warning chips -->
+                @php $unassignedHrmd = $hrmdStaffList->whereNull('hrmd_sequence'); @endphp
+                @if($unassignedHrmd->isNotEmpty())
+                    <div class="flex items-center gap-1.5 ml-auto">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-500 flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Needs Sequence:
+                        </span>
+                        @foreach($unassignedHrmd as $unassignedUser)
+                            <span class="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-[10px] font-bold border border-rose-200 dark:border-rose-900">
+                                {{ $unassignedUser->name }}
+                            </span>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <!-- ADMINISTRATORS LEDGER TABLE -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
@@ -196,11 +268,25 @@
 
                             <!-- Workflow Committees -->
                             <td class="px-5 py-3.5">
-                                <div class="flex flex-wrap gap-1 max-w-[180px]">
+                                <div class="flex flex-wrap gap-1 max-w-[200px]">
                                     @forelse($user->roles as $userRole)
-                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 uppercase tracking-wider" title="{{ $userRole->description }}">
-                                            {{ $userRole->name }}
-                                        </span>
+                                        @if($userRole->slug === 'hrmd_staff')
+                                            @if($user->hrmd_sequence)
+                                                <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 uppercase tracking-wider inline-flex items-center gap-1 shadow-2xs" title="HRMD Sequential Sign-off Order: Sequence #{{ $user->hrmd_sequence }}">
+                                                    <i class="fa-solid fa-list-ol text-[8px] text-amber-600"></i>
+                                                    <span>HR Approver #{{ $user->hrmd_sequence }}</span>
+                                                </span>
+                                            @else
+                                                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-800 uppercase tracking-wider inline-flex items-center gap-1" title="HRMD Staff has no sequence assigned yet. Click Edit to assign order.">
+                                                    <i class="fa-solid fa-triangle-exclamation text-[8.5px] text-rose-500"></i>
+                                                    <span>HRMD (Unsequenced)</span>
+                                                </span>
+                                            @endif
+                                        @else
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 uppercase tracking-wider inline-flex items-center gap-1" title="{{ $userRole->description }}">
+                                                <span>{{ $userRole->name }}</span>
+                                            </span>
+                                        @endif
                                     @empty
                                         <span class="text-[11px] text-slate-400 dark:text-slate-500 italic">None</span>
                                     @endforelse
@@ -216,6 +302,7 @@
                                         data-company_id="{{ $user->company_id }}"
                                         data-email="{{ $user->email }}"
                                         data-role="{{ $user->role }}"
+                                        data-hrmd_sequence="{{ $user->hrmd_sequence }}"
                                         data-signature="{{ $user->signature ? asset('storage/' . $user->signature) : '' }}"
                                         data-roles="{{ json_encode($user->roles->pluck('id')->toArray()) }}"
                                         data-admin_permissions="{{ json_encode($user->admin_permissions ?? []) }}"
@@ -327,16 +414,68 @@
                     </select>
                 </div>
 
-                <!-- E-Signature File Upload -->
+                <!-- Workflow Approval Committees (Cooperative Staff Roles) -->
                 <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
                     <div class="flex items-center justify-between">
-                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
-                            <span>Official E-Signature</span>
+                        <label class="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-users-gear text-emerald-600 text-xs"></i>
+                            <span>Cooperative Staff Roles / Committees</span>
                         </label>
-                        <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
+                        <span class="text-[9.5px] text-slate-400 font-semibold">Assign role(s) to operator</span>
                     </div>
-                    <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-3 rounded-xl">
+                        @foreach($roles as $r)
+                            <label class="flex items-center justify-between p-2 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 cursor-pointer select-none group transition-colors">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="roles[]" value="{{ $r->id }}" data-slug="{{ $r->slug }}" class="add-role-cb rounded text-emerald-600 dark:bg-slate-950 dark:border-slate-700 focus:ring-emerald-500 h-4 w-4 border-slate-300 dark:border-slate-700 transition-colors cursor-pointer">
+                                    <span class="text-xs text-slate-700 dark:text-slate-300 font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{{ $r->name }}</span>
+                                </div>
+                                @if($r->slug === 'hrmd_staff')
+                                    <span class="text-[8.5px] font-extrabold text-amber-700 dark:text-amber-300 bg-amber-100/90 dark:bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-300/60 dark:border-amber-800">
+                                        Sequence
+                                    </span>
+                                @endif
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <!-- HRMD Sequence Field (Dynamically Revealed when HRMD Staff role is checked) -->
+                    <div id="add-hrmd-seq-container" class="hidden mt-2.5 p-3 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40 rounded-xl space-y-2 transition-all">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-ol text-amber-600 text-xs"></i>
+                                <span>HRMD Approval Sequence</span>
+                            </label>
+                            <span class="text-[9px] font-semibold text-amber-600 dark:text-amber-400">1, 2, 3... (No Limit)</span>
+                        </div>
+
+                        <!-- Current Chain Reference Box in Add -->
+                        @if(isset($hrmdStaffList))
+                            <div class="p-2.5 bg-white dark:bg-slate-950 rounded-lg border border-amber-200/80 dark:border-amber-900/60 space-y-1.5">
+                                <div class="flex items-center justify-between text-[10px]">
+                                    <span class="font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Current Assigned Sequences:</span>
+                                    <span class="text-[9.5px] font-semibold text-slate-500">
+                                        Next available: <strong class="text-emerald-600 dark:text-emerald-400 font-extrabold">#{{ ($hrmdStaffList->whereNotNull('hrmd_sequence')->max('hrmd_sequence') ?? 0) + 1 }}</strong>
+                                    </span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                                    @forelse($hrmdStaffList->whereNotNull('hrmd_sequence')->sortBy('hrmd_sequence') as $h)
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-[10px] font-semibold border border-amber-300/70 dark:border-amber-800">
+                                            <span class="font-black text-amber-700 dark:text-amber-400">#{{ $h->hrmd_sequence }}</span>
+                                            <span>{{ $h->name }}</span>
+                                        </span>
+                                    @empty
+                                        <span class="text-[10px] text-slate-400 italic">No sequences currently assigned. Start with sequence 1.</span>
+                                    @endforelse
+                                </div>
+                            </div>
+                        @endif
+
+                        <input type="number" name="hrmd_sequence" id="add-admin-hrmd-sequence" min="1" step="1" placeholder="e.g. 1 (1st review), 2 (Supervisor), 3 (Director)..." class="w-full px-3 py-1.5 text-xs font-semibold border border-amber-200 dark:border-amber-800/80 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-lg outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder-slate-400 transition-all">
+                        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-normal">
+                            Determines sequential order of review when this admin evaluates loans at the HRMD stage. Approvals advance sequentially (1 to last) before moving to Credit Committee.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Admin Granular Page Access Permissions Grid -->
@@ -375,16 +514,20 @@
                     <span>Super Administrators automatically have unrestricted access across all admin pages, settings, and logs.</span>
                 </div>
 
-                <!-- Workflow Approval Committees -->
+                <!-- E-Signature File Upload -->
                 <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
-                    <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Workflow Approval Committees</label>
-                    <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-3 rounded-xl">
-                        @foreach($roles as $r)
-                            <label class="flex items-center gap-2 cursor-pointer select-none py-1 group">
-                                <input type="checkbox" name="roles[]" value="{{ $r->id }}" class="rounded text-emerald-600 dark:bg-slate-950 dark:border-slate-700 focus:ring-emerald-500 h-4 w-4 border-slate-300 dark:border-slate-700 transition-colors cursor-pointer">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{{ $r->name }}</span>
-                            </label>
-                        @endforeach
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
+                            <span>Official E-Signature</span>
+                        </label>
+                        <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
+                    </div>
+                    <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
+                </div>
+                        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-normal">
+                            Determines sequential order of review when this admin evaluates loans at the HRMD stage. Approvals advance sequentially (1 to last) before moving to Credit Committee.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -456,30 +599,68 @@
                     </select>
                 </div>
 
-                <!-- E-Signature Upload & Preview in Edit -->
+                <!-- Workflow Approval Committees (Cooperative Staff Roles) in Edit -->
                 <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
                     <div class="flex items-center justify-between">
-                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
-                            <span>Official E-Signature</span>
+                        <label class="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-users-gear text-emerald-600 text-xs"></i>
+                            <span>Cooperative Staff Roles / Committees</span>
                         </label>
-                        <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
+                        <span class="text-[9.5px] text-slate-400 font-semibold">Assign role(s) to operator</span>
                     </div>
-                    <div id="edit-signature-preview-container" class="hidden items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl mb-2">
-                        <div class="flex items-center gap-3">
-                            <img id="edit-signature-preview-img" src="" alt="Current Signature" class="h-10 w-auto max-w-[120px] object-contain bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                            <div>
-                                <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200 block">Registered on file</span>
-                                <span class="text-[9px] text-slate-400">Used for official sign-offs and PDF contracts.</span>
-                            </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-3 rounded-xl">
+                        @foreach($roles as $r)
+                            <label class="flex items-center justify-between p-2 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 cursor-pointer select-none group transition-colors">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="roles[]" value="{{ $r->id }}" data-slug="{{ $r->slug }}" class="edit-role-cb rounded text-emerald-600 dark:bg-slate-950 dark:border-slate-700 focus:ring-emerald-500 h-4 w-4 border-slate-300 dark:border-slate-700 transition-colors cursor-pointer">
+                                    <span class="text-xs text-slate-700 dark:text-slate-300 font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{{ $r->name }}</span>
+                                </div>
+                                @if($r->slug === 'hrmd_staff')
+                                    <span class="text-[8.5px] font-extrabold text-amber-700 dark:text-amber-300 bg-amber-100/90 dark:bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-300/60 dark:border-amber-800">
+                                        Sequence
+                                    </span>
+                                @endif
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <!-- HRMD Sequence Field in Edit (Dynamically Revealed when HRMD Staff role is checked) -->
+                    <div id="edit-hrmd-seq-container" class="hidden mt-2.5 p-3 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40 rounded-xl space-y-2 transition-all">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-ol text-amber-600 text-xs"></i>
+                                <span>HRMD Approval Sequence</span>
+                            </label>
+                            <span id="edit-admin-current-seq-badge" class="text-[9.5px] px-2 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 font-extrabold border border-amber-300 dark:border-amber-700"></span>
                         </div>
-                        <button type="button" id="btn-remove-admin-sig" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1 cursor-pointer" title="Remove obsolete signature so admin can re-upload">
-                            <i class="fa-solid fa-trash-can text-[9px]"></i>
-                            <span>Clear</span>
-                        </button>
+
+                        <!-- Current Chain Reference Box in Edit -->
+                        @if(isset($hrmdStaffList))
+                            <div class="p-2.5 bg-white dark:bg-slate-950 rounded-lg border border-amber-200/80 dark:border-amber-900/60 space-y-1.5">
+                                <div class="flex items-center justify-between text-[10px]">
+                                    <span class="font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Current HRMD Chain:</span>
+                                    <span class="text-[9.5px] font-semibold text-slate-500">
+                                        Next available: <strong class="text-emerald-600 dark:text-emerald-400 font-extrabold">#{{ ($hrmdStaffList->whereNotNull('hrmd_sequence')->max('hrmd_sequence') ?? 0) + 1 }}</strong>
+                                    </span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                                    @forelse($hrmdStaffList->whereNotNull('hrmd_sequence')->sortBy('hrmd_sequence') as $h)
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-[10px] font-semibold border border-amber-300/70 dark:border-amber-800">
+                                            <span class="font-black text-amber-700 dark:text-amber-400">#{{ $h->hrmd_sequence }}</span>
+                                            <span>{{ $h->name }}</span>
+                                        </span>
+                                    @empty
+                                        <span class="text-[10px] text-slate-400 italic">No sequences currently assigned. Start with sequence 1.</span>
+                                    @endforelse
+                                </div>
+                            </div>
+                        @endif
+
+                        <input type="number" name="hrmd_sequence" id="edit-admin-hrmd-sequence" min="1" step="1" placeholder="e.g. 1 (1st review), 2 (Supervisor), 3 (Director)..." class="w-full px-3 py-1.5 text-xs font-semibold border border-amber-200 dark:border-amber-800/80 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-lg outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder-slate-400 transition-all">
+                        <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-normal">
+                            Determines sequential order of review when this admin evaluates loans at the HRMD stage. Approvals advance sequentially (1 to last) before moving to Credit Committee.
+                        </p>
                     </div>
-                    <input type="hidden" name="remove_signature" id="admin-remove-signature-flag" value="0">
-                    <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
                 </div>
 
                 <!-- Admin Granular Page Access Permissions Grid -->
@@ -518,17 +699,30 @@
                     <span>Super Administrators automatically have unrestricted access across all admin pages, settings, and logs.</span>
                 </div>
 
-                <!-- Workflow Approval Committees -->
+                <!-- E-Signature Upload & Preview in Edit -->
                 <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
-                    <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Workflow Approval Committees</label>
-                    <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-3 rounded-xl">
-                        @foreach($roles as $r)
-                            <label class="flex items-center gap-2 cursor-pointer select-none py-1 group">
-                                <input type="checkbox" name="roles[]" value="{{ $r->id }}" class="edit-role-cb rounded text-emerald-600 dark:bg-slate-950 dark:border-slate-700 focus:ring-emerald-500 h-4 w-4 border-slate-300 dark:border-slate-700 transition-colors cursor-pointer">
-                                <span class="text-xs text-slate-700 dark:text-slate-300 font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{{ $r->name }}</span>
-                            </label>
-                        @endforeach
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-signature text-emerald-600 text-xs"></i>
+                            <span>Official E-Signature</span>
+                        </label>
+                        <span class="text-[9px] text-slate-400 font-semibold">(PNG / SVG transparent)</span>
                     </div>
+                    <div id="edit-signature-preview-container" class="hidden items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-xl mb-2">
+                        <div class="flex items-center gap-3">
+                            <img id="edit-signature-preview-img" src="" alt="Current Signature" class="h-10 w-auto max-w-[120px] object-contain bg-white dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                            <div>
+                                <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200 block">Registered on file</span>
+                                <span class="text-[9px] text-slate-400">Used for official sign-offs and PDF contracts.</span>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-remove-admin-sig" class="px-2.5 py-1 rounded-lg text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1 cursor-pointer" title="Remove obsolete signature so admin can re-upload">
+                            <i class="fa-solid fa-trash-can text-[9px]"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="remove_signature" id="admin-remove-signature-flag" value="0">
+                    <input type="file" name="signature" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/40 dark:file:text-emerald-300 hover:file:bg-emerald-100 cursor-pointer">
                 </div>
             </div>
 
@@ -833,9 +1027,71 @@
             });
         });
 
+        const addHrmdSeqContainer = document.getElementById("add-hrmd-seq-container");
+        const addHrmdSeqInput = document.getElementById("add-admin-hrmd-sequence");
+        const addHrmdCb = document.querySelector('input.add-role-cb[data-slug="hrmd_staff"]');
+
+        const editHrmdSeqContainer = document.getElementById("edit-hrmd-seq-container");
+        const editHrmdSeqInput = document.getElementById("edit-admin-hrmd-sequence");
+        const editHrmdCb = document.querySelector('input.edit-role-cb[data-slug="hrmd_staff"]');
+
         const btnAddAdmin = document.getElementById("btn-add-admin");
         if (btnAddAdmin) {
-            btnAddAdmin.addEventListener("click", () => openModal("modal-add-admin"));
+            btnAddAdmin.addEventListener("click", () => {
+                if (addHrmdSeqContainer) addHrmdSeqContainer.classList.add("hidden");
+                if (addHrmdSeqInput) addHrmdSeqInput.value = "";
+                document.querySelectorAll(".add-role-cb").forEach(cb => cb.checked = false);
+                openModal("modal-add-admin");
+            });
+        }
+
+        // Add modal: Show/hide sequence input when HRMD role is checked/unchecked
+        if (addHrmdCb && addHrmdSeqContainer) {
+            addHrmdCb.addEventListener("change", function() {
+                if (this.checked) {
+                    addHrmdSeqContainer.classList.remove("hidden");
+                    if (addHrmdSeqInput && !addHrmdSeqInput.value) {
+                        addHrmdSeqInput.focus();
+                    }
+                } else {
+                    addHrmdSeqContainer.classList.add("hidden");
+                    if (addHrmdSeqInput) addHrmdSeqInput.value = "";
+                }
+            });
+        }
+
+        // Edit modal: Show/hide sequence input when HRMD role is checked/unchecked
+        if (editHrmdCb && editHrmdSeqContainer) {
+            editHrmdCb.addEventListener("change", function() {
+                if (this.checked) {
+                    editHrmdSeqContainer.classList.remove("hidden");
+                    if (editHrmdSeqInput && !editHrmdSeqInput.value) {
+                        editHrmdSeqInput.focus();
+                    }
+                } else {
+                    editHrmdSeqContainer.classList.add("hidden");
+                    if (editHrmdSeqInput) editHrmdSeqInput.value = "";
+                }
+            });
+        }
+
+        // Auto-check HRMD Staff role checkbox when sequence is typed
+        if (addHrmdSeqInput) {
+            addHrmdSeqInput.addEventListener("input", function() {
+                if (addHrmdCb && this.value && Number(this.value) > 0) {
+                    addHrmdCb.checked = true;
+                    if (addHrmdSeqContainer) addHrmdSeqContainer.classList.remove("hidden");
+                }
+            });
+        }
+
+        if (editHrmdSeqInput) {
+            editHrmdSeqInput.addEventListener("input", function() {
+                if (editHrmdCb && this.value && Number(this.value) > 0) {
+                    editHrmdCb.checked = true;
+                    if (editHrmdSeqContainer) editHrmdSeqContainer.classList.remove("hidden");
+                }
+            });
         }
 
         document.querySelectorAll(".btn-edit-admin").forEach(btn => {
@@ -848,10 +1104,26 @@
                 const signatureUrl = this.getAttribute("data-signature");
                 const roles = JSON.parse(this.getAttribute("data-roles") || "[]");
                 const adminPerms = JSON.parse(this.getAttribute("data-admin_permissions") || "[]");
+                const hrmdSequence = this.getAttribute("data-hrmd_sequence");
 
                 document.getElementById("edit-admin-name").value = name || '';
                 document.getElementById("edit-admin-company_id").value = companyId || '';
                 document.getElementById("edit-admin-email").value = email || '';
+
+                if (editHrmdSeqInput) {
+                    editHrmdSeqInput.value = hrmdSequence || '';
+                }
+
+                const curSeqBadge = document.getElementById("edit-admin-current-seq-badge");
+                if (curSeqBadge) {
+                    if (hrmdSequence) {
+                        curSeqBadge.textContent = `Current: Sequence #${hrmdSequence}`;
+                        curSeqBadge.className = "text-[9.5px] px-2 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 font-extrabold border border-amber-300 dark:border-amber-700";
+                    } else {
+                        curSeqBadge.textContent = "Current: No Sequence Assigned";
+                        curSeqBadge.className = "text-[9.5px] px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 font-extrabold border border-rose-300 dark:border-rose-800";
+                    }
+                }
 
                 if (editRoleSelect) {
                     editRoleSelect.value = role || 'admin';
@@ -877,6 +1149,15 @@
                 editForm.querySelectorAll(".edit-role-cb").forEach(cb => {
                     cb.checked = roles.includes(parseInt(cb.value));
                 });
+
+                // Dynamically show or hide HRMD sequence container based on assigned role
+                if (editHrmdCb && editHrmdSeqContainer) {
+                    if (editHrmdCb.checked) {
+                        editHrmdSeqContainer.classList.remove("hidden");
+                    } else {
+                        editHrmdSeqContainer.classList.add("hidden");
+                    }
+                }
 
                 editForm.querySelectorAll(".edit-perm-cb").forEach(cb => {
                     cb.checked = Array.isArray(adminPerms) && adminPerms.includes(cb.value);

@@ -551,4 +551,168 @@ class LoanApprovalTest extends TestCase
 
         $response->assertSessionHasErrors(['amount']);
     }
+
+    /**
+     * Test that sequential HRMD approvals advance from 1 to the last sequence before moving to Credit Committee.
+     */
+    public function test_sequential_hrmd_approvals_advance_from_1_to_last_then_to_next_stage(): void
+    {
+        $borrower = $this->createUser('Borrower Account');
+
+        $roleHrmd = \App\Models\Role::firstOrCreate(['slug' => 'hrmd_staff'], ['name' => 'HRMD Staff']);
+
+        // Create 3 HRMD users with sequences 1, 2, and 3
+        $hrUser1 = $this->createUser('HR Sequence 1', 'admin');
+        $hrUser1->hrmd_sequence = 1;
+        $hrUser1->save();
+        $hrUser1->roles()->attach($roleHrmd);
+
+        $hrUser2 = $this->createUser('HR Sequence 2', 'admin');
+        $hrUser2->hrmd_sequence = 2;
+        $hrUser2->save();
+        $hrUser2->roles()->attach($roleHrmd);
+
+        $hrUser3 = $this->createUser('HR Sequence 3', 'admin');
+        $hrUser3->hrmd_sequence = 3;
+        $hrUser3->save();
+        $hrUser3->roles()->attach($roleHrmd);
+
+        $application = LoanApplication::create([
+            'user_id' => $borrower->id,
+            'loan_category' => 'travel',
+            'loan_type' => 'travel_loan',
+            'requested_amount' => 30000,
+            'current_stage' => 'hrmd_staff',
+            'current_hrmd_sequence' => 1,
+            'status' => 'pending',
+            'form_data' => [
+                'term_months' => 12,
+            ]
+        ]);
+
+        // 1. HR User 2 attempts to approve out of order while at sequence 1 -> should fail
+        $outOfOrderResponse = $this->actingAs($hrUser2)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Approving early',
+        ]);
+        $outOfOrderResponse->assertSessionHas('error');
+        $this->assertEquals(1, $application->fresh()->current_hrmd_sequence);
+        $this->assertEquals('hrmd_staff', $application->fresh()->current_stage);
+
+        // 2. HR User 1 approves -> moves to sequence 2
+        $resp1 = $this->actingAs($hrUser1)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'HR Level 1 Approved',
+        ]);
+        $resp1->assertSessionHas('success');
+        $this->assertEquals(2, $application->fresh()->current_hrmd_sequence);
+        $this->assertEquals('hrmd_staff', $application->fresh()->current_stage);
+
+        $this->assertDatabaseHas('loan_approvals', [
+            'loan_application_id' => $application->id,
+            'stage_role_slug' => 'hrmd_staff',
+            'hrmd_sequence' => 1,
+            'actioned_by_user_id' => $hrUser1->id,
+        ]);
+
+        // 3. HR User 2 approves -> moves to sequence 3
+        $resp2 = $this->actingAs($hrUser2)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'HR Level 2 Approved',
+        ]);
+        $resp2->assertSessionHas('success');
+        $this->assertEquals(3, $application->fresh()->current_hrmd_sequence);
+        $this->assertEquals('hrmd_staff', $application->fresh()->current_stage);
+
+        $this->assertDatabaseHas('loan_approvals', [
+            'loan_application_id' => $application->id,
+            'stage_role_slug' => 'hrmd_staff',
+            'hrmd_sequence' => 2,
+            'actioned_by_user_id' => $hrUser2->id,
+        ]);
+
+        // 4. HR User 3 (the last sequence) approves -> all HR sequences done, moves to next stage (credit_committee)
+        $resp3 = $this->actingAs($hrUser3)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'HR Final Level Approved',
+        ]);
+        $resp3->assertSessionHas('success');
+        $application->refresh();
+        $this->assertEquals('credit_committee', $application->current_stage);
+        $this->assertNull($application->current_hrmd_sequence);
+
+        $this->assertDatabaseHas('loan_approvals', [
+            'loan_application_id' => $application->id,
+            'stage_role_slug' => 'hrmd_staff',
+            'hrmd_sequence' => 3,
+            'actioned_by_user_id' => $hrUser3->id,
+        ]);
+    }
+
+    /**
+     * Test that accounting does not require files, but releasing officer requires General Ledger & Schedule PDFs.
+     */
+    public function test_releasing_officer_requires_general_ledger_and_schedule_pdfs_to_disburse(): void
+    {
+        Mail::fake();
+
+        $borrower = $this->createUser('Borrower Account');
+
+        $roleAccounting = \App\Models\Role::firstOrCreate(['slug' => 'accounting'], ['name' => 'Accounting']);
+        $roleReleasing = \App\Models\Role::firstOrCreate(['slug' => 'releasing_officer'], ['name' => 'Releasing Officer']);
+
+        $accountingOfficer = $this->createUser('Accounting Officer', 'admin');
+        $accountingOfficer->roles()->attach($roleAccounting);
+
+        $releasingOfficer = $this->createUser('Releasing Officer User', 'admin');
+        $releasingOfficer->roles()->attach($roleReleasing);
+
+        $application = LoanApplication::create([
+            'user_id' => $borrower->id,
+            'loan_category' => 'travel',
+            'loan_type' => 'travel_loan',
+            'requested_amount' => 30000,
+            'current_stage' => 'accounting',
+            'status' => 'pending',
+            'form_data' => [
+                'term_months' => 12,
+            ]
+        ]);
+
+        // 1. Accounting approves WITHOUT ledger/schedule -> succeeds and moves to releasing_officer
+        $respAcct = $this->actingAs($accountingOfficer)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Computations verified.',
+        ]);
+        $respAcct->assertSessionHas('success');
+        $this->assertEquals('releasing_officer', $application->fresh()->current_stage);
+
+        // 2. Releasing officer attempts to approve WITHOUT ledger and schedule -> fails validation
+        $failResp = $this->actingAs($releasingOfficer)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Disbursing now without files',
+        ]);
+        $failResp->assertSessionHasErrors(['ledger', 'schedule']);
+        $this->assertEquals('releasing_officer', $application->fresh()->current_stage);
+
+        // 3. Releasing officer uploads General Ledger and Payment Schedule PDFs -> succeeds and completes disbursement
+        $ledgerPdf = UploadedFile::fake()->create('General_Ledger.pdf', 200, 'application/pdf');
+        $schedulePdf = UploadedFile::fake()->create('Amortization_Schedule.pdf', 200, 'application/pdf');
+
+        $successResp = $this->actingAs($releasingOfficer)->post("/loans/{$application->id}/approve", [
+            'ledger' => $ledgerPdf,
+            'schedule' => $schedulePdf,
+            'remarks' => 'All vouchers prepared and disbursements issued.',
+        ]);
+
+        $successResp->assertSessionHas('success');
+        $application->refresh();
+        $this->assertEquals('completed', $application->current_stage);
+        $this->assertEquals('approved', $application->status);
+        $this->assertNotNull($application->ledger_path);
+        $this->assertNotNull($application->schedule_path);
+
+        // 4. Verify LoanReleasedMail was sent to the borrower with releasing remarks and officer identity
+        Mail::assertSent(\App\Mail\LoanReleasedMail::class, function ($mail) use ($borrower, $application, $releasingOfficer) {
+            return $mail->hasTo($borrower->email) &&
+                   $mail->borrowerName === $borrower->name &&
+                   $mail->loanId === (string) $application->id &&
+                   $mail->remarks === 'All vouchers prepared and disbursements issued.' &&
+                   $mail->releasingOfficerName === $releasingOfficer->name;
+        });
+    }
 }

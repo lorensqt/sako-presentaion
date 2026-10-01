@@ -17,17 +17,28 @@ class LoanReleasedMail extends Mailable
     public float $releasedAmount;
     public int $termMonths;
     public string $loanId;
+    public ?string $remarks;
+    public ?string $releasingOfficerName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $borrowerName, string $loanTypeName, float $releasedAmount, int $termMonths, string $loanId)
-    {
+    public function __construct(
+        string $borrowerName,
+        string $loanTypeName,
+        float $releasedAmount,
+        int $termMonths,
+        string $loanId,
+        ?string $remarks = null,
+        ?string $releasingOfficerName = null
+    ) {
         $this->borrowerName = $borrowerName;
         $this->loanTypeName = $loanTypeName;
         $this->releasedAmount = $releasedAmount;
         $this->termMonths = $termMonths;
         $this->loanId = $loanId;
+        $this->remarks = $remarks;
+        $this->releasingOfficerName = $releasingOfficerName;
     }
 
     /**

@@ -12,9 +12,14 @@ class LoanApproval extends Model
     protected $fillable = [
         'loan_application_id',
         'stage_role_slug',
+        'hrmd_sequence',
         'actioned_by_user_id',
         'decision',
         'remarks',
+    ];
+
+    protected $casts = [
+        'hrmd_sequence' => 'integer',
     ];
 
     /**

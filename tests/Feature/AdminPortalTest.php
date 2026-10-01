@@ -818,4 +818,34 @@ class AdminPortalTest extends TestCase
         $superAdmin->refresh();
         $this->assertTrue(Hash::check('superpassword', $superAdmin->password));
     }
+
+    /**
+     * Test that registering an admin with hrmd_sequence automatically attaches the hrmd_staff role.
+     */
+    public function test_super_admin_can_create_admin_with_hrmd_sequence_and_auto_assigns_role(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $superAdmin = User::factory()->create([
+            'role' => 'super_admin',
+        ]);
+
+        $response = $this->actingAs($superAdmin)->post('/admin/administrators', [
+            'name' => 'HR Approver One',
+            'company_id' => 'hr_admin_01',
+            'email' => 'hr01@coop.internal',
+            'role' => 'admin',
+            'admin_permissions' => ['loan_approvals'],
+            'hrmd_sequence' => 1,
+            // roles array omitted to ensure auto-association works
+        ]);
+
+        $response->assertRedirect('/admin/administrators');
+        $response->assertSessionHas('success');
+
+        $createdUser = User::where('company_id', 'hr_admin_01')->first();
+        $this->assertNotNull($createdUser);
+        $this->assertEquals(1, $createdUser->hrmd_sequence);
+        $this->assertTrue($createdUser->hasRole('hrmd_staff'));
+    }
 }

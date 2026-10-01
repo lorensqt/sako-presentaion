@@ -174,6 +174,20 @@
                     </div>
                 </div>
                 
+                @if(!empty($remarks))
+                <div class="summary-card" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #059669; padding: 16px 20px; margin-bottom: 20px;">
+                    <span class="summary-label" style="color: #047857; margin-bottom: 4px;">Releasing Officer Remarks</span>
+                    <p style="color: #334155; font-size: 13.5px; font-style: italic; margin: 0; line-height: 1.6;">
+                        &ldquo;{{ $remarks }}&rdquo;
+                    </p>
+                    @if(!empty($releasingOfficerName))
+                        <span style="display: block; font-size: 11px; color: #64748b; font-weight: 700; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            — {{ $releasingOfficerName }} (Disbursement &amp; Releasing Officer)
+                        </span>
+                    @endif
+                </div>
+                @endif
+                
                 <p>
                     Your selected repayment term is **{{ $termMonths }} months**. Monthly/semi-monthly amortization deductions will be applied directly through payroll deductions in accordance with your signed Promissory Note.
                 </p>

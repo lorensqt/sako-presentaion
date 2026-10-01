@@ -396,9 +396,19 @@ class AdminController extends Controller
             ->withQueryString();
 
         $roles = Role::all();
+        if ($roles->isEmpty()) {
+            \Artisan::call('db:seed', ['--class' => 'RoleAndPermissionSeeder', '--force' => true]);
+            $roles = Role::all();
+        }
+
         $availablePermissions = User::allAdminPagePermissions();
 
-        return view('admin.administrators', compact('users', 'search', 'roles', 'availablePermissions'));
+        // Fetch current HRMD staff list ordered by their assigned sequence for visual hierarchy reference
+        $hrmdStaffList = User::whereHas('roles', fn($q) => $q->where('slug', 'hrmd_staff'))
+            ->orderByRaw('hrmd_sequence IS NULL, hrmd_sequence ASC')
+            ->get();
+
+        return view('admin.administrators', compact('users', 'search', 'roles', 'availablePermissions', 'hrmdStaffList'));
     }
 
     /**
@@ -418,12 +428,30 @@ class AdminController extends Controller
             'roles.*' => 'exists:roles,id',
             'admin_permissions' => 'nullable|array',
             'admin_permissions.*' => 'string|in:' . implode(',', $validPermissions),
+            'hrmd_sequence' => 'nullable|integer|min:1',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
 
         $adminPermissions = ($validated['role'] === 'admin')
             ? ($request->input('admin_permissions', []))
             : null;
+
+        $roleIds = $request->input('roles', []);
+        $hrmdRole = Role::firstOrCreate(
+            ['slug' => 'hrmd_staff'],
+            ['name' => 'HRMD Representative', 'description' => 'Verifying active employment status and basic salary constraints.']
+        );
+
+        // If an HRMD sequence is provided, automatically ensure the hrmd_staff role is attached
+        if ($request->filled('hrmd_sequence')) {
+            if (!in_array((string)$hrmdRole->id, array_map('strval', $roleIds), true)) {
+                $roleIds[] = $hrmdRole->id;
+            }
+            $hrmdSequence = (int) $request->input('hrmd_sequence');
+        } else {
+            $hasHrmdRole = in_array((string)$hrmdRole->id, array_map('strval', $roleIds), true);
+            $hrmdSequence = $hasHrmdRole && $request->filled('hrmd_sequence') ? (int) $request->input('hrmd_sequence') : null;
+        }
 
         $password = $validated['password'] ?? 'password';
 
@@ -438,16 +466,15 @@ class AdminController extends Controller
             'company_id' => $validated['company_id'],
             'email' => $validated['email'] ?? null,
             'role' => $validated['role'],
+            'hrmd_sequence' => $hrmdSequence,
             'admin_permissions' => $adminPermissions,
             'signature' => $signaturePath,
             'password' => Hash::make($password),
         ]);
 
-        if ($request->has('roles')) {
-            $user->roles()->sync($request->input('roles'));
-        }
+        $user->roles()->sync($roleIds);
 
-        AuditLogger::log('admin_created', "Super Admin " . auth()->user()->name . " created administrative account: {$user->name} ({$user->company_id}) with role {$user->role}.", 'warning', $user, null, $user->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']));
+        AuditLogger::log('admin_created', "Super Admin " . auth()->user()->name . " created administrative account: {$user->name} ({$user->company_id}) with role {$user->role}.", 'warning', $user, null, $user->only(['name', 'company_id', 'email', 'role', 'hrmd_sequence', 'admin_permissions', 'signature']));
 
         return redirect()->route('admin.administrators')->with('success', 'Administrator account registered successfully!');
     }
@@ -484,6 +511,7 @@ class AdminController extends Controller
             'roles.*' => 'exists:roles,id',
             'admin_permissions' => 'nullable|array',
             'admin_permissions.*' => 'string|in:' . implode(',', $validPermissions),
+            'hrmd_sequence' => 'nullable|integer|min:1',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'remove_signature' => 'nullable|boolean',
         ]);
@@ -492,17 +520,35 @@ class AdminController extends Controller
             return redirect()->route('admin.administrators')->with('error', 'Security Protection: You cannot demote your own Super Administrator account.');
         }
 
-        $oldValues = $user->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']);
+        $oldValues = $user->only(['name', 'company_id', 'email', 'role', 'hrmd_sequence', 'admin_permissions', 'signature']);
 
         $adminPermissions = ($validated['role'] === 'admin')
             ? ($request->input('admin_permissions', []))
             : null;
+
+        $roleIds = $request->input('roles', []);
+        $hrmdRole = Role::firstOrCreate(
+            ['slug' => 'hrmd_staff'],
+            ['name' => 'HRMD Representative', 'description' => 'Verifying active employment status and basic salary constraints.']
+        );
+
+        // If an HRMD sequence is provided, automatically ensure the hrmd_staff role is attached
+        if ($request->filled('hrmd_sequence')) {
+            if (!in_array((string)$hrmdRole->id, array_map('strval', $roleIds), true)) {
+                $roleIds[] = $hrmdRole->id;
+            }
+            $hrmdSequence = (int) $request->input('hrmd_sequence');
+        } else {
+            $hasHrmdRole = in_array((string)$hrmdRole->id, array_map('strval', $roleIds), true);
+            $hrmdSequence = $hasHrmdRole && $request->filled('hrmd_sequence') ? (int) $request->input('hrmd_sequence') : null;
+        }
 
         $updateData = [
             'name' => $validated['name'],
             'company_id' => $validated['company_id'],
             'email' => $validated['email'] ?? null,
             'role' => $validated['role'],
+            'hrmd_sequence' => $hrmdSequence,
             'admin_permissions' => $adminPermissions,
         ];
 
@@ -525,9 +571,9 @@ class AdminController extends Controller
 
         $user->update($updateData);
 
-        $user->roles()->sync($request->input('roles', []));
+        $user->roles()->sync($roleIds);
 
-        $newValues = $user->fresh()->only(['name', 'company_id', 'email', 'role', 'admin_permissions', 'signature']);
+        $newValues = $user->fresh()->only(['name', 'company_id', 'email', 'role', 'hrmd_sequence', 'admin_permissions', 'signature']);
 
         AuditLogger::log('admin_updated', "Super Admin " . auth()->user()->name . " updated administrator {$user->name}.", 'warning', $user, $oldValues, $newValues);
 
@@ -769,11 +815,23 @@ class AdminController extends Controller
         $myGroupSlugs = $user->roles->pluck('slug')->toArray();
 
         // 1. Fetch loans sitting at this specific user's active stage
-        $myInboxLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
+        $myInboxLoansQuery = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
             ->where('status', 'pending')
-            ->whereIn('current_stage', $myGroupSlugs)
-            ->latest()
-            ->get();
+            ->whereIn('current_stage', $myGroupSlugs);
+
+        // Granular HRMD sequence filter: For regular admins with hrmd_staff role,
+        // only show in actionable inbox if the loan's current_hrmd_sequence matches their assigned sequence
+        if ($user->role !== 'super_admin' && in_array('hrmd_staff', $myGroupSlugs, true)) {
+            $myInboxLoansQuery->where(function ($query) use ($user) {
+                $query->where('current_stage', '!=', 'hrmd_staff')
+                    ->orWhere(function ($hrmdSub) use ($user) {
+                        $hrmdSub->where('current_stage', 'hrmd_staff')
+                            ->where('current_hrmd_sequence', $user->hrmd_sequence);
+                    });
+            });
+        }
+
+        $myInboxLoans = $myInboxLoansQuery->latest()->get();
 
         // 2. Fetch all cooperative loans sitting in the pipeline
         $allLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])

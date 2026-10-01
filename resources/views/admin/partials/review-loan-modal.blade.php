@@ -216,13 +216,13 @@
                     </h4>
                     <form id="form-action" method="POST" class="space-y-4" enctype="multipart/form-data">
                         @csrf
-                        <!-- ACCOUNTING REQUIREMENTS UPLOAD DOCK -->
+                        <!-- RELEASING OFFICER REQUIREMENTS UPLOAD DOCK -->
                         <div id="accounting-upload-section" class="hidden space-y-3 p-3.5 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-xl">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-xs">⚠️</span>
-                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Accounting Files Required</span>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Releasing Documents Required</span>
                             </div>
-                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Both the General Ledger and Payment Schedule must be attached in PDF format before forwarding to the Releasing Officer.</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Both the General Ledger and Payment Schedule must be attached in PDF format before finalizing disbursement.</p>
                             
                             <div class="space-y-2.5 pt-1">
                                 <!-- File 1: Ledger -->

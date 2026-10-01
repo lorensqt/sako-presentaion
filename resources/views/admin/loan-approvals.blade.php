@@ -69,7 +69,14 @@
                     <div class="relative bg-emerald-500/[0.02] dark:bg-emerald-500/[0.04] border border-emerald-500/25 dark:border-emerald-500/15 rounded-2xl p-4 flex flex-col justify-between min-h-[105px] transition-all hover:scale-[1.01] shadow-sm">
                         <div class="flex items-start justify-between">
                             <img src="{{ $config['icon_url'] }}" alt="{{ $config['name'] }}" class="w-6.5 h-6.5 object-contain">
-                            <span class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] font-black tracking-wider uppercase border border-emerald-500/10">Active</span>
+                            <div class="flex items-center gap-1">
+                                @if($slug === 'hrmd_staff')
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 text-[8px] font-black tracking-wider uppercase border border-amber-500/30" title="Your Assigned HRMD Approval Sequence">
+                                        Seq #{{ auth()->user()->hrmd_sequence ?? 'All' }}
+                                    </span>
+                                @endif
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] font-black tracking-wider uppercase border border-emerald-500/10">Active</span>
+                            </div>
                         </div>
                         <div class="mt-2.5">
                             <span class="text-[10px] font-black text-slate-700 dark:text-slate-300 block truncate leading-tight">{{ $config['name'] }}</span>
@@ -181,9 +188,24 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/40 dark:border-blue-900/30 uppercase tracking-wider">
-                                        {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }}
-                                    </span>
+                                    @if($loan->current_stage === 'hrmd_staff')
+                                        <div class="inline-flex flex-col items-start gap-1">
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-800 uppercase tracking-wider shadow-2xs">
+                                                HRMD Seq #{{ $loan->current_hrmd_sequence ?? 1 }}
+                                            </span>
+                                            @if(auth()->user()->hasRole('hrmd_staff'))
+                                                @if((int) auth()->user()->hrmd_sequence === (int) ($loan->current_hrmd_sequence ?? 1) || auth()->user()->role === 'super_admin')
+                                                    <span class="text-[9px] font-black text-emerald-600 dark:text-emerald-400">
+                                                        👉 Your Turn to Review
+                                                    </span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/40 dark:border-blue-900/30 uppercase tracking-wider">
+                                            {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }}
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">
                                     {{ $loan->created_at->format('M d, Y') }}
@@ -201,6 +223,7 @@
                                             'amount' => '₱' . number_format($loan->requested_amount, 2),
                                             'term' => ($loan->form_data['term_months'] ?? $loan->term_months ?? 'N/A') . ' Months',
                                             'current_stage' => $loan->current_stage,
+                                            'current_hrmd_sequence' => $loan->current_hrmd_sequence,
                                             'form_data' => $loan->form_data,
                                             'workflow_steps' => $loan->workflow_steps,
                                             'ledger_url' => $loan->ledger_url,
@@ -313,9 +336,15 @@
                                             Rejected
                                         </span>
                                     @else
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/40 dark:border-blue-900/30 uppercase tracking-wider">
-                                            {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }}
-                                        </span>
+                                        @if($loan->current_stage === 'hrmd_staff')
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-300/80 dark:border-amber-800 uppercase tracking-wider shadow-2xs">
+                                                HRMD Seq #{{ $loan->current_hrmd_sequence ?? 1 }}
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-100/40 dark:border-blue-900/30 uppercase tracking-wider">
+                                                {{ ucwords(str_replace('_', ' ', $loan->current_stage)) }}
+                                            </span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -343,6 +372,7 @@
                                             'amount' => '₱' . number_format($loan->requested_amount, 2),
                                             'term' => ($loan->form_data['term_months'] ?? $loan->term_months ?? 'N/A') . ' Months',
                                             'current_stage' => $loan->current_stage,
+                                            'current_hrmd_sequence' => $loan->current_hrmd_sequence,
                                             'form_data' => $loan->form_data,
                                             'workflow_steps' => $loan->workflow_steps,
                                             'ledger_url' => $loan->ledger_url,
@@ -391,8 +421,10 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         
-        // Parse active roles slugs
+        // Parse active roles slugs and user context
         const myGroupSlugs = @json($myGroupSlugs);
+        const currentAdminRole = @json(auth()->user()->role);
+        const currentAdminHrmdSequence = @json(auth()->user()->hrmd_sequence);
 
         // Tab Switching logic
         const tabInbox = document.getElementById("tab-inbox");
@@ -779,7 +811,7 @@
                     }
                 }
 
-                // Handle Accounting Upload Dock inside Signatory Decision Panel
+                // Handle Releasing Officer Upload Dock inside Signatory Decision Panel
                 const accountingUploadSection = document.getElementById("accounting-upload-section");
                 const inputLedger = document.getElementById("input-accounting-ledger");
                 const inputSchedule = document.getElementById("input-accounting-schedule");
@@ -787,7 +819,7 @@
                 const statusSchedule = document.getElementById("schedule-file-status");
 
                 if (accountingUploadSection) {
-                    if (loan.current_stage === 'accounting') {
+                    if (loan.current_stage === 'releasing_officer') {
                         accountingUploadSection.classList.remove("hidden");
                         if (inputLedger) {
                             inputLedger.value = "";
@@ -812,7 +844,17 @@
                     }
                 }
 
-                if (myGroupSlugs.includes(loan.current_stage)) {
+                let canActOnStage = myGroupSlugs.includes(loan.current_stage);
+
+                // Granular check for sequential HRMD stage: only active sequence can approve
+                if (canActOnStage && loan.current_stage === 'hrmd_staff') {
+                    const activeHrmdSeq = loan.current_hrmd_sequence || 1;
+                    if (currentAdminRole !== 'super_admin' && Number(currentAdminHrmdSequence) !== Number(activeHrmdSeq)) {
+                        canActOnStage = false;
+                    }
+                }
+
+                if (canActOnStage) {
                     actionPanel.classList.remove("hidden");
                     if (infoPanel) infoPanel.classList.add("hidden");
                     txtRemarks.value = "";
@@ -832,8 +874,8 @@
                         e.preventDefault();
                         const alertInstance = window.MLSAKOAlert || Swal;
 
-                        // Validation: If Accounting stage, Ledger and Schedule are mandatory
-                        if (loan.current_stage === 'accounting') {
+                        // Validation: If Releasing Officer stage, Ledger and Schedule are mandatory
+                        if (loan.current_stage === 'releasing_officer') {
                             const ledgerFile = inputLedger ? inputLedger.files[0] : null;
                             const scheduleFile = inputSchedule ? inputSchedule.files[0] : null;
 
@@ -841,7 +883,7 @@
                                 alertInstance.fire({
                                     icon: 'warning',
                                     title: 'General Ledger Required',
-                                    text: 'Accounting staff must attach the General Ledger PDF file before forwarding to the Releasing Officer.',
+                                    text: 'Releasing Officer must attach the General Ledger PDF file before finalizing loan disbursement.',
                                     iconColor: '#f59e0b',
                                     confirmButtonText: 'Select Ledger File'
                                 });
@@ -852,7 +894,7 @@
                                 alertInstance.fire({
                                     icon: 'warning',
                                     title: 'Payment Schedule Required',
-                                    text: 'Accounting staff must attach the Payment Schedule PDF file before forwarding to the Releasing Officer.',
+                                    text: 'Releasing Officer must attach the Payment Schedule PDF file before finalizing loan disbursement.',
                                     iconColor: '#f59e0b',
                                     confirmButtonText: 'Select Schedule File'
                                 });
@@ -874,11 +916,11 @@
                         alertInstance.fire({
                             icon: 'question',
                             title: 'Confirm Signature',
-                            text: loan.current_stage === 'accounting' 
-                                ? 'Are you sure you want to sign off and forward this loan with the attached Ledger & Schedule to the Releasing Officer?' 
+                            text: loan.current_stage === 'releasing_officer' 
+                                ? 'Are you sure you want to sign off and finalize loan disbursement with the attached Ledger & Schedule?' 
                                 : 'Are you sure you want to sign and approve this loan facility application?',
                             showCancelButton: true,
-                            confirmButtonText: loan.current_stage === 'accounting' ? 'Yes, Sign & Forward' : 'Yes, Sign & Approve',
+                            confirmButtonText: loan.current_stage === 'releasing_officer' ? 'Yes, Sign & Disburse' : 'Yes, Sign & Approve',
                             cancelButtonText: 'Cancel',
                             iconColor: '#10b981'
                         }).then((result) => {

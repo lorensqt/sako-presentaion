@@ -26,6 +26,7 @@ class User extends Authenticatable
         'pin',
         'pin_attempts',
         'role',
+        'hrmd_sequence',
         'admin_permissions',
         'company_id',
         'address',
@@ -56,6 +57,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'admin_permissions' => 'array',
+            'hrmd_sequence' => 'integer',
         ];
     }
 

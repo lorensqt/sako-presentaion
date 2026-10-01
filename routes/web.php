@@ -35,6 +35,14 @@ Route::middleware('auth')->group(function () {
     // Secure Signature Stream
     Route::get('/signatures/{user}', [AdminController::class, 'streamSignature'])->name('signature.show');
 
+    // Collaborative Loan Approvals & Rejections (Accessible by member co-makers and admin staff approvers)
+    Route::post('/loans/{application}/approve', [LoanApprovalController::class, 'approve'])->name('loans.approve');
+    Route::post('/loans/{application}/reject', [LoanApprovalController::class, 'reject'])->name('loans.reject');
+    Route::post('/loans/{application}/return', [LoanApprovalController::class, 'returnLoan'])->name('loans.return');
+    Route::get('/loan-documents/{document}', [LoanApprovalController::class, 'viewDocument'])->name('loan.documents.show');
+    Route::get('/loans/{application}/ledger', [LoanApprovalController::class, 'viewLedger'])->name('loans.ledger.show');
+    Route::get('/loans/{application}/schedule', [LoanApprovalController::class, 'viewSchedule'])->name('loans.schedule.show');
+
     // Member Self-Service Portal (Isolated from internal staff admins)
     Route::middleware('member.portal')->group(function () {
         Route::get('/dashboard', function() {
@@ -51,14 +59,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/loans', [MemberController::class, 'forms'])->name('member.forms');
         Route::get('/settings', [MemberController::class, 'settings'])->name('member.settings');
         Route::post('/settings', [MemberController::class, 'updateSettings'])->name('member.settings.update');
-
-        // Loan Approvals & Rejections (collaborative workflow)
-        Route::post('/loans/{application}/approve', [LoanApprovalController::class, 'approve'])->name('loans.approve');
-        Route::post('/loans/{application}/reject', [LoanApprovalController::class, 'reject'])->name('loans.reject');
-        Route::post('/loans/{application}/return', [LoanApprovalController::class, 'returnLoan'])->name('loans.return');
-        Route::get('/loan-documents/{document}', [LoanApprovalController::class, 'viewDocument'])->name('loan.documents.show');
-        Route::get('/loans/{application}/ledger', [LoanApprovalController::class, 'viewLedger'])->name('loans.ledger.show');
-        Route::get('/loans/{application}/schedule', [LoanApprovalController::class, 'viewSchedule'])->name('loans.schedule.show');
 
         // Member Loan Applications
         Route::post('/loans/apply', [MemberController::class, 'applyLoan'])->name('member.loans.apply');

@@ -56,43 +56,75 @@ class LoanApprovalController extends Controller
             if (!$user->hasRole($currentStageRole)) {
                 return back()->with('error', "You do not have permission to approve loans at the '{$currentStageRole}' stage.");
             }
+
+            // Granular HRMD Sequence Verification
+            if ($currentStageRole === 'hrmd_staff') {
+                $currentSeq = $application->current_hrmd_sequence ?? $this->workflowService->getInitialHrmdSequence();
+                $application->current_hrmd_sequence = $currentSeq;
+
+                if ($user->role !== 'super_admin' && (int) $user->hrmd_sequence !== (int) $currentSeq) {
+                    return back()->with('error', "This loan application is currently awaiting HRMD Sequence #{$currentSeq} approval.");
+                }
+
+                $alreadyApproved = $application->approvals()
+                    ->where('stage_role_slug', 'hrmd_staff')
+                    ->where('hrmd_sequence', $currentSeq)
+                    ->where('decision', 'approved')
+                    ->exists();
+
+                if ($alreadyApproved) {
+                    return back()->with('error', "HRMD Sequence #{$currentSeq} has already been approved.");
+                }
+            }
         }
 
-        // Accounting Stage Compliance: Ledger & Payment Schedule files are mandatory
-        if ($currentStageRole === 'accounting') {
+        // Releasing Officer Stage Compliance: Ledger & Payment Schedule files and remarks are mandatory
+        if ($currentStageRole === 'releasing_officer') {
             $request->validate([
                 'ledger' => 'required|file|mimes:pdf|max:10240',
                 'schedule' => 'required|file|mimes:pdf|max:10240',
+                'remarks' => 'required|string|min:3|max:1000',
             ], [
-                'ledger.required' => 'The accounting General Ledger PDF file is required before advancing to the Releasing Officer.',
+                'ledger.required' => 'The General Ledger PDF file is required before releasing the loan.',
                 'ledger.mimes' => 'The General Ledger must be a PDF document.',
                 'ledger.max' => 'The General Ledger PDF must not exceed 10MB.',
-                'schedule.required' => 'The Amortization Payment Schedule PDF file is required before advancing to the Releasing Officer.',
+                'schedule.required' => 'The Amortization Payment Schedule PDF file is required before releasing the loan.',
                 'schedule.mimes' => 'The Payment Schedule must be a PDF document.',
                 'schedule.max' => 'The Payment Schedule PDF must not exceed 10MB.',
+                'remarks.required' => 'Official releasing remarks are required before finalizing disbursement.',
             ]);
         }
 
         DB::transaction(function () use ($application, $user, $currentStageRole, $request) {
-            // If in accounting stage, store uploaded Ledger and Schedule files
-            if ($currentStageRole === 'accounting') {
+            // If in releasing_officer stage, store uploaded Ledger and Schedule files
+            if ($currentStageRole === 'releasing_officer') {
                 $disk = User::signatureDisk();
                 if ($request->hasFile('ledger')) {
-                    $ledgerPath = $request->file('ledger')->store("loans/accounting/{$application->id}", $disk);
+                    $ledgerPath = $request->file('ledger')->store("loans/releasing/{$application->id}", $disk);
                     $application->ledger_path = $ledgerPath;
                 }
                 if ($request->hasFile('schedule')) {
-                    $schedulePath = $request->file('schedule')->store("loans/accounting/{$application->id}", $disk);
+                    $schedulePath = $request->file('schedule')->store("loans/releasing/{$application->id}", $disk);
                     $application->schedule_path = $schedulePath;
                 }
+            }
+
+            $currentHrmdSeq = ($currentStageRole === 'hrmd_staff')
+                ? ($application->current_hrmd_sequence ?? $this->workflowService->getInitialHrmdSequence())
+                : null;
+
+            $actionRemarks = $request->input('remarks');
+            if (empty($actionRemarks) && $currentStageRole === 'releasing_officer') {
+                $actionRemarks = 'Loan funds and official disbursement schedules have been successfully released.';
             }
 
             // 1. Record individual action in approval ledger
             $application->approvals()->create([
                 'stage_role_slug' => $currentStageRole,
+                'hrmd_sequence' => $currentHrmdSeq,
                 'actioned_by_user_id' => $user->id,
                 'decision' => 'approved',
-                'remarks' => $request->input('remarks'),
+                'remarks' => $actionRemarks,
             ]);
 
             // Update relational co-maker status if in co-makers stage
@@ -113,6 +145,15 @@ class LoanApprovalController extends Controller
                 ]);
 
                 AuditLogger::log('loan_comaker_endorsed', "Co-maker {$user->name} endorsed loan application LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . " for member {$application->borrower->name}.", 'info', $application);
+            } elseif ($currentStageRole === 'hrmd_staff') {
+                \App\Models\LoanActivity::create([
+                    'loan_application_id' => $application->id,
+                    'user_id' => $user->id,
+                    'action' => 'stage_approved',
+                    'description' => "HRMD Sequence #{$currentHrmdSeq} approved by {$user->name}." . ($request->input('remarks') ? " Remarks: " . $request->input('remarks') : ""),
+                ]);
+
+                AuditLogger::log('loan_stage_approved', "HRMD Sequence #{$currentHrmdSeq} approved by {$user->name} for loan application LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . ".", 'info', $application);
             } else {
                 \App\Models\LoanActivity::create([
                     'loan_application_id' => $application->id,
@@ -140,6 +181,9 @@ class LoanApprovalController extends Controller
                 if ($distinctApprovals >= $requiredCount) {
                     $nextStage = $this->workflowService->getNextStage($application);
                     if ($nextStage) {
+                        if ($nextStage === 'hrmd_staff') {
+                            $application->current_hrmd_sequence = $this->workflowService->getInitialHrmdSequence();
+                        }
                         $application->current_stage = $nextStage;
                         \App\Models\LoanActivity::create([
                             'loan_application_id' => $application->id,
@@ -164,10 +208,58 @@ class LoanApprovalController extends Controller
                     }
                 }
                 // If distinct approvals < requiredCount, do not advance! It stays in 'comakers' stage.
+            } elseif ($currentStageRole === 'hrmd_staff') {
+                // Check if another HRMD sequence is pending
+                $nextSeq = User::whereHas('roles', fn($q) => $q->where('slug', 'hrmd_staff'))
+                    ->whereNotNull('hrmd_sequence')
+                    ->where('hrmd_sequence', '>', $currentHrmdSeq)
+                    ->orderBy('hrmd_sequence', 'asc')
+                    ->value('hrmd_sequence');
+
+                if ($nextSeq) {
+                    // Stays at hrmd_staff stage, but moves to next sequence
+                    $application->current_hrmd_sequence = (int) $nextSeq;
+                    \App\Models\LoanActivity::create([
+                        'loan_application_id' => $application->id,
+                        'user_id' => null,
+                        'action' => 'stage_passed',
+                        'description' => "Advanced to HRMD Sequence #{$nextSeq} approval.",
+                    ]);
+                    AuditLogger::log('loan_stage_passed', "Loan application LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . " advanced to HRMD Sequence #{$nextSeq}.", 'info', $application);
+                } else {
+                    // All HRMD sequences are complete; move to next workflow stage
+                    $application->current_hrmd_sequence = null;
+                    $nextStage = $this->workflowService->getNextStage($application);
+
+                    if ($nextStage) {
+                        $application->current_stage = $nextStage;
+                        \App\Models\LoanActivity::create([
+                            'loan_application_id' => $application->id,
+                            'user_id' => null,
+                            'action' => 'stage_passed',
+                            'description' => "All HRMD approval sequences completed. Moved to '" . ucwords(str_replace('_', ' ', $nextStage)) . "' stage.",
+                        ]);
+                        AuditLogger::log('loan_stage_passed', "Loan application LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . " completed HRMD verification and moved to '" . ucwords(str_replace('_', ' ', $nextStage)) . "' stage.", 'info', $application);
+                    } else {
+                        $application->current_stage = 'completed';
+                        $application->status = 'approved';
+                        $this->calculateLoanDisbursementDetails($application);
+                        \App\Models\LoanActivity::create([
+                            'loan_application_id' => $application->id,
+                            'user_id' => null,
+                            'action' => 'approved',
+                            'description' => "Loan application has been fully approved.",
+                        ]);
+                        AuditLogger::log('loan_stage_approved', "Loan application LN-" . str_pad($application->id, 5, '0', STR_PAD_LEFT) . " has been fully approved.", 'info', $application);
+                    }
+                }
             } else {
                 $nextStage = $this->workflowService->getNextStage($application);
 
                 if ($nextStage) {
+                    if ($nextStage === 'hrmd_staff') {
+                        $application->current_hrmd_sequence = $this->workflowService->getInitialHrmdSequence();
+                    }
                     $application->current_stage = $nextStage;
                     \App\Models\LoanActivity::create([
                         'loan_application_id' => $application->id,
@@ -200,21 +292,38 @@ class LoanApprovalController extends Controller
         if ($application->status === 'approved') {
             $application->load('borrower');
             $borrower = $application->borrower;
-            $loanTypeName = config("loans.{$application->loan_category}.{$application->loan_type}.name", ucwords(str_replace('_', ' ', $application->loan_type)));
-            $termMonths = $application->form_data['term_months'] ?? $application->term_months ?? 12;
 
-            try {
-                \Illuminate\Support\Facades\Mail::to($borrower->email)->send(
-                    new \App\Mail\LoanReleasedMail(
-                        $borrower->name,
-                        $loanTypeName,
-                        (float) $application->requested_amount,
-                        (int) $termMonths,
-                        (string) $application->id
-                    )
-                );
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::warning("Failed to send loan released email to {$borrower->email}: " . $e->getMessage());
+            if ($borrower && !empty($borrower->email)) {
+                $loanTypeName = config("loans.{$application->loan_category}.{$application->loan_type}.name", ucwords(str_replace('_', ' ', $application->loan_type)));
+                $termMonths = $application->form_data['term_months'] ?? $application->term_months ?? 12;
+
+                // Retrieve releasing officer approval record and remarks
+                $releasingApproval = $application->approvals()
+                    ->with('actor')
+                    ->where('stage_role_slug', 'releasing_officer')
+                    ->where('decision', 'approved')
+                    ->latest()
+                    ->first();
+
+                $remarksForEmail = $releasingApproval?->remarks 
+                    ?: ($request->input('remarks') ?: 'Loan funds and official disbursement schedules have been successfully released.');
+                $releasingOfficerName = $releasingApproval?->actor?->name ?? $user->name;
+
+                try {
+                    \Illuminate\Support\Facades\Mail::to($borrower->email)->send(
+                        new \App\Mail\LoanReleasedMail(
+                            $borrower->name,
+                            $loanTypeName,
+                            (float) $application->requested_amount,
+                            (int) $termMonths,
+                            (string) $application->id,
+                            $remarksForEmail,
+                            $releasingOfficerName
+                        )
+                    );
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning("Failed to send loan released email to {$borrower->email}: " . $e->getMessage());
+                }
             }
         }
 
