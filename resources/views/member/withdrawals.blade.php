@@ -365,7 +365,7 @@
                                 <span class="text-[9px] font-semibold text-slate-400 uppercase tracking-wider block">Requested</span>
                                 <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-0.5 block">₱{{ number_format($w->amount, 2) }}</span>
                             </div>
-                            <div class="border-l border-slate-150 dark:border-slate-800 pl-3">
+                            <div class="border-l border-slate-200 dark:border-slate-800 pl-3">
                                 <span class="text-[9px] font-semibold text-slate-400 uppercase tracking-wider block">Channel</span>
                                 <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate mt-0.5 block">{{ $w->channel }}</span>
                             </div>

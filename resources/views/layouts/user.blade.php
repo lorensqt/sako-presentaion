@@ -738,7 +738,7 @@
             // Configure a custom SweetAlert2 instance styled for MLSAKO Cooperative
             const MLSAKOAlert = Swal.mixin({
                 customClass: {
-                    popup: 'rounded-[2rem] border border-slate-150 dark:border-slate-800 shadow-2xl p-6 sm:p-8 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans',
+                    popup: 'rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans',
                     title: 'text-base font-extrabold text-slate-900 dark:text-white tracking-tight pt-2',
                     htmlContainer: 'text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed mt-2',
                     confirmButton: 'bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md focus:ring-2 focus:ring-emerald-500/20 outline-none',

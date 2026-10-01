@@ -246,7 +246,7 @@
                 <div class="space-y-2 col-span-1 sm:col-span-2">
                     <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Custom Approval Flow Stages</label>
                     <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Configure the exact path of stages this loan facility must undergo:</p>
-                    <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-150 dark:border-slate-800 p-3.5 rounded-2xl">
+                    <div class="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
                             <input type="checkbox" class="prod-stage-checkbox rounded border-slate-350 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500/20" value="comakers" checked>
                             <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Co-Makers</span>

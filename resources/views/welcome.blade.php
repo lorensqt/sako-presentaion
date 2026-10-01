@@ -17,183 +17,186 @@
 @endpush
 
 @section('content')
-    <!-- Hero Sectionsss -->
-    <section class="relative min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center overflow-hidden pt-8 pb-16 lg:pt-16 lg:pb-24 bg-[#FAF9F6]">
-        <!-- Warm alabaster background -->
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-10 sm:py-14 lg:py-16 bg-[#FAF9F6] flex items-center">
         <!-- Background Gradient Grids -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute top-0 right-0 w-[50rem] h-[50rem] bg-emerald-100/40 rounded-full blur-3xl -mr-48 -mt-48">
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-emerald-100/40 rounded-full blur-3xl -mr-32 -mt-32">
             </div>
-            <div class="absolute bottom-0 left-0 w-[45rem] h-[45rem] bg-teal-100/30 rounded-full blur-3xl -ml-48 -mb-48">
+            <div class="absolute bottom-0 left-0 w-[35rem] h-[35rem] bg-teal-100/30 rounded-full blur-3xl -ml-32 -mb-32">
             </div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <!-- Text Content -->
-                <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
+                <div class="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
                     <span
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] sm:text-xs font-bold tracking-wide uppercase border border-emerald-100/50 shadow-sm">
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] sm:text-xs font-bold tracking-wide uppercase border border-emerald-100/60 shadow-xs">
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                         Your Trusted Financial Partner Since 2001
                     </span>
 
                     <h1
-                        class="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1] serif-font">
+                        class="text-2xl xs:text-3xl sm:text-4xl lg:text-[2.65rem] font-black tracking-tight text-slate-900 leading-[1.15] serif-font">
                         Empowering Your <span
                             class="bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">Financial
                             Future</span>, Together.
                     </h1>
 
-                    <p class="text-xs xs:text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                    <p class="text-xs sm:text-sm lg:text-[15px] text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
                         Join Sako Cooperative today. Experience secure savings, flexible loan options, and a
                         community-driven ecosystem dedicated to sustainable financial progress for everyone.
                     </p>
 
                     <!-- Actions -->
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-1">
                         <a href="#membership"
-                            class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all duration-200">
+                            class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 hover:-translate-y-0.5 transition-all duration-200">
                             Become a Member Today
-                            <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
                         </a>
                         <a href="#services"
-                            class="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm sm:text-base px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200">
+                            class="w-full sm:w-auto inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm px-5 py-3 rounded-xl border border-slate-200 shadow-xs hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200">
                             Explore Our Services
                         </a>
                     </div>
 
                     <!-- Live Milestones Grid -->
-                    <div class="grid grid-cols-3 gap-3 xs:gap-6 pt-6 sm:pt-8 border-t border-slate-200/60 max-w-lg mx-auto lg:mx-0">
+                    <div class="grid grid-cols-3 gap-3 xs:gap-5 pt-5 sm:pt-6 border-t border-slate-200/70 max-w-md mx-auto lg:mx-0">
                         <div class="text-center lg:text-left">
-                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">6,000+</p>
-                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Active Members</p>
+                            <p class="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 serif-font">6,000+</p>
+                            <p class="text-[9px] xs:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 leading-tight">Active Members</p>
                         </div>
 
-                        <div class="text-center lg:text-left border-x border-slate-200/60 px-2 xs:px-4">
-                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">25+</p>
-                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Years Service</p>
+                        <div class="text-center lg:text-left border-x border-slate-200/70 px-2 xs:px-3">
+                            <p class="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 serif-font">25+</p>
+                            <p class="text-[9px] xs:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 leading-tight">Years Service</p>
                         </div>
 
                         <div class="text-center lg:text-left">
-                            <p class="text-xl xs:text-2xl sm:text-3xl font-black text-slate-900 serif-font">₱250M+</p>
-                            <p class="text-[9px] xs:text-xs font-bold text-slate-500 uppercase tracking-widest mt-1 leading-tight">Assets Managed</p>
+                            <p class="text-lg xs:text-xl sm:text-2xl font-black text-slate-900 serif-font">₱250M+</p>
+                            <p class="text-[9px] xs:text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 leading-tight">Assets Managed</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Visual Graphics Side -->
-                <div class="lg:col-span-5 relative w-full">
+                <!-- Visual Graphics Side (Login Gateway) -->
+                <div class="lg:col-span-5 relative w-full max-w-md mx-auto lg:ml-auto">
 
-                    <!-- Main Glassmorphic Panel (Now Login/Profile Card) -->
+                    <!-- Main Glassmorphic Panel (Login/Profile Card) -->
                     <div
-                        class="relative bg-gradient-to-tr from-emerald-800 to-teal-950 rounded-3xl sm:rounded-[2.5rem] p-5 xs:p-6 sm:p-10 text-white shadow-2xl overflow-hidden border border-emerald-800/20 group">
+                        class="relative bg-gradient-to-b from-slate-900 via-slate-900 to-emerald-950 rounded-2xl sm:rounded-3xl p-5 sm:p-7 text-white shadow-xl shadow-slate-950/20 overflow-hidden border border-emerald-500/20 group">
                         <!-- Overlay Grid Graphic -->
                         <div
-                            class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]">
+                            class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:20px_20px]">
                         </div>
 
-                        <div class="relative z-10 space-y-5 sm:space-y-6">
+                        <div class="relative z-10 space-y-4">
                             @auth
                                 <!-- Logged In Profile View -->
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-300">Active Member Session</span>
-                                    <div class="flex gap-1.5">
-                                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                                <div class="flex items-center justify-between pb-1 border-b border-slate-800">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Active Member Session</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                                        <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
                                     </div>
                                 </div>
 
-                                <div class="text-center py-4 sm:py-6 space-y-4">
-                                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-500/20 border border-emerald-400/30 rounded-full flex items-center justify-center mx-auto shadow-inner">
-                                        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
+                                <div class="text-center py-2 space-y-3">
+                                    <div class="w-14 h-14 bg-emerald-500/20 border border-emerald-400/30 rounded-full flex items-center justify-center mx-auto shadow-inner text-emerald-300 font-bold text-lg">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                     </div>
-                                    <div class="space-y-1">
-                                        <h3 class="text-lg sm:text-xl font-bold serif-font">{{ Auth::user()->name }}</h3>
-                                        <p class="text-[10px] sm:text-xs text-emerald-300 font-semibold tracking-wider uppercase">{{ strtoupper(Auth::user()->role) }}</p>
+                                    <div class="space-y-0.5">
+                                        <h3 class="text-base sm:text-lg font-bold serif-font text-white">{{ Auth::user()->name }}</h3>
+                                        <p class="text-[10px] text-emerald-400 font-bold tracking-wider uppercase">{{ strtoupper(str_replace('_', ' ', Auth::user()->role)) }}</p>
                                     </div>
 
-                                    <div class="bg-emerald-900/40 border border-emerald-800/30 p-3 sm:p-4 rounded-2xl text-left text-xs space-y-2">
-                                        <p class="text-emerald-200"><span class="font-bold text-white">Company ID:</span> {{ Auth::user()->company_id ?: 'N/A' }}</p>
-                                        <p class="text-emerald-200"><span class="font-bold text-white">Email:</span> {{ Auth::user()->email }}</p>
-                                        <p class="text-emerald-200"><span class="font-bold text-white">Contact:</span> {{ Auth::user()->contact_number ?: 'N/A' }}</p>
+                                    <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl text-left text-xs space-y-1.5">
+                                        <p class="text-slate-300"><span class="font-bold text-white">ID:</span> {{ Auth::user()->company_id ?: 'N/A' }}</p>
+                                        <p class="text-slate-300 truncate"><span class="font-bold text-white">Email:</span> {{ Auth::user()->email }}</p>
                                     </div>
                                 </div>
 
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="w-full inline-flex items-center justify-center bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-rose-900/30">
-                                        Log Out Account
-                                    </button>
-                                </form>
+                                <div class="space-y-2 pt-1">
+                                    <a href="{{ Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin' ? route('admin.dashboard') : route('member.savings') }}"
+                                        class="w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-all shadow-md">
+                                        Enter Dashboard &rarr;
+                                    </a>
+
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="w-full inline-flex items-center justify-center bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 font-bold text-xs py-2 px-4 rounded-xl transition-all duration-150 cursor-pointer">
+                                            Sign Out
+                                        </button>
+                                    </form>
+                                </div>
                             @else
                                 <!-- Login Card View -->
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-300">Member Gateway</span>
-                                    <div class="flex gap-1.5">
-                                        <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
-                                        <span class="w-2.5 h-2.5 bg-amber-500 rounded-full"></span>
-                                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                                <div class="flex items-center justify-between pb-1 border-b border-slate-800">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Member Gateway</span>
+                                    <div class="flex gap-1">
+                                        <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+                                        <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+                                        <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
                                     </div>
                                 </div>
 
-                                <div class="space-y-1">
-                                    <h3 class="text-xl sm:text-2xl font-bold serif-font">Welcome Back</h3>
-                                    <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">Please sign in to access your dashboard.</p>
+                                <div class="space-y-0.5">
+                                    <h3 class="text-lg sm:text-xl font-bold serif-font text-white">Welcome Back</h3>
+                                    <p class="text-[11px] text-slate-300 font-medium">Sign in to access your cooperative account.</p>
                                 </div>
 
                                 <!-- Session Alert Feedback -->
                                 @if(session('success'))
-                                    <div class="p-3.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 text-xs rounded-xl font-semibold">
+                                    <div class="p-2.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 text-xs rounded-xl font-semibold">
                                         {{ session('success') }}
                                     </div>
                                 @endif
 
                                 @if($errors->has('login_identifier'))
-                                    <div class="p-3.5 bg-rose-500/20 border border-rose-500/30 text-rose-200 text-xs rounded-xl font-semibold">
+                                    <div class="p-2.5 bg-rose-500/20 border border-rose-500/30 text-rose-200 text-xs rounded-xl font-semibold">
                                         {{ $errors->first('login_identifier') }}
                                     </div>
                                 @endif
 
-                                <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
+                                <form action="{{ route('login.post') }}" method="POST" class="space-y-3.5">
                                     @csrf
-                                    <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Company ID</label>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider">Company ID</label>
                                         <input type="text" name="login_identifier" required value="{{ old('login_identifier') }}"
                                             placeholder="e.g. 20248216"
-                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+                                            class="w-full bg-slate-950/70 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 transition-all">
                                     </div>
 
-                                    <div class="space-y-1.5">
-                                        <div class="flex justify-between items-center">
-                                            <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Password</label>
-                                        </div>
-                                        <input type="password" name="password" placeholder="••••••••"
-                                            class="w-full bg-emerald-950/50 border border-emerald-800/60 rounded-xl px-4 py-3 sm:py-3.5 text-sm text-white placeholder-emerald-600/70 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider">Password</label>
+                                        <input type="password" name="password" placeholder="••••••••" required
+                                            class="w-full bg-slate-950/70 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 transition-all">
                                     </div>
 
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="remember" id="remember" class="rounded bg-emerald-950 border-emerald-800 text-emerald-600 focus:ring-emerald-500/30">
-                                        <label for="remember" class="ml-2 text-xs text-emerald-200 font-medium">Remember me</label>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label class="flex items-center cursor-pointer select-none">
+                                            <input type="checkbox" name="remember" id="remember" class="rounded bg-slate-950 border-slate-700 text-emerald-600 focus:ring-emerald-500/30 w-3.5 h-3.5 cursor-pointer">
+                                            <span class="ml-2 text-[11px] text-slate-300 font-medium">Remember me</span>
+                                        </label>
                                     </div>
 
-                                    <div class="pt-1 space-y-3">
-                                        <button type="submit" class="w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-950/50 hover:-translate-y-0.5">
+                                    <div class="pt-0.5 space-y-2.5">
+                                        <button type="submit" class="w-full inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm py-2.5 sm:py-3 px-4 rounded-xl transition-all duration-200 shadow-md shadow-emerald-950/50 hover:-translate-y-0.5 cursor-pointer">
                                             Sign In Account
                                         </button>
 
-                                        <div class="relative flex py-1 items-center">
-                                            <div class="flex-grow border-t border-emerald-800/40"></div>
-                                            <span class="flex-shrink mx-4 text-[10px] text-emerald-500 font-bold uppercase tracking-widest">or</span>
-                                            <div class="flex-grow border-t border-emerald-800/40"></div>
+                                        <div class="relative flex py-0.5 items-center">
+                                            <div class="flex-grow border-t border-slate-800"></div>
+                                            <span class="flex-shrink mx-3 text-[10px] text-slate-400 font-bold uppercase tracking-wider">or</span>
+                                            <div class="flex-grow border-t border-slate-800"></div>
                                         </div>
 
-                                        <a href="{{ route('auth.google') }}" class="w-full inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm px-6 py-3 sm:py-3.5 rounded-xl transition-all duration-200 border border-slate-200 shadow-sm hover:-translate-y-0.5">
+                                        <a href="{{ route('auth.google') }}" class="w-full inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition-all duration-200 border border-slate-200 shadow-xs hover:-translate-y-0.5">
                                             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24">
                                                 <path fill="#EA4335" d="M12 5.04c1.5 0 2.85.51 3.91 1.53l2.92-2.92C17.07 1.95 14.73 1 12 1 7.35 1 3.4 3.65 1.51 7.5l3.52 2.73C5.87 6.82 8.69 5.04 12 5.04z"/>
                                                 <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.28 1.48-1.12 2.73-2.38 3.58l3.69 2.85c2.16-1.99 3.72-4.92 3.72-8.58z"/>
@@ -205,8 +208,8 @@
                                     </div>
                                 </form>
 
-                                <div class="text-center pt-1 text-xs text-emerald-300">
-                                    Don't have an account? <button type="button" class="trigger-pmes-modal font-bold text-white hover:underline focus:outline-none">Apply for Membership</button>
+                                <div class="text-center pt-0.5 text-xs text-slate-300">
+                                    Don't have an account? <button type="button" class="trigger-pmes-modal font-bold text-emerald-400 hover:text-emerald-300 hover:underline focus:outline-none cursor-pointer">Apply for Membership</button>
                                 </div>
                             @endauth
                         </div>
@@ -392,18 +395,18 @@
 
                     <!-- Ledger share capital values compartments -->
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-[#FAF9F6] p-5 rounded-2xl border border-slate-150 flex flex-col justify-between">
+                        <div class="bg-[#FAF9F6] p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-colors">
                             <span class="text-[10px] font-extrabold text-slate-400 tracking-wider">FOUNDING POOL</span>
                             <p class="text-lg font-black text-slate-900 mt-2">Php 26,000.00</p>
-                            <span class="text-[10px] text-slate-400 leading-none mt-1 font-semibold">25 pioneer
+                            <span class="text-[10px] text-slate-500 leading-none mt-1 font-semibold">25 pioneer
                                 members</span>
                         </div>
 
-                        <div class="bg-[#FAF9F6] p-5 rounded-2xl border border-slate-150 flex flex-col justify-between">
+                        <div class="bg-[#FAF9F6] p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-colors">
                             <span class="text-[10px] font-extrabold text-slate-400 tracking-wider">TOTAL
                                 REGISTRATION</span>
                             <p class="text-lg font-black text-slate-900 mt-2">Php 71,500.00</p>
-                            <span class="text-[10px] text-slate-400 leading-none mt-1 font-semibold">Registered with
+                            <span class="text-[10px] text-slate-500 leading-none mt-1 font-semibold">Registered with
                                 CDA</span>
                         </div>
                     </div>
@@ -825,257 +828,214 @@
         </div>
     </section>
 
-    <!-- News & Events Section -->
-    <section id="news" class="py-24 bg-white relative reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <!-- Header -->
-            <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-16">
-                <div class="space-y-4 max-w-xl">
-                    <span
-                        class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">Community
-                        Hub</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight serif-font">
-                        Latest News, Assembly Advisories & Events
-                    </h2>
-                    <div class="w-16 h-1 bg-emerald-500 rounded-full"></div>
-                </div>
-                <div>
-                    <a href="#"
-                        class="inline-flex items-center text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
-                        View Complete Newsroom &rarr;
-                    </a>
-                </div>
-            </div>
-
-            <!-- News Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <!-- Article 1 -->
-                <div
-                    class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover-card-trigger group flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=500&q=80"
-                            alt="General Assembly"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <span
-                            class="absolute top-4 left-4 bg-emerald-600 text-white text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-md">Advisory</span>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div class="space-y-2">
-                            <p class="text-[10px] font-semibold text-slate-400">Published: July 28, 2026</p>
-                            <h3
-                                class="text-lg font-bold text-slate-900 leading-snug group-hover:text-emerald-600 transition-colors serif-font">
-                                25th Annual General Assembly Scheduled on August 15, 2026
-                            </h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                All legitimate regular members are requested to attend our upcoming assembly. Voting
-                                protocols regarding the new dividend tier reform will be initiated.
-                            </p>
-                        </div>
-                        <span class="text-xs font-bold text-emerald-600 group-hover:underline">Read Story &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Article 2 -->
-                <div
-                    class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover-card-trigger group flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=500&q=80"
-                            alt="Financial seminar"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <span
-                            class="absolute top-4 left-4 bg-teal-700 text-white text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-md">Workshop</span>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div class="space-y-2">
-                            <p class="text-[10px] font-semibold text-slate-400">Published: July 20, 2026</p>
-                            <h3
-                                class="text-lg font-bold text-slate-900 leading-snug group-hover:text-teal-600 transition-colors serif-font">
-                                Empowering Agri-businesses: Free Accounting & Seed Funding Seminars
-                            </h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                Join us this Wednesday to discover modern financial methodologies, low-overhead inventory
-                                management, and exclusive agricultural cooperative credit lines.
-                            </p>
-                        </div>
-                        <span class="text-xs font-bold text-teal-600 group-hover:underline">Read Story &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- Article 3 -->
-                <div
-                    class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover-card-trigger group flex flex-col h-full">
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=500&q=80"
-                            alt="Scholarship distribution"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <span
-                            class="absolute top-4 left-4 bg-violet-700 text-white text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-md">Community</span>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div class="space-y-2">
-                            <p class="text-[10px] font-semibold text-slate-400">Published: June 15, 2026</p>
-                            <h3
-                                class="text-lg font-bold text-slate-900 leading-snug group-hover:text-violet-600 transition-colors serif-font">
-                                EduCare Grant Program Welcomes 50 New Student Scholars
-                            </h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                Sako Cooperative's primary social impact trust releases scholarship support grants covering
-                                secondary and college tuition fees for exemplary underprivileged youth.
-                            </p>
-                        </div>
-                        <span class="text-xs font-bold text-violet-600 group-hover:underline">Read Story &rarr;</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
     <!-- Contact Section -->
-    <section id="contact" class="py-24 bg-gradient-to-b from-white to-[#F8FAFC] relative reveal">
+    <section id="contact" class="py-24 bg-gradient-to-b from-white via-slate-50/40 to-[#FAF9F6] relative reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                <!-- Left Side: Information Cards & Office Map -->
-                <div class="lg:col-span-5 space-y-8">
-                    <div>
-                        <span
-                            class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">Contact
-                            Details</span>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight serif-font mt-4">
-                            We're Here to Listen & Support.
-                        </h2>
-                        <p class="text-slate-600 text-sm mt-3 leading-relaxed">
-                            Have queries about regular membership, micro-financing loans, or dividend payouts? Reach our
-                            central support desk. Or visit our head office.
-                        </p>
-                    </div>
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-200/60 shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Central Assistance Desk
+                </span>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight serif-font">
+                    We're Here to Listen & Support.
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Have questions regarding regular membership, loan options, emergency assistance, or patronage dividends? Our centralized team is ready to assist you online or in person.
+                </p>
+            </div>
 
+            <!-- Direct Contact Channels Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
+
+                <!-- Channel 1: Headquarters -->
+                <div class="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
                     <div class="space-y-4">
-                        <!-- Head Office -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex gap-4 items-start">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 mt-1 flex-shrink-0 border border-emerald-500/10">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-900">Cooperative Headquarters</h4>
-                                <p class="text-xs text-slate-500 mt-1">Room 201, ML Borromeo Bldg. Borromeo St. Pahina
-                                    Central, Cebu City, 6000</p>
-                                <span class="inline-block text-[10px] text-slate-400 mt-1 font-semibold">Open: Mon to Sat
-                                    (8:00 AM - 5:00 PM)</span>
-                            </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
                         </div>
-
-                        <!-- Direct Contacts -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex gap-4 items-start">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-600 mt-1 flex-shrink-0 border border-teal-500/10">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600">Walk-In Assistance</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-0.5">Headquarters & Office</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                                Room 201, ML Borromeo Bldg., Borromeo St., Pahina Central, Cebu City, 6000
+                            </p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-900">Direct Support Hotline</h4>
-                                <p class="text-xs text-slate-500 mt-1">Phone: 09682010246 / 09479992492</p>
-                                <p class="text-xs text-slate-500">Email: support@mlsako.com</p>
-                            </div>
+                                Mon – Sat • 8:00 AM – 5:00 PM
+                            </span>
                         </div>
                     </div>
-
-                    <!-- Google Map Mockup Frame -->
-                    <div class="rounded-3xl overflow-hidden shadow-inner h-52 border border-slate-150 relative">
-                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80"
-                            alt="Map mockup placeholder" class="w-full h-full object-cover brightness-95 saturate-50">
-                        <div class="absolute inset-0 bg-slate-900/10 flex items-center justify-center">
-                            <div
-                                class="bg-white/95 backdrop-blur px-4 py-2.5 rounded-2xl shadow border border-slate-100 text-center space-y-1">
-                                <p class="text-xs font-bold text-slate-900">Interactive Location Map</p>
-                                <a href="https://www.google.com/maps/search/Room+201,+ML+Borromeo+Bldg.,+Borromeo+St.,+Pahina+Central,+Cebu+City,+6000/@10.295597,123.8961094,51m/data=!3m1!1e3?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDcyNy4wIKXMDSoASAFQAw%3D%3D"
-                                    target="_blank"
-                                    class="text-[10px] text-emerald-600 font-extrabold hover:underline">Open in Google Maps
-                                    &rarr;</a>
-                            </div>
-                        </div>
+                    <div class="pt-6">
+                        <a href="https://www.google.com/maps/search/Room+201,+ML+Borromeo+Bldg.,+Borromeo+St.,+Pahina+Central,+Cebu+City,+6000/@10.295597,123.8961094,51m/data=!3m1!1e3?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDcyNy4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center text-xs font-bold text-emerald-600 hover:text-emerald-700 group-hover:underline">
+                            <span>Get GPS Directions</span>
+                            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Right Side: Clean Modern Feedback Contact Form -->
-                <div class="lg:col-span-7">
-                    <div class="bg-white rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 shadow-md border border-slate-100">
-                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 serif-font mb-2">Send a Secure Message</h3>
-                        <p class="text-xs text-slate-500 mb-8">Fill in your inquiry details below. All submitted
-                            communication remains private under absolute administrative encryption.</p>
-
-                        <form
-                            onsubmit="event.preventDefault(); alert('This is a prototype form layout. Functionality is not operational yet.');"
-                            class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Your Full
-                                    Name</label>
-                                <input type="text" placeholder="John Laurence Castillo"
-                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                                    required>
+                <!-- Channel 2: Phone Hotlines -->
+                <div class="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-600">Immediate Phone Support</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-0.5">Direct Helpdesk Lines</h3>
+                            <div class="space-y-1.5 mt-2">
+                                <a href="tel:09682010246" class="block font-mono text-sm sm:text-base font-bold text-slate-800 hover:text-teal-600 transition-colors">
+                                    0968 201 0246 <span class="text-[10px] font-sans font-medium text-slate-400">(Smart / Primary)</span>
+                                </a>
+                                <a href="tel:09479992492" class="block font-mono text-sm sm:text-base font-bold text-slate-800 hover:text-teal-600 transition-colors">
+                                    0947 999 2492 <span class="text-[10px] font-sans font-medium text-slate-400">(Secondary)</span>
+                                </a>
                             </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                                Tap to dial instantly on mobile
+                            </span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="tel:09682010246"
+                            class="inline-flex items-center text-xs font-bold text-teal-600 hover:text-teal-700 group-hover:underline">
+                            <span>Call Primary Line</span>
+                            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
 
-                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Email
-                                    Address</label>
-                                <input type="email" placeholder="john@example.com"
-                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                                    required>
-                            </div>
+                <!-- Channel 3: Email Support -->
+                <div class="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group md:col-span-2 lg:col-span-1">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Digital Inquiries</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-0.5">Official Email Desk</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                                For loan documentation, member requests, and corporate communications:
+                            </p>
+                            <a href="mailto:support@mlsako.com?subject=Cooperative%20Inquiry" class="inline-block mt-2 font-mono text-sm sm:text-base font-bold text-emerald-700 hover:underline break-all">
+                                support@mlsako.com
+                            </a>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Prompt response within 24 business hours
+                            </span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="mailto:support@mlsako.com?subject=Cooperative%20Inquiry"
+                            class="inline-flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 group-hover:underline">
+                            <span>Open Mail Composer</span>
+                            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
 
-                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Phone
-                                    Number</label>
-                                <input type="tel" placeholder="+63 912 345 6789"
-                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                                    required>
-                            </div>
+            </div>
 
-                            <div class="space-y-1.5 col-span-1 sm:col-span-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Subject
-                                    Matter</label>
-                                <select
-                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200"
-                                    required>
-                                    <option value="savings">Savings Inquiry</option>
-                                    <option value="loans">Loan Application Request</option>
-                                    <option value="membership">Membership Registration Help</option>
-                                    <option value="other">General Community Query</option>
-                                </select>
-                            </div>
+            <!-- Panoramic Interactive Map Card -->
+            <div class="relative bg-white rounded-3xl sm:rounded-[2.5rem] border border-slate-200/80 shadow-md overflow-hidden group">
+                <div class="h-72 sm:h-96 w-full relative">
+                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80"
+                        alt="Cebu City Headquarters Map Satellite" class="w-full h-full object-cover brightness-95 saturate-75 transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
+                    
+                    <!-- Floating Location Info Card -->
+                    <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-5 sm:p-6 rounded-2xl shadow-xl border border-slate-200/60 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Headquarters Pin</span>
+                        </div>
+                        <div>
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">ML Borromeo Building, Cebu City</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Room 201, Borromeo St., Pahina Central, Cebu City, 6000
+                            </p>
+                        </div>
+                        <div class="pt-1 flex flex-wrap gap-3">
+                            <a href="https://www.google.com/maps/search/Room+201,+ML+Borromeo+Bldg.,+Borromeo+St.,+Pahina+Central,+Cebu+City,+6000/@10.295597,123.8961094,51m/data=!3m1!1e3?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDcyNy4wIKXMDSoASAFQAw%3D%3D"
+                                target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all duration-200">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                                <span>Open in Google Maps</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="space-y-1.5 col-span-1 sm:col-span-2">
-                                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Inquiry
-                                    Message</label>
-                                <textarea rows="5" placeholder="Write down your queries or specifications here..."
-                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-200 resize-none"
-                                    required></textarea>
-                            </div>
+            <!-- Trust & Assurance Badges Strip -->
+            <div class="mt-12 pt-8 border-t border-slate-200/60 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left">
+                <div class="flex items-center justify-center sm:justify-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">CDA Registered & Regulated</p>
+                        <p class="text-[11px] text-slate-500">Compliant with Philippine Cooperative Code</p>
+                    </div>
+                </div>
 
-                            <div class="col-span-1 sm:col-span-2 pt-2">
-                                <button type="submit"
-                                    class="w-full sm:w-auto inline-flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm px-8 py-4 rounded-xl shadow-lg transition-all duration-200">
-                                    Send Secure Message
-                                    <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                    </svg>
-                                </button>
-                            </div>
+                <div class="flex items-center justify-center sm:justify-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Full Member Confidentiality</p>
+                        <p class="text-[11px] text-slate-500">Encrypted records & protected identity</p>
+                    </div>
+                </div>
 
-                        </form>
+                <div class="flex items-center justify-center sm:justify-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">Personal & Community-Driven</p>
+                        <p class="text-[11px] text-slate-500">Over 25 years of trusted member service</p>
                     </div>
                 </div>
             </div>

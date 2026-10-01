@@ -56,12 +56,23 @@
     @stack('styles')
 </head>
 <body class="text-slate-800 antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white">
-    <!-- Announcement Bar -->
-    <div class="bg-gradient-to-r from-emerald-800 to-teal-950 text-emerald-100 text-xs py-2 px-4 text-center font-medium tracking-wide">
-        <span class="inline-flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
-            Annual General Assembly Scheduled: August 15, 2026. <a href="#news" class="underline hover:text-white transition-colors duration-200">Learn More &rarr;</a>
-        </span>
+    <!-- Announcement Bar (Option C: Dual Action) -->
+    <div class="bg-gradient-to-r from-emerald-900 via-teal-950 to-slate-950 text-emerald-100 text-xs py-2.5 px-4 text-center font-medium tracking-wide border-b border-emerald-900/40">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <span class="inline-flex items-center gap-1.5 text-emerald-300">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                Ready to grow with Sako Cooperative?
+            </span>
+            <div class="inline-flex items-center gap-2 text-[11px] sm:text-xs">
+                <a href="#membership" class="font-bold text-white hover:text-emerald-300 underline underline-offset-2 transition-colors duration-200">
+                    Apply for Membership &rarr;
+                </a>
+                <span class="text-emerald-700 font-bold">•</span>
+                <a href="#contact" class="font-bold text-emerald-300 hover:text-white underline underline-offset-2 transition-colors duration-200">
+                    Contact Us Now &rarr;
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Sticky Navigation Bar -->
@@ -83,7 +94,6 @@
                     <a href="#about" class="hover:text-emerald-600 transition-colors duration-200 py-2">About Us</a>
                     <a href="#services" class="hover:text-emerald-600 transition-colors duration-200 py-2">Services</a>
                     <a href="#membership" class="hover:text-emerald-600 transition-colors duration-200 py-2">Membership</a>
-                    <a href="#news" class="hover:text-emerald-600 transition-colors duration-200 py-2">News & Events</a>
                     <a href="#contact" class="hover:text-emerald-600 transition-colors duration-200 py-2">Contact</a>
                 </nav>
 
@@ -118,7 +128,6 @@
                 <a href="#about" class="block px-3 py-2.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">About Us</a>
                 <a href="#services" class="block px-3 py-2.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">Services</a>
                 <a href="#membership" class="block px-3 py-2.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">Membership</a>
-                <a href="#news" class="block px-3 py-2.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">News & Events</a>
                 <a href="#contact" class="block px-3 py-2.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">Contact Us</a>
                 
                 <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
@@ -173,7 +182,6 @@
                         <li><a href="#about" class="hover:text-emerald-400 transition-colors duration-200">About Our Coop</a></li>
                         <li><a href="#services" class="hover:text-emerald-400 transition-colors duration-200">Financial Services</a></li>
                         <li><a href="#membership" class="hover:text-emerald-400 transition-colors duration-200">How to Join</a></li>
-                        <li><a href="#news" class="hover:text-emerald-400 transition-colors duration-200">News & Events</a></li>
                         <li><a href="#contact" class="hover:text-emerald-400 transition-colors duration-200">Get in Touch</a></li>
                     </ul>
                 </div>

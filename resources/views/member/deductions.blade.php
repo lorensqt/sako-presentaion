@@ -235,7 +235,7 @@
                             <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Savings Amount</span>
                             <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block leading-none">₱{{ number_format($req->savings_amount, 2) }}</span>
                         </div>
-                        <div class="border-l border-slate-150 dark:border-slate-800 pl-4">
+                        <div class="border-l border-slate-200 dark:border-slate-800 pl-4">
                             <span class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest block leading-none">Fixed Amount</span>
                             <span class="text-sm font-extrabold text-slate-900 dark:text-white font-mono mt-1 block leading-none">₱{{ number_format($req->fixed_amount, 2) }}</span>
                         </div>
