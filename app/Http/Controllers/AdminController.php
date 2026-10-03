@@ -664,17 +664,29 @@ class AdminController extends Controller
             abort(404, 'Signature not found.');
         }
 
+        $headers = [
+            'Content-Type' => 'image/png',
+            'X-Frame-Options' => 'SAMEORIGIN',
+            'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
+        ];
+
         $disk = User::signatureDisk();
 
-        if (Storage::disk($disk)->exists($user->signature)) {
-            return Storage::disk($disk)->response($user->signature, null, [
-                'Content-Type' => 'image/png',
-                'X-Frame-Options' => 'SAMEORIGIN',
-                'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
-            ]);
+        try {
+            // 1. Cloud bucket primary check
+            if (Storage::disk($disk)->exists($user->signature)) {
+                return Storage::disk($disk)->response($user->signature, basename($user->signature), $headers);
+            }
+
+            // 2. Legacy local storage fallback
+            if (Storage::disk('public')->exists($user->signature)) {
+                return Storage::disk('public')->response($user->signature, basename($user->signature), $headers);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to stream signature for user {$user->id}: " . $e->getMessage());
         }
 
-        abort(404, 'Signature file could not be located in cloud storage.');
+        abort(404, 'Signature file could not be located.');
     }
 
     /**

@@ -255,7 +255,7 @@ class User extends Authenticatable
 
     /**
      * Get the publicly accessible URL for the signature.
-     * Uses temporary presigned URLs for private cloud buckets.
+     * Generates a temporary presigned URL for cloud bucket objects, or routes to authenticated stream.
      */
     public function getSignatureUrlAttribute(): ?string
     {
@@ -271,19 +271,17 @@ class User extends Authenticatable
 
         if ($disk === 's3') {
             try {
-                // Generate a temporary presigned URL for private cloud bucket access (30 min expiry)
-                return Storage::disk('s3')->temporaryUrl($this->signature, now()->addMinutes(30));
-            } catch (\Throwable $e) {
-                // Fallback to authenticated streaming route if temporaryUrl cannot be generated
-                return route('signature.show', $this->id);
-            }
+                if (Storage::disk('s3')->exists($this->signature)) {
+                    return Storage::disk('s3')->temporaryUrl($this->signature, now()->addMinutes(30));
+                }
+            } catch (\Throwable $e) {}
         }
 
         return route('signature.show', $this->id);
     }
 
     /**
-     * Determine if a signature exists strictly on the cloud storage disk.
+     * Determine if a signature exists on the storage disk (cloud or legacy local).
      */
     public function hasSignature(): bool
     {
@@ -294,14 +292,20 @@ class User extends Authenticatable
         $disk = self::signatureDisk();
 
         try {
-            return Storage::disk($disk)->exists($this->signature);
+            if (Storage::disk($disk)->exists($this->signature)) {
+                return true;
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            return Storage::disk('public')->exists($this->signature);
         } catch (\Throwable $e) {
             return false;
         }
     }
 
     /**
-     * Get base64 data URI of the signature from the cloud storage disk (ideal for DomPDF rendering).
+     * Get base64 data URI of the signature (ideal for DomPDF rendering).
      */
     public function getSignatureBase64Attribute(): ?string
     {
@@ -315,6 +319,14 @@ class User extends Authenticatable
             if (Storage::disk($disk)->exists($this->signature)) {
                 $content = Storage::disk($disk)->get($this->signature);
                 $mime = Storage::disk($disk)->mimeType($this->signature) ?? 'image/png';
+                return 'data:' . $mime . ';base64,' . base64_encode($content);
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            if (Storage::disk('public')->exists($this->signature)) {
+                $content = Storage::disk('public')->get($this->signature);
+                $mime = Storage::disk('public')->mimeType($this->signature) ?? 'image/png';
                 return 'data:' . $mime . ';base64,' . base64_encode($content);
             }
         } catch (\Throwable $e) {}
