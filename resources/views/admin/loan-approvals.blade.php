@@ -520,14 +520,21 @@
             if (!modalPdf) return;
             if (pdfTitle) pdfTitle.textContent = filename || 'Compliance Document';
             if (pdfMeta) pdfMeta.textContent = (filesize ? filesize + ' • ' : '') + 'Verified PDF Stream';
-            if (pdfExternalLink) pdfExternalLink.href = url;
+
+            // Normalize URL scheme to match page protocol to prevent mixed content
+            let targetUrl = url;
+            if (window.location.protocol === 'https:' && targetUrl.startsWith('http://')) {
+                targetUrl = targetUrl.replace('http://', 'https://');
+            }
+
+            if (pdfExternalLink) pdfExternalLink.href = targetUrl;
 
             // Show loader
             if (pdfLoader) pdfLoader.classList.remove("opacity-0", "pointer-events-none");
             
             // Set source
             if (pdfIframe) {
-                pdfIframe.src = url + '#toolbar=1&navpanes=0';
+                pdfIframe.src = targetUrl + '#toolbar=1&navpanes=0';
                 pdfIframe.onload = function() {
                     setTimeout(() => {
                         if (pdfLoader) pdfLoader.classList.add("opacity-0", "pointer-events-none");

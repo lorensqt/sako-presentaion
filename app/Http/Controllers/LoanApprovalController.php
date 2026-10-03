@@ -564,7 +564,7 @@ class LoanApprovalController extends Controller
     {
         $application = $document->loanApplication;
         if (!$application) {
-            abort(404, 'Loan application not found.');
+            return $this->renderFrameError('Loan application not found.', 404);
         }
 
         $this->authorizeDocumentAccess($application);
@@ -573,11 +573,13 @@ class LoanApprovalController extends Controller
         if (Storage::disk($disk)->exists($document->file_path)) {
             return Storage::disk($disk)->response($document->file_path, $document->original_name, [
                 'Content-Type' => $document->mime_type ?: 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . addslashes($document->original_name) . '"'
+                'Content-Disposition' => 'inline; filename="' . addslashes($document->original_name) . '"',
+                'X-Frame-Options' => 'SAMEORIGIN',
+                'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
             ]);
         }
 
-        abort(404, 'The requested document file could not be located in cloud storage.');
+        return $this->renderFrameError("The document file '{$document->original_name}' could not be located in cloud storage. If this loan was filed before cloud storage was enabled, the document may need to be re-uploaded.", 404);
     }
 
     /**
@@ -588,18 +590,20 @@ class LoanApprovalController extends Controller
         $this->authorizeDocumentAccess($application);
 
         if (!$application->ledger_path) {
-            abort(404, 'Accounting ledger has not been uploaded for this loan.');
+            return $this->renderFrameError('Accounting ledger has not been uploaded for this loan.', 404);
         }
 
         $disk = User::storageDisk();
         if (Storage::disk($disk)->exists($application->ledger_path)) {
             return Storage::disk($disk)->response($application->ledger_path, 'Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+                'Content-Disposition' => 'inline; filename="Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"',
+                'X-Frame-Options' => 'SAMEORIGIN',
+                'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
             ]);
         }
 
-        abort(404, 'Ledger file could not be located in cloud storage.');
+        return $this->renderFrameError('Accounting ledger file could not be located in cloud storage.', 404);
     }
 
     /**
@@ -610,18 +614,40 @@ class LoanApprovalController extends Controller
         $this->authorizeDocumentAccess($application);
 
         if (!$application->schedule_path) {
-            abort(404, 'Payment schedule has not been uploaded for this loan.');
+            return $this->renderFrameError('Payment schedule has not been uploaded for this loan.', 404);
         }
 
         $disk = User::storageDisk();
         if (Storage::disk($disk)->exists($application->schedule_path)) {
             return Storage::disk($disk)->response($application->schedule_path, 'Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
+                'Content-Disposition' => 'inline; filename="Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"',
+                'X-Frame-Options' => 'SAMEORIGIN',
+                'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
             ]);
         }
 
-        abort(404, 'Payment schedule file could not be located in cloud storage.');
+        return $this->renderFrameError('Payment schedule file could not be located in cloud storage.', 404);
+    }
+
+    /**
+     * Helper to render an elegant in-frame message if a document cannot be streamed.
+     */
+    protected function renderFrameError(string $message, int $statusCode = 404)
+    {
+        $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Document Unavailable</title></head>' .
+            '<body style="margin:0;font-family:system-ui,-apple-system,sans-serif;background:#0b1120;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:24px;text-align:center;box-sizing:border-box;">' .
+            '<div style="width:48px;height:48px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:#f87171;font-weight:bold;font-size:20px;">!</div>' .
+            '<h2 style="color:#f87171;margin:0 0 8px 0;font-size:18px;font-weight:700;">Document Unavailable</h2>' .
+            '<p style="color:#94a3b8;max-width:480px;font-size:13px;line-height:1.6;margin:0 0 20px 0;">' . htmlspecialchars($message) . '</p>' .
+            '<a href="javascript:window.location.reload()" style="display:inline-block;padding:8px 16px;background:#1e293b;color:#cbd5e1;text-decoration:none;border-radius:8px;font-size:12px;font-weight:600;border:1px solid #334155;">Retry</a>' .
+            '</body></html>';
+
+        return response($html, $statusCode, [
+            'Content-Type' => 'text/html; charset=UTF-8',
+            'X-Frame-Options' => 'SAMEORIGIN',
+            'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
+        ]);
     }
 
     /**

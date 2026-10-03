@@ -667,7 +667,11 @@ class AdminController extends Controller
         $disk = User::signatureDisk();
 
         if (Storage::disk($disk)->exists($user->signature)) {
-            return Storage::disk($disk)->response($user->signature);
+            return Storage::disk($disk)->response($user->signature, null, [
+                'Content-Type' => 'image/png',
+                'X-Frame-Options' => 'SAMEORIGIN',
+                'Content-Security-Policy' => "frame-ancestors 'self' https://loans.sako-central.org https://sako-central.org https://*.sako-central.org http://localhost:* http://127.0.0.1:*",
+            ]);
         }
 
         abort(404, 'Signature file could not be located in cloud storage.');
