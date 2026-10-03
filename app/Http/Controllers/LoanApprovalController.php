@@ -98,7 +98,7 @@ class LoanApprovalController extends Controller
         DB::transaction(function () use ($application, $user, $currentStageRole, $request) {
             // If in releasing_officer stage, store uploaded Ledger and Schedule files
             if ($currentStageRole === 'releasing_officer') {
-                $disk = User::signatureDisk();
+                $disk = User::storageDisk();
                 if ($request->hasFile('ledger')) {
                     $ledgerPath = $request->file('ledger')->store("loans/releasing/{$application->id}", $disk);
                     $application->ledger_path = $ledgerPath;
@@ -569,7 +569,7 @@ class LoanApprovalController extends Controller
 
         $this->authorizeDocumentAccess($application);
 
-        $disk = User::signatureDisk();
+        $disk = User::storageDisk();
         if (Storage::disk($disk)->exists($document->file_path)) {
             return Storage::disk($disk)->response($document->file_path, $document->original_name, [
                 'Content-Type' => $document->mime_type ?: 'application/pdf',
@@ -577,21 +577,7 @@ class LoanApprovalController extends Controller
             ]);
         }
 
-        // Retrieve local path fallback
-        $path = storage_path('app/public/' . $document->file_path);
-        if (!file_exists($path)) {
-            $altPath = storage_path('app/' . $document->file_path);
-            if (file_exists($altPath)) {
-                $path = $altPath;
-            } else {
-                abort(404, 'The requested document file could not be located on the server.');
-            }
-        }
-
-        return response()->file($path, [
-            'Content-Type' => $document->mime_type ?: 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . addslashes($document->original_name) . '"'
-        ]);
+        abort(404, 'The requested document file could not be located in cloud storage.');
     }
 
     /**
@@ -605,7 +591,7 @@ class LoanApprovalController extends Controller
             abort(404, 'Accounting ledger has not been uploaded for this loan.');
         }
 
-        $disk = User::signatureDisk();
+        $disk = User::storageDisk();
         if (Storage::disk($disk)->exists($application->ledger_path)) {
             return Storage::disk($disk)->response($application->ledger_path, 'Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
                 'Content-Type' => 'application/pdf',
@@ -613,20 +599,7 @@ class LoanApprovalController extends Controller
             ]);
         }
 
-        $path = storage_path('app/public/' . $application->ledger_path);
-        if (!file_exists($path)) {
-            $altPath = storage_path('app/' . $application->ledger_path);
-            if (file_exists($altPath)) {
-                $path = $altPath;
-            } else {
-                abort(404, 'Ledger file could not be located on the server.');
-            }
-        }
-
-        return response()->file($path, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Loan_Ledger_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
-        ]);
+        abort(404, 'Ledger file could not be located in cloud storage.');
     }
 
     /**
@@ -640,7 +613,7 @@ class LoanApprovalController extends Controller
             abort(404, 'Payment schedule has not been uploaded for this loan.');
         }
 
-        $disk = User::signatureDisk();
+        $disk = User::storageDisk();
         if (Storage::disk($disk)->exists($application->schedule_path)) {
             return Storage::disk($disk)->response($application->schedule_path, 'Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf', [
                 'Content-Type' => 'application/pdf',
@@ -648,20 +621,7 @@ class LoanApprovalController extends Controller
             ]);
         }
 
-        $path = storage_path('app/public/' . $application->schedule_path);
-        if (!file_exists($path)) {
-            $altPath = storage_path('app/' . $application->schedule_path);
-            if (file_exists($altPath)) {
-                $path = $altPath;
-            } else {
-                abort(404, 'Schedule file could not be located on the server.');
-            }
-        }
-
-        return response()->file($path, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Amortization_Schedule_LN-' . str_pad($application->id, 5, '0', STR_PAD_LEFT) . '.pdf"'
-        ]);
+        abort(404, 'Payment schedule file could not be located in cloud storage.');
     }
 
     /**

@@ -233,14 +233,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the storage disk used for application files and signatures.
+     * Enforces strict cloud bucket storage in production and standard runtime.
+     */
+    public static function storageDisk(): string
+    {
+        if (app()->runningUnitTests()) {
+            return config('filesystems.default') === 'public' ? 'public' : 's3';
+        }
+
+        return 's3';
+    }
+
+    /**
      * Get the storage disk used for signatures.
      */
     public static function signatureDisk(): string
     {
-        if (config('filesystems.default') === 's3' || !empty(config('filesystems.disks.s3.bucket'))) {
-            return 's3';
-        }
-        return 'public';
+        return self::storageDisk();
     }
 
     /**
@@ -269,11 +279,11 @@ class User extends Authenticatable
             }
         }
 
-        return asset('storage/' . $this->signature);
+        return route('signature.show', $this->id);
     }
 
     /**
-     * Determine if a signature exists on the storage disk or locally.
+     * Determine if a signature exists strictly on the cloud storage disk.
      */
     public function hasSignature(): bool
     {
@@ -284,16 +294,14 @@ class User extends Authenticatable
         $disk = self::signatureDisk();
 
         try {
-            if (Storage::disk($disk)->exists($this->signature)) {
-                return true;
-            }
-        } catch (\Throwable $e) {}
-
-        return file_exists(storage_path('app/public/' . $this->signature));
+            return Storage::disk($disk)->exists($this->signature);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**
-     * Get base64 data URI of the signature (ideal for DomPDF rendering).
+     * Get base64 data URI of the signature from the cloud storage disk (ideal for DomPDF rendering).
      */
     public function getSignatureBase64Attribute(): ?string
     {
@@ -310,13 +318,6 @@ class User extends Authenticatable
                 return 'data:' . $mime . ';base64,' . base64_encode($content);
             }
         } catch (\Throwable $e) {}
-
-        // Fallback to local storage if available
-        $localPath = storage_path('app/public/' . $this->signature);
-        if (file_exists($localPath)) {
-            $content = file_get_contents($localPath);
-            return 'data:image/png;base64,' . base64_encode($content);
-        }
 
         return null;
     }

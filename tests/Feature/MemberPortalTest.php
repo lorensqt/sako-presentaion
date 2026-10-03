@@ -73,7 +73,7 @@ class MemberPortalTest extends TestCase
         $response->assertSee('142,490.00'); // Cooperative Savings Deposit Balance
         $response->assertSee('141,990.00'); // Calculated withdrawable amount (142490 - 500)
         $response->assertSee('500.00'); // Maintaining balance
-        $response->assertSee('strictly non-withdrawable'); // Non-withdrawable warning notice
+        $response->assertSee('Non-Withdrawable Equity'); // Non-withdrawable warning notice
     }
 
     /**
@@ -234,7 +234,8 @@ class MemberPortalTest extends TestCase
     public function test_members_can_update_profile_and_signature(): void
     {
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
-        \Illuminate\Support\Facades\Storage::fake('public');
+        $disk = User::storageDisk();
+        \Illuminate\Support\Facades\Storage::fake($disk);
 
         $user = User::create([
             'name' => 'John Member',
@@ -260,8 +261,8 @@ class MemberPortalTest extends TestCase
         $this->assertEquals('Cebu City, Cebu', $user->address);
         $this->assertNotNull($user->signature);
 
-        // Assert file exists in faked public storage
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($user->signature);
+        // Assert file exists in faked storage
+        \Illuminate\Support\Facades\Storage::disk($disk)->assertExists($user->signature);
     }
 
     /**

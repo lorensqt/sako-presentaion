@@ -715,4 +715,123 @@ class LoanApprovalTest extends TestCase
                    $mail->releasingOfficerName === $releasingOfficer->name;
         });
     }
+
+    /**
+     * Test that uploaded loan compliance documents are saved to the designated storage disk
+     * and can be securely streamed by authorized parties, while blocking unauthorized members.
+     */
+    public function test_loan_compliance_documents_are_stored_on_storage_disk_and_can_be_viewed(): void
+    {
+        $disk = User::storageDisk();
+        Storage::fake($disk);
+
+        $borrower = $this->createUser('Pedro Borrower');
+        $unrelatedMember = $this->createUser('Unrelated Member');
+        $admin = $this->createUser('Admin User', 'admin');
+
+        $pdfFile1 = UploadedFile::fake()->create('company_id.pdf', 150, 'application/pdf');
+        $pdfFile2 = UploadedFile::fake()->create('payslip_august.pdf', 250, 'application/pdf');
+
+        $response = $this->actingAs($borrower)->post('/loans/apply', [
+            'category' => 'emergency',
+            'type' => 'emergency_loan',
+            'amount' => 20000,
+            'term' => 12,
+            'remarks' => 'Medical assistance needed',
+            'pin' => '123456',
+            'documents' => [$pdfFile1, $pdfFile2],
+        ]);
+
+        $response->assertRedirect('/myloans');
+        $response->assertSessionHas('success');
+
+        $application = LoanApplication::with('documents')->where('user_id', $borrower->id)->latest()->first();
+        $this->assertNotNull($application);
+        $this->assertCount(2, $application->documents);
+
+        $firstDoc = $application->documents->first();
+        $secondDoc = $application->documents->last();
+
+        // 1. Verify files exist on the storage disk (e.g. S3 or configured disk)
+        Storage::disk($disk)->assertExists($firstDoc->file_path);
+        Storage::disk($disk)->assertExists($secondDoc->file_path);
+
+        // 2. Borrower can view the document inline
+        $borrowerResp = $this->actingAs($borrower)->get(route('loan.documents.show', $firstDoc->id));
+        $borrowerResp->assertStatus(200);
+        $this->assertStringContainsString('application/pdf', $borrowerResp->headers->get('Content-Type'));
+        $this->assertStringContainsString('inline', $borrowerResp->headers->get('Content-Disposition'));
+
+        // 3. Admin can view the document
+        $adminResp = $this->actingAs($admin)->get(route('loan.documents.show', $firstDoc->id));
+        $adminResp->assertStatus(200);
+
+        // 4. Unrelated member cannot view the document (403 Forbidden)
+        $unauthResp = $this->actingAs($unrelatedMember)->get(route('loan.documents.show', $firstDoc->id));
+        $unauthResp->assertStatus(403);
+    }
+
+    /**
+     * Test that resubmitting a returned loan application deletes previous physical documents from the storage disk.
+     */
+    public function test_resubmitted_loan_cleans_up_old_documents_from_storage_disk(): void
+    {
+        $disk = User::storageDisk();
+        Storage::fake($disk);
+
+        $borrower = $this->createUser('Maria Borrower');
+        $sakoStaff = $this->createUser('Sako Staff', 'sako_staff');
+        $role = \App\Models\Role::firstOrCreate(['slug' => 'sako_staff'], ['name' => 'Sako Staff']);
+        $sakoStaff->roles()->attach($role);
+
+        $oldPdf = UploadedFile::fake()->create('old_id.pdf', 100, 'application/pdf');
+
+        $this->actingAs($borrower)->post('/loans/apply', [
+            'category' => 'travel',
+            'type' => 'travel_loan',
+            'amount' => 15000,
+            'term' => 12,
+            'remarks' => 'Travel booking',
+            'pin' => '123456',
+            'documents' => [$oldPdf],
+        ]);
+
+        $application = LoanApplication::with('documents')->where('user_id', $borrower->id)->latest()->first();
+        $oldDoc = $application->documents->first();
+        Storage::disk($disk)->assertExists($oldDoc->file_path);
+
+        // Sako Staff returns application for corrections
+        $this->actingAs($sakoStaff)->post("/loans/{$application->id}/return", [
+            'remarks' => 'Company ID is expired, please attach valid ID',
+        ]);
+
+        $application->refresh();
+        $this->assertEquals('returned', $application->status);
+
+        // Borrower resubmits with new document
+        $newPdf = UploadedFile::fake()->create('new_valid_id.pdf', 120, 'application/pdf');
+
+        $resubmitResp = $this->actingAs($borrower)->post('/loans/apply', [
+            'resubmit_id' => $application->id,
+            'category' => 'travel',
+            'type' => 'travel_loan',
+            'amount' => 15000,
+            'term' => 12,
+            'remarks' => 'Attached updated valid ID',
+            'pin' => '123456',
+            'documents' => [$newPdf],
+        ]);
+
+        $resubmitResp->assertRedirect('/myloans');
+        $application->refresh();
+
+        // Old file must be pruned from the storage disk
+        Storage::disk($disk)->assertMissing($oldDoc->file_path);
+
+        // New file must exist on the storage disk
+        $newDoc = $application->documents()->first();
+        $this->assertNotNull($newDoc);
+        $this->assertEquals('new_valid_id.pdf', $newDoc->original_name);
+        Storage::disk($disk)->assertExists($newDoc->file_path);
+    }
 }

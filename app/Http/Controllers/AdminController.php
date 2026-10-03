@@ -670,12 +670,7 @@ class AdminController extends Controller
             return Storage::disk($disk)->response($user->signature);
         }
 
-        $localPath = storage_path('app/public/' . $user->signature);
-        if (file_exists($localPath)) {
-            return response()->file($localPath);
-        }
-
-        abort(404, 'Signature file could not be located.');
+        abort(404, 'Signature file could not be located in cloud storage.');
     }
 
     /**

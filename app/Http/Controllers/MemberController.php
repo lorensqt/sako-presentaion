@@ -616,11 +616,13 @@ class MemberController extends Controller
 
         // Process uploaded compliance documents
         if ($request->hasFile('documents')) {
-            // If resubmitting with new documents, clean up old physical files
+            $disk = User::storageDisk();
+
+            // If resubmitting with new documents, clean up old physical files from cloud storage
             if ($application->documents()->exists()) {
                 foreach ($application->documents as $oldDoc) {
-                    if (Storage::disk('public')->exists($oldDoc->file_path)) {
-                        Storage::disk('public')->delete($oldDoc->file_path);
+                    if (Storage::disk($disk)->exists($oldDoc->file_path)) {
+                        Storage::disk($disk)->delete($oldDoc->file_path);
                     }
                 }
                 $application->documents()->delete();
@@ -631,7 +633,7 @@ class MemberController extends Controller
                 $fileSize = $file->getSize();
                 $mimeType = $file->getMimeType() ?: 'application/pdf';
 
-                $storedPath = $file->store("loans/documents/{$application->id}", 'public');
+                $storedPath = $file->store("loans/documents/{$application->id}", $disk);
 
                 LoanDocument::create([
                     'loan_application_id' => $application->id,
