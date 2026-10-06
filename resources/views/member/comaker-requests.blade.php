@@ -386,10 +386,11 @@
     <!-- Backdrop -->
     <div class="fixed inset-0 bg-slate-950/40 dark:bg-slate-950/70 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none modal-overlay"></div>
     
-    <!-- Modal Container -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xl w-full max-w-xl relative z-10 p-4 sm:p-6 space-y-4 transform scale-95 opacity-0 transition-all duration-300 modal-container max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
-        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+    <!-- Modal Container with Fixed Header, Scrollable Body, and Fixed Footer -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xl w-full max-w-xl relative z-10 flex flex-col max-h-[90vh] transform scale-95 opacity-0 transition-all duration-300 modal-container overflow-hidden">
+        
+        <!-- FIXED HEADER -->
+        <div class="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex-shrink-0">
             <div class="space-y-1 min-w-0 flex-1">
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                     <h3 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug">
@@ -405,124 +406,124 @@
                         Ref: <span id="display-app-ref" class="font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200/70 dark:border-slate-700">LN-00000</span>
                     </span>
                     <span class="text-slate-300 dark:text-slate-600 hidden xs:inline">•</span>
-                    <span class="truncate">ML Sako Credit Facility</span>
+                    <span class="truncate">Legally Binding Guaranty</span>
                 </div>
             </div>
-            <button type="button" class="modal-close p-1.5 -mr-1 -mt-1 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex-shrink-0" aria-label="Close modal">
+            <button type="button" class="modal-close p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex-shrink-0 cursor-pointer" aria-label="Close modal">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
-        <!-- Scrollable Body Content -->
-        <div class="space-y-4">
-            
-            <!-- Guaranteed Financial Exposure Banner -->
-            <div class="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-md relative overflow-hidden">
-                <!-- Subtle background watermark icon -->
-                <i class="fa-solid fa-file-contract absolute -right-3 -bottom-3 text-7xl text-white/5 pointer-events-none"></i>
+        <!-- FORM WRAPPER (ENCLOSES SCROLLABLE BODY & FIXED FOOTER) -->
+        <form id="form-comaker-decision" method="POST" class="flex flex-col flex-1 overflow-hidden m-0">
+            @csrf
+            <!-- Hidden PIN input passed to controller -->
+            <input type="hidden" name="pin" id="comaker-pin-input">
+
+            <!-- SCROLLABLE BODY CONTENT -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
                 
-                <div class="relative z-10 space-y-1">
-                    <div class="flex flex-wrap items-center justify-between gap-1.5">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
-                            Guaranteed Principal Exposure
-                        </span>
-                        <span class="text-[10px] text-slate-300 font-medium bg-white/10 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                            Joint &amp; Several Liability
-                        </span>
-                    </div>
+                <!-- Guaranteed Financial Exposure Banner -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-md relative overflow-hidden">
+                    <!-- Subtle background watermark icon -->
+                    <i class="fa-solid fa-file-contract absolute -right-3 -bottom-3 text-7xl text-white/5 pointer-events-none"></i>
                     
-                    <div class="flex items-baseline justify-between pt-1">
-                        <h2 id="display-loan-amount" class="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">₱0.00</h2>
-                        <div class="text-right">
-                            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Horizon</span>
-                            <span id="display-loan-term" class="text-xs font-bold font-mono text-emerald-300">0 Months</span>
+                    <div class="relative z-10 space-y-1.5">
+                        <div class="flex flex-wrap items-center justify-between gap-1.5">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
+                                Guaranteed Principal Exposure
+                            </span>
+                            <span class="text-[10px] text-slate-300 font-medium bg-white/10 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                                Joint &amp; Several Liability
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-baseline justify-between pt-1">
+                            <h2 id="display-loan-amount" class="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">₱0.00</h2>
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Horizon</span>
+                                <span id="display-loan-term" class="text-xs font-bold font-mono text-emerald-300">0 Months</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Unified Borrower Profile & Loan Specifications Brief -->
-            <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/70 dark:border-slate-800/70 p-3.5 rounded-2xl space-y-3">
-                <!-- Borrower Header row -->
-                <div class="flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
-                            <span id="display-borrower-initials">--</span>
+                <!-- Unified Borrower Profile & Loan Specifications Brief -->
+                <div class="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/70 dark:border-slate-800/70 p-4 rounded-2xl space-y-3">
+                    <!-- Borrower Header row -->
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+                                <span id="display-borrower-initials">--</span>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Primary Borrower</span>
+                                <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate" id="display-borrower-name">--</h4>
+                            </div>
                         </div>
-                        <div class="min-w-0">
-                            <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Primary Borrower</span>
-                            <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate" id="display-borrower-name">--</h4>
+                        <div class="text-right flex-shrink-0">
+                            <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Company ID</span>
+                            <span id="display-borrower-id" class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">--</span>
                         </div>
                     </div>
-                    <div class="text-right flex-shrink-0">
-                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Company ID</span>
-                        <span id="display-borrower-id" class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">--</span>
+
+                    <!-- Facility Details row -->
+                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Facility Type:</span>
+                        <span id="display-loan-name" class="font-bold text-slate-800 dark:text-slate-200 text-xs">--</span>
+                    </div>
+
+                    <!-- Stated Purpose row -->
+                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 space-y-1">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Borrower Purpose / Note:</span>
+                        <p id="display-member-remarks" class="text-xs text-slate-600 dark:text-slate-300 italic pl-2.5 border-l-2 border-emerald-500 bg-white dark:bg-slate-900/60 p-2.5 rounded-r-xl leading-relaxed">
+                            --
+                        </p>
                     </div>
                 </div>
 
-                <!-- Facility Details row -->
-                <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between text-xs">
-                    <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Facility Type:</span>
-                    <span id="display-loan-name" class="font-bold text-slate-800 dark:text-slate-200 text-xs">--</span>
-                </div>
-
-                <!-- Stated Purpose row -->
-                <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 space-y-1">
-                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Borrower Purpose / Note:</span>
-                    <p id="display-member-remarks" class="text-xs text-slate-600 dark:text-slate-300 italic pl-2.5 border-l-2 border-emerald-500 bg-white dark:bg-slate-900/60 p-2 rounded-r-lg leading-relaxed">
-                        --
-                    </p>
-                </div>
-            </div>
-
-            <!-- Signatory Audit Trail -->
-            <div class="space-y-2">
-                <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-list-check text-blue-500"></i>
-                    Signatory Audit Trail
-                </h4>
-                <div class="space-y-2 max-h-[140px] overflow-y-auto pr-1" id="comaker-history-timeline">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- Action Station -->
-            <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <form id="form-comaker-decision" method="POST" class="space-y-3">
-                    @csrf
-                    
-                    <!-- Verification Remarks Input -->
-                    <div class="space-y-1">
-                        <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                            <span>Digital Verification Remarks</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">(Required)</span>
-                        </label>
-                        <textarea name="remarks" id="comaker-remarks" required rows="2" placeholder="State your verification notes (e.g. capacity confirmed, repayment plan reviewed)..." class="w-full px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 dark:placeholder-slate-500 transition-all resize-none"></textarea>
+                <!-- Signatory Audit Trail -->
+                <div class="space-y-2">
+                    <h4 class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check text-blue-500"></i>
+                        Signatory Audit Trail
+                    </h4>
+                    <div class="space-y-2 max-h-[140px] overflow-y-auto pr-1" id="comaker-history-timeline">
+                        <!-- Populated via JS -->
                     </div>
+                </div>
 
-                    <!-- Legal Attestation Checkbox -->
-                    <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 cursor-pointer select-none group">
-                        <input type="checkbox" id="comaker-consent-checkbox" class="mt-0.5 rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 h-4 w-4 transition-colors flex-shrink-0 cursor-pointer">
-                        <span class="text-[11px] text-slate-600 dark:text-slate-400 leading-normal group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
-                            I certify that I have verified the borrower's capacity to pay and voluntarily authorize joint and several liability as co-guarantor under ML Sako bylaws.
-                        </span>
+                <!-- Verification Remarks Input -->
+                <div class="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                        <span>Digital Verification Remarks</span>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">(Required)</span>
                     </label>
+                    <textarea name="remarks" id="comaker-remarks" required rows="2" placeholder="State your verification notes (e.g. capacity confirmed, repayment plan reviewed)..." class="w-full px-3.5 py-2.5 text-xs border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-xl outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 placeholder-slate-400 dark:placeholder-slate-500 transition-all resize-none"></textarea>
+                </div>
 
-                    <!-- Decision Action Buttons -->
-                    <div class="grid grid-cols-2 gap-2.5 pt-1">
-                        <button type="submit" id="btn-comaker-reject" class="inline-flex items-center justify-center gap-1.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40 font-semibold text-xs py-2.5 px-3 rounded-xl transition-all cursor-pointer">
-                            <i class="fa-solid fa-ban text-xs"></i>
-                            <span>Decline Request</span>
-                        </button>
-                        <button type="submit" id="btn-comaker-approve" class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-3 rounded-xl shadow-xs shadow-emerald-600/10 transition-all cursor-pointer">
-                            <i class="fa-solid fa-file-signature text-xs"></i>
-                            <span>Authorize &amp; Sign</span>
-                        </button>
-                    </div>
-                </form>
+                <!-- Legal Attestation Checkbox -->
+                <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 cursor-pointer select-none group">
+                    <input type="checkbox" id="comaker-consent-checkbox" class="mt-0.5 rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 h-4 w-4 transition-colors flex-shrink-0 cursor-pointer">
+                    <span class="text-[11px] text-slate-600 dark:text-slate-400 leading-normal group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
+                        I certify that I have verified the borrower's capacity to pay and voluntarily authorize joint and several liability as co-guarantor under ML Sako bylaws.
+                    </span>
+                </label>
             </div>
-        </div>
+
+            <!-- FIXED STICKY FOOTER -->
+            <div class="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-xs flex items-center justify-between gap-3 flex-shrink-0">
+                <button type="button" id="btn-comaker-reject" class="inline-flex items-center justify-center gap-1.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-900/30 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40 font-bold text-xs py-2.5 px-4 rounded-xl transition-all cursor-pointer">
+                    <i class="fa-solid fa-ban text-xs"></i>
+                    <span>Decline Request</span>
+                </button>
+                <button type="button" id="btn-comaker-approve" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer">
+                    <i class="fa-solid fa-file-signature text-xs"></i>
+                    <span>Authorize &amp; Sign</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -749,8 +750,9 @@
                 btnApprove.onclick = function (e) {
                     e.preventDefault();
                     if (!txtRemarks.value.trim()) {
-                        if (window.MLSAKOAlert) {
-                            MLSAKOAlert.fire({
+                        const alertInstance = window.MLSAKOAlert || Swal;
+                        if (alertInstance) {
+                            alertInstance.fire({
                                 icon: 'warning',
                                 title: 'Remarks Required',
                                 text: "Please enter digital verification remarks before endorsing.",
@@ -762,8 +764,9 @@
                         return;
                     }
                     if (chkConsent && !chkConsent.checked) {
-                        if (window.MLSAKOAlert) {
-                            MLSAKOAlert.fire({
+                        const alertInstance = window.MLSAKOAlert || Swal;
+                        if (alertInstance) {
+                            alertInstance.fire({
                                 icon: 'warning',
                                 title: 'Legal Attestation Required',
                                 text: "Please acknowledge the co-guarantor joint liability certification before authorizing.",
@@ -775,25 +778,147 @@
                         return;
                     }
 
-                    // Activate loading state
-                    btnApprove.disabled = true;
-                    btnReject.disabled = true;
-                    txtRemarks.readOnly = true;
-                    if (chkConsent) chkConsent.disabled = true;
+                    const alertInstance = window.MLSAKOAlert || Swal;
+                    if (alertInstance) {
+                        alertInstance.fire({
+                            icon: 'question',
+                            title: 'Authorize Co-Maker Guarantee',
+                            html: `
+                                <div class="space-y-4 text-center">
+                                    <div class="space-y-1">
+                                        <p class="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                                            You are endorsing <strong class="text-slate-900 dark:text-white font-bold">${borrowerName}</strong> for <strong class="text-emerald-600 dark:text-emerald-400 font-mono font-bold">${document.getElementById("display-loan-amount").textContent}</strong>.
+                                        </p>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
+                                            Joint &amp; Several Solidary Obligation
+                                        </span>
+                                    </div>
+                                    <div class="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+                                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                                            Enter 6-Digit Security PIN to Authorize
+                                        </p>
+                                        <div class="flex justify-center gap-1.5" id="swal-pin-inputs-container">
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                            <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+                                        </div>
+                                        <input type="hidden" id="swal-hidden-pin">
+                                    </div>
+                                </div>
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Authorize & Sign',
+                            cancelButtonText: 'Cancel',
+                            iconColor: '#10b981',
+                            didOpen: () => {
+                                const container = document.getElementById('swal-pin-inputs-container');
+                                if (container) {
+                                    const inputs = container.querySelectorAll('input');
+                                    const hidden = document.getElementById('swal-hidden-pin');
+                                    
+                                    inputs.forEach((input, index) => {
+                                        input.addEventListener('input', () => {
+                                            input.value = input.value.replace(/[^0-9]/g, '');
+                                            if (input.value.length === 1 && index < inputs.length - 1) {
+                                                inputs[index + 1].focus();
+                                            }
+                                            updateVal();
+                                        });
 
-                    btnApprove.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Authorizing...</span>';
-                    btnApprove.classList.add("opacity-80", "cursor-wait");
-                    btnReject.classList.add("opacity-40", "pointer-events-none");
+                                        input.addEventListener('keydown', (e) => {
+                                            if (e.key === 'Backspace') {
+                                                if (input.value.length === 0 && index > 0) {
+                                                    inputs[index - 1].value = '';
+                                                    inputs[index - 1].focus();
+                                                    e.preventDefault();
+                                                } else {
+                                                    input.value = '';
+                                                }
+                                                updateVal();
+                                            }
+                                        });
 
-                    formDecision.action = `/loans/${loan.id}/approve`;
-                    formDecision.submit();
+                                        input.addEventListener('paste', (e) => {
+                                            e.preventDefault();
+                                            const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, inputs.length);
+                                            if (pasteData) {
+                                                for (let i = 0; i < pasteData.length; i++) {
+                                                    if (inputs[i]) {
+                                                        inputs[i].value = pasteData[i];
+                                                    }
+                                                }
+                                                const nextFocus = Math.min(pasteData.length, inputs.length - 1);
+                                                inputs[nextFocus].focus();
+                                                updateVal();
+                                            }
+                                        });
+                                    });
+
+                                    const updateVal = () => {
+                                        let fullVal = '';
+                                        inputs.forEach(inp => fullVal += inp.value);
+                                        hidden.value = fullVal;
+                                    };
+
+                                    setTimeout(() => {
+                                        if (inputs[0]) inputs[0].focus();
+                                    }, 150);
+                                }
+                            },
+                            preConfirm: () => {
+                                const pinVal = document.getElementById('swal-hidden-pin').value;
+                                if (pinVal.length !== 6) {
+                                    Swal.showValidationMessage('Please enter your 6-digit security PIN.');
+                                    return false;
+                                }
+                                return pinVal;
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('comaker-pin-input').value = result.value;
+
+                                // Activate loading state
+                                btnApprove.disabled = true;
+                                btnReject.disabled = true;
+                                txtRemarks.readOnly = true;
+                                if (chkConsent) chkConsent.disabled = true;
+
+                                btnApprove.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Authorizing...</span>';
+                                btnApprove.classList.add("opacity-80", "cursor-wait");
+                                btnReject.classList.add("opacity-40", "pointer-events-none");
+
+                                formDecision.action = `/loans/${loan.id}/approve`;
+                                formDecision.submit();
+                            }
+                        });
+                    } else {
+                        const pinPrompt = prompt('Enter your 6-digit Security PIN to authorize:');
+                        if (pinPrompt && pinPrompt.length === 6 && !isNaN(pinPrompt)) {
+                            document.getElementById('comaker-pin-input').value = pinPrompt;
+                            btnApprove.disabled = true;
+                            btnReject.disabled = true;
+                            txtRemarks.readOnly = true;
+                            if (chkConsent) chkConsent.disabled = true;
+
+                            btnApprove.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Authorizing...</span>';
+                            btnApprove.classList.add("opacity-80", "cursor-wait");
+                            btnReject.classList.add("opacity-40", "pointer-events-none");
+
+                            formDecision.action = `/loans/${loan.id}/approve`;
+                            formDecision.submit();
+                        }
+                    }
                 };
 
                 btnReject.onclick = function (e) {
                     e.preventDefault();
                     if (!txtRemarks.value.trim()) {
-                        if (window.MLSAKOAlert) {
-                            MLSAKOAlert.fire({
+                        const alertInstance = window.MLSAKOAlert || Swal;
+                        if (alertInstance) {
+                            alertInstance.fire({
                                 icon: 'warning',
                                 title: 'Remarks Required',
                                 text: "Please specify rejection remarks to log the case decision.",
@@ -805,18 +930,46 @@
                         return;
                     }
 
-                    // Activate loading state
-                    btnApprove.disabled = true;
-                    btnReject.disabled = true;
-                    txtRemarks.readOnly = true;
-                    if (chkConsent) chkConsent.disabled = true;
+                    const alertInstance = window.MLSAKOAlert || Swal;
+                    if (alertInstance) {
+                        alertInstance.fire({
+                            icon: 'warning',
+                            title: 'Decline Endorsement?',
+                            text: "Are you sure you want to decline to co-sign this loan application? The primary borrower will be notified.",
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, Decline',
+                            cancelButtonText: 'Cancel',
+                            iconColor: '#f43f5e'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                btnApprove.disabled = true;
+                                btnReject.disabled = true;
+                                txtRemarks.readOnly = true;
+                                if (chkConsent) chkConsent.disabled = true;
 
-                    btnReject.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Declining...</span>';
-                    btnReject.classList.add("opacity-80", "cursor-wait");
-                    btnApprove.classList.add("opacity-40", "pointer-events-none");
+                                btnReject.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Declining...</span>';
+                                btnReject.classList.add("opacity-80", "cursor-wait");
+                                btnApprove.classList.add("opacity-40", "pointer-events-none");
 
-                    formDecision.action = `/loans/${loan.id}/reject`;
-                    formDecision.submit();
+                                formDecision.action = `/loans/${loan.id}/reject`;
+                                formDecision.submit();
+                            }
+                        });
+                    } else {
+                        if (confirm("Are you sure you want to decline to co-sign this loan application?")) {
+                            btnApprove.disabled = true;
+                            btnReject.disabled = true;
+                            txtRemarks.readOnly = true;
+                            if (chkConsent) chkConsent.disabled = true;
+
+                            btnReject.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Declining...</span>';
+                            btnReject.classList.add("opacity-80", "cursor-wait");
+                            btnApprove.classList.add("opacity-40", "pointer-events-none");
+
+                            formDecision.action = `/loans/${loan.id}/reject`;
+                            formDecision.submit();
+                        }
+                    }
                 };
 
                 openDrawer("drawer-comaker-evaluate");

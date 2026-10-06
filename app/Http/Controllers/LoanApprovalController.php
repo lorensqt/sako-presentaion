@@ -9,9 +9,13 @@ use App\Models\User;
 use App\Services\LoanWorkflowService;
 use App\Services\AuditLogger;
 use App\Mail\CoMakerDeclinedMail;
+use App\Mail\SecurityAlertMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class LoanApprovalController extends Controller
 {
@@ -52,6 +56,44 @@ class LoanApprovalController extends Controller
             if ($hasAlreadyApproved) {
                 return back()->with('error', "You have already actioned this endorsement request.");
             }
+
+            // Security PIN Verification for Co-Maker Authorization
+            $request->validate([
+                'pin' => 'required|string|size:6',
+                'remarks' => 'required|string|min:3|max:1000',
+            ], [
+                'pin.required' => '6-digit security PIN is required to authorize endorsement.',
+                'pin.size' => 'Security PIN must be exactly 6 digits.',
+                'remarks.required' => 'Digital verification remarks are required.',
+            ]);
+
+            if (is_null($user->pin)) {
+                return back()->with('error', 'Security PIN is not configured on your account. Please set up your PIN first.');
+            }
+
+            if (!\Illuminate\Support\Facades\Hash::check($request->pin, $user->pin)) {
+                $user->increment('pin_attempts');
+
+                if ($user->pin_attempts >= 3) {
+                    $user->update(['pin_attempts' => 0]);
+                    \Illuminate\Support\Facades\Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\SecurityAlertMail($user->name));
+                    } catch (\Throwable $e) {}
+
+                    return redirect()->route('login')->withErrors([
+                        'login_identifier' => 'Account signed out due to 3 consecutive failed PIN attempts during co-maker endorsement. A security alert email has been sent.'
+                    ]);
+                }
+
+                $remaining = 3 - $user->pin_attempts;
+                return back()->with('error', "Incorrect security PIN. You have {$remaining} attempt" . ($remaining === 1 ? '' : 's') . " remaining.");
+            }
+
+            $user->update(['pin_attempts' => 0]);
         } else {
             if (!$user->hasRole($currentStageRole)) {
                 return back()->with('error', "You do not have permission to approve loans at the '{$currentStageRole}' stage.");
