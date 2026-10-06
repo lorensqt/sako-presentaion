@@ -788,18 +788,39 @@ class AdminController extends Controller
     {
         $search = $request->input('search');
         $status = $request->input('status');
+        $category = $request->input('category');
+        $stage = $request->input('stage');
 
-        $query = \App\Models\LoanApplication::with('borrower');
+        $query = \App\Models\LoanApplication::with(['borrower', 'loan']);
 
         if ($search) {
-            $query->whereHas('borrower', function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('company_id', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $cleanedId = preg_replace('/[^0-9]/', '', $search);
+                if (!empty($cleanedId)) {
+                    $q->where('id', (int) $cleanedId);
+                }
+                $q->orWhereHas('borrower', function ($b) use ($search) {
+                    $b->where('name', 'like', "%{$search}%")
+                      ->orWhere('company_id', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
             });
         }
 
-        if ($status) {
-            $query->where('status', $status);
+        if ($status && $status !== 'all') {
+            if ($status === 'approved') {
+                $query->whereIn('status', ['approved', 'released']);
+            } else {
+                $query->where('status', $status);
+            }
+        }
+
+        if ($category && $category !== 'all') {
+            $query->where('loan_category', $category);
+        }
+
+        if ($stage && $stage !== 'all') {
+            $query->where('current_stage', $stage);
         }
 
         $allLoans = $query->latest()->paginate(15)->withQueryString();
@@ -812,7 +833,15 @@ class AdminController extends Controller
             'rejected' => \App\Models\LoanApplication::where('status', 'rejected')->count(),
         ];
 
-        return view('admin.loans', compact('allLoans', 'metrics'));
+        if ($request->ajax()) {
+            return response()->json([
+                'loans_html' => view('admin.partials.loans-directory-rows', compact('allLoans'))->render(),
+                'pagination_html' => $allLoans->hasPages() ? $allLoans->links()->render() : '',
+                'total_count' => $allLoans->total(),
+            ]);
+        }
+
+        return view('admin.loans', compact('allLoans', 'metrics', 'search', 'status', 'category', 'stage'));
     }
 
     /**
@@ -822,11 +851,16 @@ class AdminController extends Controller
     {
         $user = $request->user();
         
+        $search = $request->input('search');
+        $stage = $request->input('stage');
+        $status = $request->input('status');
+        $category = $request->input('category');
+
         // Find which roles/groups the logged-in admin belongs to (e.g. ['sako_staff', 'hrmd_staff'])
         $myGroupSlugs = $user->roles->pluck('slug')->toArray();
 
         // 1. Fetch loans sitting at this specific user's active stage
-        $myInboxLoansQuery = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
+        $myInboxLoansQuery = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents', 'loan'])
             ->where('status', 'pending')
             ->whereIn('current_stage', $myGroupSlugs);
 
@@ -842,18 +876,71 @@ class AdminController extends Controller
             });
         }
 
+        // Apply filters to Inbox Query
+        if ($search) {
+            $myInboxLoansQuery->where(function ($q) use ($search) {
+                $cleanedId = preg_replace('/[^0-9]/', '', $search);
+                if (!empty($cleanedId)) {
+                    $q->where('id', (int) $cleanedId);
+                }
+                $q->orWhereHas('borrower', function ($b) use ($search) {
+                    $b->where('name', 'like', "%{$search}%")
+                      ->orWhere('company_id', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        if ($stage && $stage !== 'all') {
+            $myInboxLoansQuery->where('current_stage', $stage);
+        }
+
+        if ($category && $category !== 'all') {
+            $myInboxLoansQuery->where('loan_category', $category);
+        }
+
         $myInboxLoans = $myInboxLoansQuery->latest()->get();
 
         // 2. Fetch all cooperative loans sitting in the pipeline
-        $allLoans = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents'])
-            ->latest()
-            ->paginate(15);
+        $allLoansQuery = \App\Models\LoanApplication::with(['borrower', 'approvals.actor', 'documents', 'loan']);
 
-        // Calculate queue metrics
+        if ($search) {
+            $allLoansQuery->where(function ($q) use ($search) {
+                $cleanedId = preg_replace('/[^0-9]/', '', $search);
+                if (!empty($cleanedId)) {
+                    $q->where('id', (int) $cleanedId);
+                }
+                $q->orWhereHas('borrower', function ($b) use ($search) {
+                    $b->where('name', 'like', "%{$search}%")
+                      ->orWhere('company_id', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        if ($stage && $stage !== 'all') {
+            $allLoansQuery->where('current_stage', $stage);
+        }
+
+        if ($status && $status !== 'all') {
+            if ($status === 'approved') {
+                $allLoansQuery->whereIn('status', ['approved', 'released']);
+            } else {
+                $allLoansQuery->where('status', $status);
+            }
+        }
+
+        if ($category && $category !== 'all') {
+            $allLoansQuery->where('loan_category', $category);
+        }
+
+        $allLoans = $allLoansQuery->latest()->paginate(15)->withQueryString();
+
+        // Calculate queue metrics (unfiltered total counts)
         $metrics = [
             'my_inbox' => $myInboxLoans->count(),
             'total_pending' => \App\Models\LoanApplication::where('status', 'pending')->count(),
-            'approved' => \App\Models\LoanApplication::where('status', 'approved')->count(),
+            'approved' => \App\Models\LoanApplication::whereIn('status', ['approved', 'released'])->count(),
             'rejected' => \App\Models\LoanApplication::where('status', 'rejected')->count(),
         ];
 
@@ -866,7 +953,27 @@ class AdminController extends Controller
             $loan->workflow_steps = $workflowService->getWorkflowDetails($loan);
         }
 
-        return view('admin.loan-approvals', compact('myInboxLoans', 'allLoans', 'metrics', 'myGroupSlugs'));
+        // Return AJAX JSON response if requested via dynamic fetch
+        if ($request->ajax()) {
+            return response()->json([
+                'inbox_html' => view('admin.partials.loan-approvals-inbox-rows', compact('myInboxLoans'))->render(),
+                'all_html' => view('admin.partials.loan-approvals-all-rows', compact('allLoans'))->render(),
+                'pagination_html' => $allLoans->hasPages() ? $allLoans->links()->render() : '',
+                'inbox_count' => $myInboxLoans->count(),
+                'all_count' => $allLoans->total(),
+            ]);
+        }
+
+        return view('admin.loan-approvals', compact(
+            'myInboxLoans', 
+            'allLoans', 
+            'metrics', 
+            'myGroupSlugs',
+            'search',
+            'stage',
+            'status',
+            'category'
+        ));
     }
 
     /**

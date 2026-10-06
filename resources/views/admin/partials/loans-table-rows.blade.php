@@ -1,92 +1,197 @@
 @forelse($loanProducts as $product)
-    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/10 transition-colors {{ !$product->is_active ? 'opacity-60 bg-slate-50/30' : '' }}">
-        <td class="px-6 py-4">
+    @php
+        $categoryKey = strtolower($product->category);
+        $categoryConfig = match($categoryKey) {
+            'regular' => [
+                'badge' => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200/60 dark:border-emerald-800/60',
+                'icon_bg' => 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-800/50',
+                'icon' => 'fa-solid fa-building-columns',
+            ],
+            'commodity' => [
+                'badge' => 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200/60 dark:border-blue-800/60',
+                'icon_bg' => 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-200/50 dark:border-blue-800/50',
+                'icon' => 'fa-solid fa-cart-shopping',
+            ],
+            'special', 'seasonal' => [
+                'badge' => 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/60',
+                'icon_bg' => 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200/50 dark:border-amber-800/50',
+                'icon' => 'fa-solid fa-star',
+            ],
+            'bonus_buyout' => [
+                'badge' => 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200/60 dark:border-purple-800/60',
+                'icon_bg' => 'bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border-purple-200/50 dark:border-purple-800/50',
+                'icon' => 'fa-solid fa-gift',
+            ],
+            'emergency', 'health' => [
+                'badge' => 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200/60 dark:border-rose-800/60',
+                'icon_bg' => 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200/50 dark:border-rose-800/50',
+                'icon' => 'fa-solid fa-kit-medical',
+            ],
+            default => [
+                'badge' => 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+                'icon_bg' => 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+                'icon' => 'fa-solid fa-folder',
+            ],
+        };
+    @endphp
+
+    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors duration-150 {{ !$product->is_active ? 'opacity-65 bg-slate-50/40 dark:bg-slate-950/30' : '' }}">
+        <!-- Product Name & Identity -->
+        <td class="px-6 py-4.5">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center font-bold text-slate-600 text-xs border border-slate-200/40 dark:border-slate-700/55 flex-shrink-0">
-                    <img src="https://img.icons8.com/?size=100&id=oWdlOvw3CmcM&format=png&color=000000" class="w-5 h-5 flex-shrink-0 dark:hidden" alt="Facility Icon">
-                    <img src="https://img.icons8.com/?size=100&id=oWdlOvw3CmcM&format=png&color=FFFFFF" class="w-5 h-5 flex-shrink-0 hidden dark:block" alt="Facility Icon">
+                <div class="w-10 h-10 rounded-xl {{ $categoryConfig['icon_bg'] }} border flex items-center justify-center font-bold text-sm shadow-2xs flex-shrink-0">
+                    <i class="{{ $categoryConfig['icon'] }}"></i>
                 </div>
-                <div>
-                    <h4 class="font-bold text-slate-955 dark:text-white text-xs">{{ $product->name }}</h4>
-                    <div class="flex items-center gap-1.5 mt-0.5">
-                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide border border-slate-250/30 dark:border-slate-850">{{ $product->category }}</span>
-                        @if(!$product->is_active)
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 font-bold border border-rose-100/30">Inactive</span>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm tracking-tight truncate">{{ $product->name }}</h4>
+                        @if($product->is_active)
+                            <span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/60">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>Active</span>
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+                                Inactive
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span class="text-[9px] px-2 py-0.5 rounded-md font-extrabold uppercase tracking-wider border {{ $categoryConfig['badge'] }}">
+                            {{ str_replace('_', ' ', $product->category) }}
+                        </span>
+
+                        @if($product->partner)
+                            <span class="text-[9px] px-2 py-0.5 rounded-md font-semibold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+                                Partner: {{ $product->partner }}
+                            </span>
                         @endif
                     </div>
                 </div>
             </div>
         </td>
-        <td class="px-6 py-4 font-bold text-slate-900 dark:text-white text-xs">
-            {{ is_numeric($product->loanable_amount) ? '₱' . number_format($product->loanable_amount, 2) : ($product->loanable_amount ?: 'N/A') }}
+
+        <!-- Borrowing Limit -->
+        <td class="px-6 py-4.5">
+            <div class="flex flex-col">
+                <span class="font-mono font-black text-slate-900 dark:text-white text-xs">
+                    {{ is_numeric($product->loanable_amount) ? '₱' . number_format((float)$product->loanable_amount, 2) : ($product->loanable_amount ?: 'Open') }}
+                </span>
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Borrowing Limit</span>
+            </div>
         </td>
-        <td class="px-6 py-4 font-mono text-xs">
+
+        <!-- Interest Rate Model -->
+        <td class="px-6 py-4.5">
             @if($product->hasCustomTerms())
                 @php $sortedTerms = $product->getSortedTerms(); @endphp
                 <div class="flex flex-col">
-                    <span class="inline-flex items-center gap-1 font-black text-emerald-600 dark:text-emerald-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        <span>Tiered Rates</span>
+                    <span class="inline-flex items-center gap-1 font-bold font-mono text-emerald-700 dark:text-emerald-400 text-xs">
+                        <i class="fa-solid fa-bolt text-emerald-500 text-[10px]"></i>
+                        <span>Tiered Matrix</span>
                     </span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-sans font-semibold">
-                        {{ number_format($sortedTerms[0]['interest_rate'], 2) }}% – {{ number_format(end($sortedTerms)['interest_rate'], 2) }}%
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
+                        {{ number_format($sortedTerms[0]['interest_rate'], 2) }}% – {{ number_format(end($sortedTerms)['interest_rate'], 2) }}% APR
                     </span>
                 </div>
             @else
-                <span class="font-black text-emerald-600 dark:text-emerald-400">
-                    {{ number_format($product->interest_rate, 2) }}%
-                </span>
+                <div class="flex flex-col">
+                    <span class="font-mono font-black text-slate-900 dark:text-white text-xs">
+                        {{ number_format($product->interest_rate, 2) }}%
+                    </span>
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Flat Rate APR</span>
+                </div>
             @endif
         </td>
-        <td class="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400 text-xs">
-            ₱{{ number_format($product->fixed_deposit, 2) }}
+
+        <!-- Required Share Capital -->
+        <td class="px-6 py-4.5">
+            <div class="flex flex-col">
+                <span class="font-mono font-bold text-slate-800 dark:text-slate-200 text-xs">
+                    ₱{{ number_format($product->fixed_deposit, 2) }}
+                </span>
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Share Capital</span>
+            </div>
         </td>
-        <td class="px-6 py-4 text-xs font-bold">
+
+        <!-- Tenure Options -->
+        <td class="px-6 py-4.5">
             @if($product->hasCustomTerms())
                 @php $sortedTerms = $product->getSortedTerms(); @endphp
                 <div class="flex flex-col">
-                    <span class="text-slate-900 dark:text-white font-bold">{{ count($sortedTerms) }} Tenures</span>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-normal">
-                        {{ implode(', ', array_map(fn($t) => $t['months'] . 'm', $sortedTerms)) }}
+                    <span class="font-bold text-slate-900 dark:text-white text-xs">{{ count($sortedTerms) }} Tenures</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate max-w-[140px]" title="{{ implode(', ', array_map(fn($t) => $t['months'] . ' mos', $sortedTerms)) }}">
+                        {{ implode(' · ', array_map(fn($t) => $t['months'] . 'm', $sortedTerms)) }}
                     </span>
                 </div>
             @else
-                <span class="text-slate-500 dark:text-slate-400">
-                    {{ $product->max_term_months ? $product->max_term_months . ' Mos' : 'N/A' }}
-                </span>
+                <div class="flex flex-col">
+                    <span class="font-bold text-slate-900 dark:text-white text-xs">
+                        {{ $product->max_term_months ? $product->max_term_months . ' Months' : 'Open Tenure' }}
+                    </span>
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Max Horizon</span>
+                </div>
             @endif
         </td>
-        <td class="px-6 py-4 text-xs">
-            <div class="flex flex-wrap gap-1">
+
+        <!-- Governance & Approval Chain -->
+        <td class="px-6 py-4.5">
+            <div class="flex flex-wrap gap-1.5 items-center">
                 @if($product->hrmd_approval)
-                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border border-amber-100/50 dark:border-amber-900/30 font-bold uppercase tracking-wider">HRMD Staff</span>
+                    <span class="inline-flex items-center gap-1 text-[9px] px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-bold border border-amber-200/60 dark:border-amber-800/60 uppercase">
+                        <span>HRMD</span>
+                    </span>
                 @endif
                 @if($product->comakers)
-                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30 font-bold uppercase tracking-wider">
-                        Co-Makers ({{ is_array($product->comakers) ? 'Matrix' : $product->comakers }})
+                    <span class="inline-flex items-center gap-1 text-[9px] px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-200/60 dark:border-indigo-800/60 uppercase">
+                        <span>Co-Makers: {{ is_array($product->comakers) ? 'Matrix' : $product->comakers }}</span>
                     </span>
+                @endif
+                @if(!$product->hrmd_approval && !$product->comakers)
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">Direct SAKO</span>
                 @endif
             </div>
         </td>
-        <td class="px-6 py-4 text-right">
-            <div class="inline-flex items-center justify-end gap-2">
-                <button type="button" class="btn-edit-loan-product p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors cursor-pointer" data-product="{{ json_encode($product) }}">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+
+        <!-- Row Actions -->
+        <td class="px-6 py-4.5 text-right">
+            <div class="inline-flex items-center justify-end gap-1.5">
+                <button type="button" 
+                    class="btn-edit-loan-product w-8 h-8 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 flex items-center justify-center" 
+                    data-product="{{ json_encode($product) }}" 
+                    title="Edit Loan Product">
+                    <i class="fa-solid fa-pen-to-square text-xs"></i>
                 </button>
-                <form action="{{ route('admin.loans.destroy', $product->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete/deactivate this loan product?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-455 hover:text-rose-600 hover:border-rose-300 dark:hover:border-rose-500 transition-colors cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
-                </form>
+                <button type="button" 
+                    class="btn-delete-loan-product w-8 h-8 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300 dark:hover:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 flex items-center justify-center"
+                    data-id="{{ $product->id }}"
+                    data-name="{{ $product->name }}"
+                    data-category="{{ ucfirst(str_replace('_', ' ', $product->category)) }}"
+                    data-rate="{{ $product->hasCustomTerms() ? 'Tiered Rates' : number_format($product->interest_rate, 2) . '%' }}"
+                    data-term="{{ $product->hasCustomTerms() ? count($product->getSortedTerms()) . ' Tenures' : ($product->max_term_months ? $product->max_term_months . ' Mos' : 'N/A') }}"
+                    title="Delete Loan Product">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
             </div>
         </td>
     </tr>
 @empty
     <tr>
-        <td colspan="7" class="px-6 py-12 text-center text-slate-400 dark:text-slate-500 italic">
-            No loan facilities matched the query.
+        <td colspan="7" class="px-6 py-16 text-center">
+            <div class="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3">
+                <div class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xl text-slate-400 dark:text-slate-500 shadow-2xs">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">No Loan Products Found</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+                    No loan products matched the current search query or active filter criteria.
+                </p>
+                <button type="button" class="mt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer inline-flex items-center gap-1.5" onclick="document.getElementById('btn-reset-filters')?.click()">
+                    <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
+                    <span>Clear all active filters</span>
+                </button>
+            </div>
         </td>
     </tr>
 @endforelse
