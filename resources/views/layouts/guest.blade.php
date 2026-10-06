@@ -10,6 +10,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('img/sako-logo-nobg.png') }}">
 
+    @include('partials.pwa-meta')
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,6 +297,7 @@
             });
         });
     </script>
+    <x-pwa-install-prompt />
     @stack('scripts')
 </body>
 </html>

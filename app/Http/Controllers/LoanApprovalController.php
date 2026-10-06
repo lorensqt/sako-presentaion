@@ -84,7 +84,7 @@ class LoanApprovalController extends Controller
                         \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\SecurityAlertMail($user->name));
                     } catch (\Throwable $e) {}
 
-                    return redirect()->route('login')->withErrors([
+                    return redirect('/')->withErrors([
                         'login_identifier' => 'Account signed out due to 3 consecutive failed PIN attempts during co-maker endorsement. A security alert email has been sent.'
                     ]);
                 }

@@ -126,6 +126,7 @@ class LoanApprovalTest extends TestCase
         // 1. First comaker approves. Should record approval but stage remains 'comakers'
         $response = $this->actingAs($comaker1)->post("/loans/{$application->id}/approve", [
             'remarks' => 'Approved by comaker 1',
+            'pin' => '123456',
         ]);
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -136,18 +137,77 @@ class LoanApprovalTest extends TestCase
         // 2. Try to approve again with same comaker. Should be blocked.
         $response2 = $this->actingAs($comaker1)->post("/loans/{$application->id}/approve", [
             'remarks' => 'Approving again',
+            'pin' => '123456',
         ]);
         $response2->assertSessionHas('error');
 
         // 3. Second comaker approves. Should advance stage to 'sako_staff'
         $response3 = $this->actingAs($comaker2)->post("/loans/{$application->id}/approve", [
             'remarks' => 'Approved by comaker 2',
+            'pin' => '123456',
         ]);
         $response3->assertRedirect();
         $response3->assertSessionHas('success');
 
         $application->refresh();
         $this->assertEquals('sako_staff', $application->current_stage);
+    }
+
+    /**
+     * Test co-maker endorsement requires a valid 6-digit security PIN.
+     */
+    public function test_comaker_endorsement_requires_valid_security_pin(): void
+    {
+        Mail::fake();
+
+        $borrower = $this->createUser('John Borrower');
+        $comaker = $this->createUser('Comaker PinTester');
+
+        $application = LoanApplication::create([
+            'user_id' => $borrower->id,
+            'loan_category' => 'health',
+            'loan_type' => 'sako_care',
+            'requested_amount' => 15000,
+            'current_stage' => 'comakers',
+            'status' => 'pending',
+            'form_data' => [
+                'term_months' => 12,
+                'comakers' => [$comaker->id],
+            ]
+        ]);
+
+        // 1. Missing PIN fails validation
+        $missingPinResponse = $this->actingAs($comaker)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Endorsing without pin',
+        ]);
+        $missingPinResponse->assertSessionHasErrors(['pin']);
+
+        // 2. Incorrect PIN increments attempts
+        $wrongPinResponse = $this->actingAs($comaker)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Endorsing with wrong pin',
+            'pin' => '999999',
+        ]);
+        $wrongPinResponse->assertSessionHas('error');
+        $comaker->refresh();
+        $this->assertEquals(1, $comaker->pin_attempts);
+
+        // 3. Second wrong attempt
+        $wrongPinResponse2 = $this->actingAs($comaker)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Endorsing with wrong pin attempt 2',
+            'pin' => '999999',
+        ]);
+        $wrongPinResponse2->assertSessionHas('error');
+        $comaker->refresh();
+        $this->assertEquals(2, $comaker->pin_attempts);
+
+        // 4. Third wrong attempt triggers logout and lockout security alert
+        $wrongPinResponse3 = $this->actingAs($comaker)->post("/loans/{$application->id}/approve", [
+            'remarks' => 'Endorsing with wrong pin attempt 3',
+            'pin' => '999999',
+        ]);
+        $wrongPinResponse3->assertRedirect('/');
+        $this->assertGuest();
+        Mail::assertSent(\App\Mail\SecurityAlertMail::class);
     }
 
     /**
