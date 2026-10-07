@@ -13,6 +13,17 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Public Membership Form Download
+Route::get('/downloads/membership-registration-form', function () {
+    $filePath = public_path('forms/membership-registration-form-2026.pdf');
+    if (!file_exists($filePath)) {
+        abort(404, 'Registration form not found.');
+    }
+    return response()->download($filePath, 'ML-Sako-Membership-Registration-Form-2026.pdf', [
+        'Content-Type' => 'application/pdf',
+    ]);
+})->name('download.membership-form');
+
 Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 

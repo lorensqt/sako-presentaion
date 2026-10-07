@@ -785,7 +785,7 @@
                                 </span>
                                 <h3 class="text-2xl sm:text-3xl font-bold serif-font text-white">Join the Cooperative Online</h3>
                                 <p class="text-xs text-emerald-200 leading-relaxed">
-                                    Skip the long queues and Seminars. Fill out our simplified online registration form and set up your dynamic ledger account in just under 5 minutes.
+                                    Skip the long queues and Seminars. Fill out our simplified online registration form and set up your dynamic ledger account in just under 5 minutes. (COMING SOON)
                                 </p>
                             </div>
 
@@ -811,13 +811,25 @@
                                 <div class="pt-4 text-center">
                                     <p class="text-xs font-semibold text-emerald-300">You are logged in as an active member.</p>
                                     <p class="text-[10px] text-emerald-400/80 mt-1">Explore your portal details or apply for savings & loans from your dashboard.</p>
+                                    <div class="mt-4">
+                                        <a href="{{ route('download.membership-form') }}" download="ML-Sako-Membership-Registration-Form-2026.pdf"
+                                            class="inline-flex items-center justify-center gap-2 bg-emerald-700/60 hover:bg-emerald-700 text-white border border-emerald-400/30 font-bold text-xs py-2.5 px-4 rounded-xl transition-all">
+                                            <i class="fa-solid fa-file-pdf text-emerald-300"></i>
+                                            <span>Download Registration Form</span>
+                                        </a>
+                                    </div>
                                 </div>
                             @else
-                                <div class="pt-4">
+                                <div class="pt-4 space-y-3">
                                     <button type="button"
-                                        class="trigger-pmes-modal w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-emerald-950/40 transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none">
-                                        Apply for Membership Now &rarr;
+                                        class="trigger-pmes-modal w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm py-4 rounded-xl shadow-lg shadow-emerald-950/40 transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none cursor-pointer">
+                                        <span>Apply for Membership Now</span> &rarr;
                                     </button>
+                                    <a href="{{ route('download.membership-form') }}" download="ML-Sako-Membership-Registration-Form-2026.pdf"
+                                        class="w-full inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-emerald-100 hover:text-white border border-emerald-400/30 font-bold text-xs py-3 px-4 rounded-xl transition-all duration-200 cursor-pointer">
+                                        <i class="fa-solid fa-file-pdf text-emerald-300"></i>
+                                        <span>Download Registration Form (PDF)</span>
+                                    </a>
                                 </div>
                             @endauth
                         </div>
@@ -1088,11 +1100,19 @@
                     <div class="relative">
                         <!-- Dot -->
                         <div class="absolute -left-[41px] top-0.5 w-6 h-6 rounded-full bg-emerald-50 border-4 border-emerald-500 flex items-center justify-center font-bold text-emerald-700 text-xs shadow-sm">2</div>
-                        <div class="space-y-1">
-                            <h4 class="text-sm font-bold text-slate-900">Submit Your Physical Form & Share Capital Contribution</h4>
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-bold text-slate-900">Submit Your Physical Form &amp; Share Capital Contribution</h4>
                             <p class="text-xs text-slate-500 leading-relaxed">
-                                Secure your printed Membership Form from our office or download it digitally. Submit the completed form along with your initial share capital contribution to configure your personal cooperative pool.
+                                Secure your printed Membership Form from our office or download it directly below. Submit the completed form along with your initial share capital contribution to configure your personal cooperative pool.
                             </p>
+                            <div class="pt-1">
+                                <a href="{{ route('download.membership-form') }}" download="ML-Sako-Membership-Registration-Form-2026.pdf"
+                                    class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 border border-emerald-200/80 font-bold text-xs transition-all shadow-2xs group">
+                                    <i class="fa-solid fa-file-pdf text-emerald-600 group-hover:scale-110 transition-transform"></i>
+                                    <span>Download Registration Form (PDF)</span>
+                                    <i class="fa-solid fa-arrow-down text-[10px] text-emerald-500 ml-0.5"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -1124,8 +1144,13 @@
             </div>
 
             <!-- Footer -->
-            <div class="p-6 bg-slate-50 border-t border-slate-100 text-center flex-shrink-0 flex items-center justify-end gap-3 rounded-b-[2.5rem]">
-                <button type="button" id="close-pmes-modal-btn" class="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-100 transition-all outline-none">
+            <div class="p-6 bg-slate-50 border-t border-slate-100 flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-b-[2.5rem]">
+                <a href="{{ route('download.membership-form') }}" download="ML-Sako-Membership-Registration-Form-2026.pdf"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all outline-none cursor-pointer">
+                    <i class="fa-solid fa-download text-xs"></i>
+                    <span>Download Registration Form</span>
+                </a>
+                <button type="button" id="close-pmes-modal-btn" class="w-full sm:w-auto px-5 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-100 transition-all outline-none cursor-pointer">
                     Close Guide
                 </button>
             </div>
