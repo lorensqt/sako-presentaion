@@ -344,7 +344,7 @@
         </aside>
 
         <!-- Mobile Sidebar / Off-canvas Menu Overlay -->
-        <div id="mobile-sidebar" class="fixed inset-0 z-40 hidden md:hidden no-print">
+        <div id="mobile-sidebar" class="fixed inset-0 z-50 hidden md:hidden no-print">
             <div id="mobile-sidebar-backdrop"
                 class="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm"></div>
             <nav id="mobile-sidebar-panel"
@@ -499,7 +499,7 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Topbar Header -->
             <header
-                class="h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 flex-shrink-0 z-10 no-print">
+                class="relative h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 flex-shrink-0 z-40 no-print">
                 <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 sm:flex-initial">
                     <!-- Hamburger button for mobile -->
                     <button id="mobile-sidebar-toggle"
@@ -540,7 +540,7 @@
                 <!-- Right Toolbar -->
                 <div class="flex items-center gap-2 flex-shrink-0">
                     <!-- Profile Dropdown Wrapper -->
-                    <div class="relative" id="profile-dropdown-wrapper">
+                    <div class="relative z-50" id="profile-dropdown-wrapper">
                         <!-- Profile Dropdown Trigger -->
                         <button id="profile-dropdown-trigger" type="button"
                             class="group flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">

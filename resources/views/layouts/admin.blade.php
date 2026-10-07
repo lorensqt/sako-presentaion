@@ -436,7 +436,7 @@
         </aside>
 
         <!-- Mobile Sidebar / Off-canvas Menu Overlay -->
-        <div id="mobile-sidebar" class="fixed inset-0 z-40 hidden lg:hidden">
+        <div id="mobile-sidebar" class="fixed inset-0 z-50 hidden lg:hidden">
             <div id="mobile-sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm"></div>
             <nav id="mobile-sidebar-panel" class="fixed top-0 bottom-0 left-0 w-64 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
                 <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200/80 dark:border-slate-700/80">
@@ -660,7 +660,7 @@
         <!-- Main Window Container -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Topbar Header -->
-            <header class="h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between px-4 sm:px-6 flex-shrink-0 z-10">
+            <header class="relative h-16 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between px-4 sm:px-6 flex-shrink-0 z-40">
                 <div class="flex items-center gap-3">
                     <!-- Hamburger button for mobile -->
                     <button id="mobile-sidebar-toggle" class="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-700/50 lg:hidden transition-all">
@@ -703,7 +703,7 @@
                     @yield('header_actions')
 
                     <!-- Profile Dropdown Wrapper -->
-                    <div class="relative" id="profile-dropdown-wrapper">
+                    <div class="relative z-50" id="profile-dropdown-wrapper">
                         <!-- Profile Dropdown Trigger -->
                         <button id="profile-dropdown-trigger" type="button"
                             class="group flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
