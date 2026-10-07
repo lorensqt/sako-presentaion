@@ -162,6 +162,12 @@ class MemberController extends Controller
 
         $user = Auth::user();
         if (is_null($user->pin)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Security PIN is not configured. Please setup your PIN in settings first.'
+                ], 422);
+            }
             return back()->withErrors(['pin' => 'Security PIN is not configured. Please setup your PIN first.'])->withInput();
         }
 
@@ -187,13 +193,32 @@ class MemberController extends Controller
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'locked_out' => true,
+                        'redirect' => '/',
+                        'error' => 'Account signed out due to 3 consecutive failed PIN attempts during withdrawal authorization. A security alert email has been sent.'
+                    ], 403);
+                }
+
                 return redirect('/')->withErrors([
                     'login_identifier' => 'Account signed out due to 3 consecutive failed PIN attempts during withdrawal authorization. A security alert email has been sent.'
                 ]);
             }
 
             $remaining = 3 - $user->pin_attempts;
-            return back()->withErrors(['pin' => "Incorrect security PIN. You have {$remaining} attempts remaining."])->withInput();
+            $errorMsg = "Incorrect security PIN. You have {$remaining} attempt" . ($remaining === 1 ? '' : 's') . " remaining.";
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'remaining_attempts' => $remaining,
+                    'error' => $errorMsg
+                ], 422);
+            }
+
+            return back()->withErrors(['pin' => $errorMsg])->withInput();
         }
 
         // Reset attempts if correct
@@ -213,6 +238,14 @@ class MemberController extends Controller
         ]);
 
         AuditLogger::log('withdrawal_requested', "Member " . auth()->user()->name . " filed a withdrawal request for ₱" . number_format($withdrawal->amount, 2) . " via {$withdrawal->channel}.", 'info', $withdrawal);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Your withdrawal request has been submitted and is currently pending review.',
+                'withdrawal' => $withdrawal
+            ]);
+        }
 
         return redirect()->route('member.withdrawals')->with([
             'success' => 'Your withdrawal request has been submitted and is currently pending review.',

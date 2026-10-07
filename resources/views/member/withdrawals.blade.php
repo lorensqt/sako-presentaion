@@ -10,6 +10,54 @@
     .btn-preset-amount, .cancel-btn {
         cursor: pointer !important;
     }
+
+    /* Dark Mode SweetAlert Validation Message & PIN Completion Styles */
+    .dark .swal2-validation-message {
+        background: #0f172a !important; /* slate-900 */
+        color: #f87171 !important; /* rose-400 */
+        border: 1px solid #334155 !important; /* slate-700 */
+        border-radius: 0.875rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        padding: 0.75rem 1rem !important;
+        margin-top: 0.75rem !important;
+    }
+
+    /* SweetAlert Action Buttons Spacing & Separation */
+    .swal2-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1rem !important; /* Clean breathing room between Authorize and Cancel buttons */
+        margin-top: 1.5rem !important;
+        width: 100% !important;
+    }
+
+    .swal2-actions button {
+        margin: 0 !important; /* Eliminate cramped default Swal margins */
+    }
+
+    .swal-pin-complete {
+        border-color: #10b981 !important;
+        background-color: rgba(16, 185, 129, 0.12) !important;
+        color: #10b981 !important;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3) !important;
+        transform: scale(1.04);
+    }
+
+    @keyframes pinShake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-6px); }
+        40%, 80% { transform: translateX(6px); }
+    }
+    .animate-shake {
+        animation: pinShake 0.4s ease-in-out !important;
+    }
+
+    .swal-pin-digit-input {
+        -webkit-text-security: disc;
+        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 </style>
 @endpush
 
@@ -335,7 +383,7 @@
                                     </span>
                                     <form action="{{ route('member.withdrawals.cancel', $w->id) }}" method="POST" class="inline cancel-withdrawal-form m-0">
                                         @csrf
-                                        <button type="submit" class="cancel-btn text-[10px] font-bold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer">
+                                        <button type="submit" class="cancel-btn text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer">
                                             Cancel
                                         </button>
                                     </form>
@@ -545,32 +593,54 @@
                 }
 
                 const channelDisplay = channel === "MCash" ? `MCash (${mcashAcc})` : "Payment Solution";
+                let autoCheckTriggered = false;
+                let resetPinInputsFn = null;
 
                 if (window.MLSAKOAlert) {
                     MLSAKOAlert.fire({
                         icon: 'question',
-                        title: 'Confirm Withdrawal',
+                        title: 'Authorize Payout',
                         html: `
                             <div class="space-y-4 text-center">
-                                <div class="space-y-1">
-                                    <p class="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                                        Confirm payout request of <strong class="text-slate-900 dark:text-white font-mono font-bold">₱${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong>?
-                                    </p>
-                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                                        Channel: ${channelDisplay}
-                                    </span>
+                                <!-- Payout Details Inset Box -->
+                                <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 space-y-2 text-center shadow-xs">
+                                    <div class="flex items-center justify-between text-xs pb-1.5 border-b border-slate-200/60 dark:border-slate-700/60">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">Payout Request</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/50 font-mono">
+                                            <i class="fa-solid fa-wallet text-[9px]"></i>
+                                            Savings Pool
+                                        </span>
+                                    </div>
+                                    <div class="flex items-baseline justify-center gap-1 text-slate-900 dark:text-white">
+                                        <span class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">₱</span>
+                                        <span class="text-2xl font-black font-mono tracking-tight">${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                    </div>
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-semibold bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-300">
+                                        <i class="fa-solid fa-route text-slate-400 text-[10px]"></i>
+                                        <span>Channel:</span>
+                                        <strong class="text-slate-900 dark:text-white font-bold">${channelDisplay}</strong>
+                                    </div>
                                 </div>
-                                <div class="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-                                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                                        Enter 6-Digit Security PIN
-                                    </p>
-                                    <div class="flex justify-center gap-1.5" id="swal-pin-inputs-container">
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 h-11 text-center text-lg font-bold bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-150" required>
+
+                                <!-- Security PIN Verification Dock -->
+                                <div class="space-y-2 pt-1">
+                                    <div class="flex items-center justify-between px-1">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400 text-[10px]"></i>
+                                            <span>Security PIN Verification</span>
+                                        </span>
+                                        <span id="swal-pin-status-hint" class="text-[10px] font-bold text-slate-400 dark:text-slate-500 transition-colors">
+                                            6 digits required
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-center gap-1.5 sm:gap-2" id="swal-pin-inputs-container">
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
                                     </div>
                                     <input type="hidden" id="swal-hidden-pin">
                                 </div>
@@ -582,10 +652,78 @@
                         iconColor: '#10b981',
                         didOpen: () => {
                             const container = document.getElementById('swal-pin-inputs-container');
+                            const hidden = document.getElementById('swal-hidden-pin');
+                            const statusHint = document.getElementById('swal-pin-status-hint');
+                            const confirmBtn = Swal.getConfirmButton();
+
+                            // Initialize confirm button in disabled state
+                            if (confirmBtn) {
+                                confirmBtn.disabled = true;
+                                confirmBtn.classList.add('opacity-40', 'cursor-not-allowed', 'filter', 'grayscale');
+                                confirmBtn.innerHTML = '<i class="fa-solid fa-lock mr-1.5 text-xs"></i><span>Enter 6-Digit PIN</span>';
+                            }
+
                             if (container) {
-                                const inputs = container.querySelectorAll('input');
-                                const hidden = document.getElementById('swal-hidden-pin');
-                                
+                                const inputs = Array.from(container.querySelectorAll('.swal-pin-digit-input'));
+
+                                const setPinsCompleteState = (isComplete) => {
+                                    if (isComplete) {
+                                        inputs.forEach(inp => {
+                                            inp.classList.add('swal-pin-complete');
+                                        });
+                                        if (statusHint) {
+                                            statusHint.innerHTML = '<span class="text-emerald-600 dark:text-emerald-400 font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> PIN Complete • Authorizing...</span>';
+                                        }
+                                        if (confirmBtn) {
+                                            confirmBtn.disabled = false;
+                                            confirmBtn.classList.remove('opacity-40', 'cursor-not-allowed', 'filter', 'grayscale');
+                                            confirmBtn.classList.add('animate-pulse', 'ring-2', 'ring-emerald-500/50');
+                                            confirmBtn.innerHTML = '<i class="fa-solid fa-check mr-1.5 text-xs"></i><span>Authorize Request</span>';
+                                        }
+                                    } else {
+                                        inputs.forEach(inp => {
+                                            inp.classList.remove('swal-pin-complete');
+                                        });
+                                        if (statusHint) {
+                                            const count = inputs.filter(i => i.value).length;
+                                            statusHint.textContent = count > 0 ? `${count} of 6 digits entered` : '6 digits required';
+                                            statusHint.className = 'text-[10px] font-bold text-slate-400 dark:text-slate-500 transition-colors';
+                                        }
+                                        if (confirmBtn) {
+                                            confirmBtn.disabled = true;
+                                            confirmBtn.classList.add('opacity-40', 'cursor-not-allowed', 'filter', 'grayscale');
+                                            confirmBtn.classList.remove('animate-pulse', 'ring-2', 'ring-emerald-500/50');
+                                            confirmBtn.innerHTML = '<i class="fa-solid fa-lock mr-1.5 text-xs"></i><span>Enter 6-Digit PIN</span>';
+                                        }
+                                    }
+                                };
+
+                                resetPinInputsFn = () => setPinsCompleteState(false);
+
+                                const updateVal = () => {
+                                    let fullVal = '';
+                                    inputs.forEach(inp => fullVal += inp.value);
+                                    hidden.value = fullVal;
+
+                                    if (fullVal.length === 6) {
+                                        setPinsCompleteState(true);
+                                        if (!autoCheckTriggered) {
+                                            autoCheckTriggered = true;
+                                            // Smooth auto-check confirmation after 240ms feedback
+                                            setTimeout(() => {
+                                                if (hidden.value.length === 6) {
+                                                    Swal.clickConfirm();
+                                                } else {
+                                                    autoCheckTriggered = false;
+                                                }
+                                            }, 240);
+                                        }
+                                    } else {
+                                        autoCheckTriggered = false;
+                                        setPinsCompleteState(false);
+                                    }
+                                };
+
                                 inputs.forEach((input, index) => {
                                     input.addEventListener('input', () => {
                                         input.value = input.value.replace(/[^0-9]/g, '');
@@ -605,6 +743,11 @@
                                                 input.value = '';
                                             }
                                             updateVal();
+                                        } else if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            if (hidden.value.length === 6) {
+                                                Swal.clickConfirm();
+                                            }
                                         }
                                     });
 
@@ -624,38 +767,103 @@
                                     });
                                 });
 
-                                const updateVal = () => {
-                                    let fullVal = '';
-                                    inputs.forEach(inp => fullVal += inp.value);
-                                    hidden.value = fullVal;
-                                };
-
                                 setTimeout(() => {
                                     if (inputs[0]) inputs[0].focus();
                                 }, 150);
                             }
                         },
-                        preConfirm: () => {
+                        preConfirm: async () => {
                             const pinVal = document.getElementById('swal-hidden-pin').value;
-                            if (pinVal.length !== 6) {
-                                Swal.showValidationMessage('Please enter your 6-digit security PIN.');
+                            if (!pinVal || pinVal.length !== 6) {
+                                Swal.showValidationMessage('Please enter your complete 6-digit security PIN.');
                                 return false;
                             }
-                            return pinVal;
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('withdrawal-pin-input').value = result.value;
-                            form.dataset.confirmed = "true";
 
-                            // Activate loading state
-                            if (btnSubmit) {
-                                btnSubmit.disabled = true;
-                                btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Processing...</span>';
-                                btnSubmit.classList.add("opacity-80", "cursor-wait");
+                            const confirmBtn = Swal.getConfirmButton();
+                            const statusHint = document.getElementById('swal-pin-status-hint');
+                            const container = document.getElementById('swal-pin-inputs-container');
+                            const inputs = container ? Array.from(container.querySelectorAll('.swal-pin-digit-input')) : [];
+
+                            // Verifying state on button and hint
+                            if (confirmBtn) {
+                                confirmBtn.disabled = true;
+                                confirmBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1.5 text-xs"></i><span>Verifying PIN...</span>';
+                            }
+                            if (statusHint) {
+                                statusHint.innerHTML = '<span class="text-emerald-600 dark:text-emerald-400 font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-notch fa-spin text-[10px]"></i> Validating PIN...</span>';
                             }
 
-                            form.submit();
+                            const formData = new FormData(form);
+                            formData.set('pin', pinVal);
+
+                            try {
+                                const response = await fetch(form.action, {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || form.querySelector('input[name="_token"]')?.value
+                                    }
+                                });
+
+                                const data = await response.json();
+
+                                if (!response.ok || !data.success) {
+                                    // Handle lockout redirect
+                                    if (data.locked_out && data.redirect) {
+                                        window.location.href = data.redirect;
+                                        return false;
+                                    }
+
+                                    // Extract error message
+                                    const errMsg = data.error || (data.errors ? Object.values(data.errors).flat()[0] : 'Authentication failed. Please verify your PIN.');
+                                    Swal.showValidationMessage(errMsg);
+
+                                    // Visual feedback: Shake & highlight inputs in rose
+                                    inputs.forEach(inp => {
+                                        inp.classList.remove('swal-pin-complete');
+                                        inp.classList.add('border-rose-500', 'text-rose-600', 'dark:text-rose-400', 'bg-rose-50/60', 'dark:bg-rose-950/40', 'animate-shake');
+                                    });
+
+                                    // Smooth in-place reset and refocus first cell
+                                    setTimeout(() => {
+                                        inputs.forEach(inp => {
+                                            inp.value = '';
+                                            inp.classList.remove('border-rose-500', 'text-rose-600', 'dark:text-rose-400', 'bg-rose-50/60', 'dark:bg-rose-950/40', 'animate-shake');
+                                        });
+                                        const hidden = document.getElementById('swal-hidden-pin');
+                                        if (hidden) hidden.value = '';
+                                        autoCheckTriggered = false;
+                                        if (resetPinInputsFn) resetPinInputsFn();
+                                        if (inputs[0]) inputs[0].focus();
+                                    }, 450);
+
+                                    return false;
+                                }
+
+                                return data;
+                            } catch (err) {
+                                Swal.showValidationMessage('Network connection error. Please try again.');
+                                if (confirmBtn) {
+                                    confirmBtn.disabled = false;
+                                    confirmBtn.innerHTML = '<i class="fa-solid fa-check mr-1.5 text-xs"></i><span>Authorize Request</span>';
+                                }
+                                autoCheckTriggered = false;
+                                return false;
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value?.success) {
+                            MLSAKOAlert.fire({
+                                icon: 'success',
+                                title: 'Withdrawal Filed',
+                                text: result.value.message || 'Your withdrawal request has been submitted and is currently pending review.',
+                                confirmButtonText: 'Understood',
+                                iconColor: '#10b981'
+                            }).then(() => {
+                                window.location.reload();
+                            });
                         }
                     });
                 } else {

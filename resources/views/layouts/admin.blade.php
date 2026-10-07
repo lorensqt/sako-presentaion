@@ -966,6 +966,7 @@
                     popup: 'rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans',
                     title: 'text-base font-extrabold text-slate-900 dark:text-white tracking-tight pt-2',
                     htmlContainer: 'text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed mt-2',
+                    actions: 'flex items-center justify-center gap-3.5 sm:gap-4 mt-6 w-full',
                     confirmButton: 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-500/10 outline-none',
                     cancelButton: 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold px-6 py-3 rounded-xl transition-all border border-slate-200 dark:border-slate-700 outline-none'
                 },
