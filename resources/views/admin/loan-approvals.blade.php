@@ -800,6 +800,49 @@
                 const btnReject = document.getElementById("btn-action-reject");
                 const btnReturn = document.getElementById("btn-action-return");
 
+                const approveSpinner = document.getElementById("btn-action-approve-spinner");
+                const approveIcon = document.getElementById("btn-action-approve-icon");
+                const approveText = document.getElementById("btn-action-approve-text");
+
+                const rejectSpinner = document.getElementById("btn-action-reject-spinner");
+                const rejectIcon = document.getElementById("btn-action-reject-icon");
+                const rejectText = document.getElementById("btn-action-reject-text");
+
+                const returnSpinner = document.getElementById("btn-action-return-spinner");
+                const returnIcon = document.getElementById("btn-action-return-icon");
+                const returnText = document.getElementById("btn-action-return-text");
+
+                // Reset all action buttons & close triggers
+                [btnApprove, btnReject, btnReturn].forEach(btn => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove("opacity-75", "cursor-wait");
+                    }
+                });
+                document.querySelectorAll(".modal-close").forEach(c => {
+                    c.disabled = false;
+                });
+
+                if (approveSpinner) approveSpinner.classList.add("hidden");
+                if (approveIcon) approveIcon.classList.remove("hidden");
+                if (rejectSpinner) rejectSpinner.classList.add("hidden");
+                if (rejectIcon) rejectIcon.classList.remove("hidden");
+                if (returnSpinner) returnSpinner.classList.add("hidden");
+                if (returnIcon) returnIcon.classList.remove("hidden");
+
+                const isReleasing = loan.current_stage === 'releasing_officer';
+
+                if (approveText) {
+                    approveText.textContent = isReleasing ? "Finalize & Disburse Loan" : "Sign & Approve";
+                }
+                if (approveIcon) {
+                    approveIcon.innerHTML = isReleasing
+                        ? '<i class="fa-solid fa-money-bill-transfer text-emerald-100 group-hover:scale-110 transition-transform duration-200"></i>'
+                        : '<svg class="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+                }
+                if (rejectText) rejectText.textContent = "Reject Application";
+                if (returnText) returnText.textContent = "Return Application";
+
                 if (['sako_staff', 'hrmd_staff'].includes(loan.current_stage)) {
                     btnReturn.classList.remove("hidden");
                 } else {
@@ -848,18 +891,80 @@
                         return;
                     }
 
+                    const isReleasing = loan.current_stage === 'releasing_officer';
+
                     alertInstance.fire({
                         icon: 'question',
-                        title: 'Confirm Signature',
-                        text: loan.current_stage === 'releasing_officer' 
+                        title: isReleasing ? 'Confirm Disbursement' : 'Confirm Signature',
+                        text: isReleasing 
                             ? 'Are you sure you want to sign off and finalize loan disbursement with the attached Ledger & Schedule?' 
                             : 'Are you sure you want to sign and approve this loan facility application?',
                         showCancelButton: true,
-                        confirmButtonText: loan.current_stage === 'releasing_officer' ? 'Yes, Sign & Disburse' : 'Yes, Sign & Approve',
+                        confirmButtonText: isReleasing ? 'Yes, Sign & Disburse' : 'Yes, Sign & Approve',
                         cancelButtonText: 'Cancel',
                         iconColor: '#10b981'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            // 1. Lock all controls to prevent duplicate submissions
+                            [btnApprove, btnReject, btnReturn].forEach(btn => {
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.classList.add("cursor-wait");
+                                }
+                            });
+                            btnApprove.classList.add("opacity-75");
+                            document.querySelectorAll(".modal-close").forEach(c => {
+                                c.disabled = true;
+                            });
+
+                            // 2. Button Micro-Loading State
+                            if (approveSpinner) approveSpinner.classList.remove("hidden");
+                            if (approveIcon) approveIcon.classList.add("hidden");
+                            if (approveText) {
+                                approveText.textContent = isReleasing ? "Disbursing & Finalizing..." : "Signing & Approving...";
+                            }
+
+                            // 3. Macro Fullscreen/Modal Loading Overlay
+                            if (alertInstance) {
+                                alertInstance.fire({
+                                    title: isReleasing ? 'Disbursing Loan & Archiving Ledger...' : 'Signing & Processing Approval...',
+                                    html: isReleasing ? `
+                                        <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                            <div class="relative w-16 h-16 flex items-center justify-center">
+                                                <div class="w-16 h-16 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+                                                <span class="absolute text-xl"><i class="fa-solid fa-money-bill-wave text-emerald-600 dark:text-emerald-400"></i></span>
+                                            </div>
+                                            <div class="space-y-1.5 text-center">
+                                                <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                                    Uploading General Ledger &amp; Payment Schedule PDFs...
+                                                </p>
+                                                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                                    Calculating financial amortizations, executing disbursement, and dispatching notification email to the borrower. Please do not close or refresh this page.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                            <div class="relative w-16 h-16 flex items-center justify-center">
+                                                <div class="w-16 h-16 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+                                                <span class="absolute text-xl"><i class="fa-solid fa-file-signature text-emerald-600 dark:text-emerald-400"></i></span>
+                                            </div>
+                                            <div class="space-y-1.5 text-center">
+                                                <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                                    Recording cryptographic stage approval...
+                                                </p>
+                                                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                                    Advancing loan application to the next sequential verification pipeline. Please wait a moment.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    `,
+                                    showConfirmButton: false,
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                });
+                            }
+
                             formAction.action = `/loans/${loan.id}/approve`;
                             formAction.submit();
                         }
@@ -891,6 +996,46 @@
                         iconColor: '#f43f5e'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            [btnApprove, btnReject, btnReturn].forEach(btn => {
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.classList.add("cursor-wait");
+                                }
+                            });
+                            btnReject.classList.add("opacity-75");
+                            document.querySelectorAll(".modal-close").forEach(c => {
+                                c.disabled = true;
+                            });
+
+                            if (rejectSpinner) rejectSpinner.classList.remove("hidden");
+                            if (rejectIcon) rejectIcon.classList.add("hidden");
+                            if (rejectText) rejectText.textContent = "Declining Application...";
+
+                            if (alertInstance) {
+                                alertInstance.fire({
+                                    title: 'Processing Rejection...',
+                                    html: `
+                                        <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                            <div class="relative w-16 h-16 flex items-center justify-center">
+                                                <div class="w-16 h-16 rounded-full border-4 border-rose-500/20 border-t-rose-500 animate-spin"></div>
+                                                <span class="absolute text-xl"><i class="fa-solid fa-ban text-rose-600 dark:text-rose-400"></i></span>
+                                            </div>
+                                            <div class="space-y-1.5 text-center">
+                                                <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                                    Recording rejection &amp; terminating workflow...
+                                                </p>
+                                                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                                    Archiving remarks in audit log. Please wait a moment.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    `,
+                                    showConfirmButton: false,
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                });
+                            }
+
                             formAction.action = `/loans/${loan.id}/reject`;
                             formAction.submit();
                         }
@@ -922,6 +1067,46 @@
                         iconColor: '#f59e0b'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            [btnApprove, btnReject, btnReturn].forEach(btn => {
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.classList.add("cursor-wait");
+                                }
+                            });
+                            btnReturn.classList.add("opacity-75");
+                            document.querySelectorAll(".modal-close").forEach(c => {
+                                c.disabled = true;
+                            });
+
+                            if (returnSpinner) returnSpinner.classList.remove("hidden");
+                            if (returnIcon) returnIcon.classList.add("hidden");
+                            if (returnText) returnText.textContent = "Returning Application...";
+
+                            if (alertInstance) {
+                                alertInstance.fire({
+                                    title: 'Returning Application...',
+                                    html: `
+                                        <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                            <div class="relative w-16 h-16 flex items-center justify-center">
+                                                <div class="w-16 h-16 rounded-full border-4 border-amber-500/20 border-t-amber-500 animate-spin"></div>
+                                                <span class="absolute text-xl"><i class="fa-solid fa-arrow-rotate-left text-amber-600 dark:text-amber-400"></i></span>
+                                            </div>
+                                            <div class="space-y-1.5 text-center">
+                                                <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                                    Returning loan application for corrections...
+                                                </p>
+                                                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                                    Sending correction feedback to member and resetting queue status. Please wait a moment.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    `,
+                                    showConfirmButton: false,
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                });
+                            }
+
                             formAction.action = `/loans/${loan.id}/return`;
                             formAction.submit();
                         }

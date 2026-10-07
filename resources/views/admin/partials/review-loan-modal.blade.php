@@ -255,22 +255,31 @@
 
                         <div class="flex flex-col gap-2.5 pt-1">
                             <button type="submit" id="btn-action-approve" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-550 hover:to-teal-550 text-white font-extrabold text-xs px-6 py-3.5 rounded-xl shadow-lg shadow-emerald-600/10 hover:shadow-xl hover:shadow-emerald-600/20 dark:shadow-emerald-950/45 border border-emerald-500/10 transition-all duration-300 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 group">
-                                <svg class="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                Sign & Approve
+                                <span id="btn-action-approve-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                <span id="btn-action-approve-icon" class="flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </span>
+                                <span id="btn-action-approve-text">Sign & Approve</span>
                             </button>
                             <button type="submit" id="btn-action-reject" class="w-full bg-rose-50/55 hover:bg-rose-100/75 dark:bg-rose-950/15 text-rose-700 dark:text-rose-400 border border-rose-200/50 dark:border-rose-900/30 font-extrabold text-xs px-5 py-3 rounded-xl transition-all duration-300 active:scale-[0.98] cursor-pointer shadow-3xs hover:shadow flex items-center justify-center gap-2 group">
-                                <svg class="w-4 h-4 text-rose-500 group-hover:scale-115 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                Reject Application
+                                <span id="btn-action-reject-spinner" class="hidden w-4 h-4 border-2 border-rose-700/30 dark:border-rose-400/30 border-t-rose-700 dark:border-t-rose-400 rounded-full animate-spin"></span>
+                                <span id="btn-action-reject-icon" class="flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-rose-500 group-hover:scale-115 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </span>
+                                <span id="btn-action-reject-text">Reject Application</span>
                             </button>
                             <button type="submit" id="btn-action-return" class="w-full bg-amber-50/55 hover:bg-amber-100/75 dark:bg-amber-950/15 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-900/30 font-extrabold text-xs px-5 py-3 rounded-xl transition-all duration-300 active:scale-[0.98] cursor-pointer shadow-3xs hover:shadow hidden flex items-center justify-center gap-2 group">
-                                <svg class="w-4 h-4 text-amber-500 group-hover:rotate-45 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-                                </svg>
-                                Return Application
+                                <span id="btn-action-return-spinner" class="hidden w-4 h-4 border-2 border-amber-700/30 dark:border-amber-400/30 border-t-amber-700 dark:border-t-amber-400 rounded-full animate-spin"></span>
+                                <span id="btn-action-return-icon" class="flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-amber-500 group-hover:rotate-45 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                                    </svg>
+                                </span>
+                                <span id="btn-action-return-text">Return Application</span>
                             </button>
                         </div>
                     </form>

@@ -176,11 +176,30 @@
             opacity: 1;
             transform: translateX(0.25rem);
         }
+
+        /* Top Navigation Progress Bar Animation */
+        @keyframes navProgressGlow {
+            0% { width: 0%; opacity: 1; }
+            40% { width: 60%; opacity: 1; }
+            80% { width: 85%; opacity: 1; }
+            100% { width: 95%; opacity: 1; }
+        }
+        .nav-progress-animating {
+            opacity: 1 !important;
+        }
+        .nav-progress-animating #page-nav-progress-bar {
+            animation: navProgressGlow 2s cubic-bezier(0.1, 0.45, 0.1, 1) forwards !important;
+        }
     </style>
     @stack('styles')
 </head>
 
 <body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased overflow-hidden">
+    <!-- Top Viewport Navigation Progress Bar -->
+    <div id="page-nav-progress" class="fixed top-0 left-0 right-0 h-1 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
+        <div id="page-nav-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 w-0 rounded-r-full shadow-sm shadow-emerald-500/50"></div>
+    </div>
+
     @include('components.pin-security-overlay')
 
     <div class="flex h-full overflow-hidden">
@@ -224,7 +243,8 @@
 
                     <!-- My Savings -->
                     <a href="{{ route('member.savings') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.savings') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-wallet w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.savings') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">My Savings</span>
                         <span class="sidebar-tooltip hidden lg:block">My Savings</span>
@@ -232,7 +252,8 @@
 
                     <!-- Payroll Deduction -->
                     <a href="{{ route('member.deductions') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.deductions') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">Payroll Deduction</span>
                         <span class="sidebar-tooltip hidden lg:block">Payroll Deduction</span>
@@ -247,7 +268,8 @@
 
                     <!-- My Loans -->
                     <a href="{{ route('member.loans') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.loans') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">My Loans</span>
                         @if ($rejectedComakersLoansCount > 0)
@@ -258,7 +280,8 @@
 
                     <!-- Apply for Loan -->
                     <a href="{{ route('member.forms') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.forms') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-circle-plus w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.forms') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">Apply for Loan</span>
                         <span class="sidebar-tooltip hidden lg:block">Apply for Loan</span>
@@ -266,7 +289,8 @@
 
                     <!-- Co-Maker Requests -->
                     <a href="{{ route('member.comaker_requests') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.comaker_requests') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.comaker_requests') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">Co-Maker Requests</span>
                         @if ($pendingComakerCount > 0)
@@ -277,7 +301,8 @@
 
                     <!-- My Withdrawals -->
                     <a href="{{ route('member.withdrawals') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.withdrawals') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">My Withdrawals</span>
                         <span class="sidebar-tooltip hidden lg:block">My Withdrawals</span>
@@ -292,7 +317,8 @@
 
                     <!-- Elections -->
                     <a href="{{ route('member.elections.index') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.elections.*') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                         <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                         <span class="sidebar-text flex-1 truncate">Elections &amp; Voting</span>
                         @if ($activeUnvotedElectionsCount > 0)
@@ -348,16 +374,30 @@
 
                         <!-- My Savings -->
                         <a href="{{ route('member.savings') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.savings') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.savings') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-wallet w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.savings') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">My Savings</span>
+                            @if(request()->routeIs('member.savings'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
+                            @endif
                         </a>
 
                         <!-- Payroll Deduction -->
                         <a href="{{ route('member.deductions') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.deductions') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.deductions') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-sliders w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.deductions') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">Payroll Deduction</span>
+                            @if(request()->routeIs('member.deductions'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
+                            @endif
                         </a>
                     </div>
 
@@ -369,36 +409,62 @@
 
                         <!-- My Loans -->
                         <a href="{{ route('member.loans') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.loans') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.loans') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-receipt w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.loans') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">My Loans</span>
                             @if ($rejectedComakersLoansCount > 0)
                                 <span class="bg-amber-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-bounce shadow-xs">{{ $rejectedComakersLoansCount }}</span>
+                            @elseif(request()->routeIs('member.loans'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
                             @endif
                         </a>
 
                         <!-- Apply for Loan -->
                         <a href="{{ route('member.forms') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.forms') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.forms') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-circle-plus w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.forms') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">Apply for Loan</span>
+                            @if(request()->routeIs('member.forms'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
+                            @endif
                         </a>
 
                         <!-- Co-Maker Requests -->
                         <a href="{{ route('member.comaker_requests') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.comaker_requests') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.comaker_requests') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-signature w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.comaker_requests') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">Co-Maker Requests</span>
                             @if ($pendingComakerCount > 0)
                                 <span class="bg-rose-500 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full animate-pulse shadow-xs">{{ $pendingComakerCount }}</span>
+                            @elseif(request()->routeIs('member.comaker_requests'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
                             @endif
                         </a>
 
                         <!-- My Withdrawals -->
                         <a href="{{ route('member.withdrawals') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.withdrawals') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.withdrawals') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">My Withdrawals</span>
+                            @if(request()->routeIs('member.withdrawals'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
+                            @endif
                         </a>
                     </div>
 
@@ -410,11 +476,17 @@
 
                         <!-- Elections -->
                         <a href="{{ route('member.elections.index') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
+                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.elections.*') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
                             <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">Elections &amp; Voting</span>
                             @if ($activeUnvotedElectionsCount > 0)
                                 <span class="bg-rose-500 dark:bg-rose-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-xs animate-pulse">Vote Now!</span>
+                            @elseif(request()->routeIs('member.elections.*'))
+                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    Active
+                                </span>
                             @endif
                         </a>
                     </div>
@@ -730,6 +802,76 @@
                     }
                 });
             }
+
+            // Instant Tap / Click Navigation Feedback Handler
+            const feedbackLinks = document.querySelectorAll(".nav-feedback-link");
+            const navProgressBar = document.getElementById("page-nav-progress");
+
+            function showNavProgress() {
+                if (navProgressBar) {
+                    navProgressBar.classList.add("nav-progress-animating");
+                }
+            }
+
+            feedbackLinks.forEach(link => {
+                link.addEventListener("click", function(e) {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || this.getAttribute('target') === '_blank') {
+                        return;
+                    }
+
+                    const href = this.getAttribute('href');
+                    if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+                    // If clicking the current page's link, dismiss mobile sidebar smoothly without reload lag
+                    try {
+                        const targetUrl = new URL(this.href, window.location.origin);
+                        if (targetUrl.pathname === window.location.pathname) {
+                            closeSidebar();
+                            return;
+                        }
+                    } catch (_) {}
+
+                    // 1. Tactile Active Highlight State
+                    this.classList.add("ring-2", "ring-emerald-500/60", "scale-[0.98]", "transition-transform");
+                    if (!this.classList.contains("bg-gradient-to-r")) {
+                        this.classList.add("bg-emerald-50", "dark:bg-emerald-950/40", "text-emerald-700", "dark:text-emerald-300");
+                    }
+
+                    // 2. Icon to Spinner Morph
+                    const icon = this.querySelector("i.fa-solid");
+                    if (icon) {
+                        const isWhite = this.classList.contains("text-white") || icon.classList.contains("text-white");
+                        icon.className = `fa-solid fa-circle-notch fa-spin w-5 text-center flex-shrink-0 text-sm ${isWhite ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`;
+                    }
+
+                    // 3. Dynamic "Opening..." micro-feedback badge
+                    const activeBadge = this.querySelector(".nav-active-badge");
+                    if (activeBadge) {
+                        activeBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Loading...';
+                    } else {
+                        let pill = this.querySelector(".nav-loading-pill");
+                        if (!pill) {
+                            pill = document.createElement("span");
+                            pill.className = "nav-loading-pill inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded-full animate-pulse ml-auto " +
+                                (this.classList.contains("text-white") 
+                                    ? "bg-white/20 text-white" 
+                                    : "bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300/40 dark:border-emerald-800/40");
+                            pill.innerHTML = '<i class="fa-solid fa-arrow-right text-[8px]"></i> Opening...';
+                            this.appendChild(pill);
+                        }
+                    }
+
+                    // 4. Trigger sleek top viewport loading bar
+                    showNavProgress();
+                });
+            });
+
+            // Reset navigation progress if restored from bfcache (back/forward cache)
+            window.addEventListener("pageshow", function(event) {
+                if (navProgressBar) {
+                    navProgressBar.classList.remove("nav-progress-animating");
+                }
+            });
         });
     </script>
 
