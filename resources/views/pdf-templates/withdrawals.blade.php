@@ -282,7 +282,7 @@
                 <th style="width: 15%; text-align: right;">Amount</th>
                 <th style="width: 15%;">Channel</th>
                 <th style="width: 15%;">Status</th>
-                <th style="width: 18%;">Transaction ID</th>
+                <th style="width: 18%;">Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -306,8 +306,8 @@
                             <span class="badge badge-fallback">{{ strtoupper($w->status) }}</span>
                         @endif
                     </td>
-                    <td style="font-family: monospace; font-size: 8.5pt; color: #0f172a; font-weight: bold;">
-                        {{ $w->transaction_id ?: '—' }}
+                    <td style="font-size: 8pt; color: #0f172a; font-weight: 500;">
+                        {{ $w->remarks ?: ($w->transaction_id ?: '—') }}
                     </td>
                 </tr>
             @endforeach

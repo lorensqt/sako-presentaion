@@ -15,6 +15,7 @@ class WithdrawalRequest extends Model
         'channel',
         'reason',
         'status',
+        'remarks',
         'transaction_id',
     ];
 

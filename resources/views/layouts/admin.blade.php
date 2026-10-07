@@ -978,13 +978,83 @@
 
             // Check and trigger Laravel Session Alerts
             @if(session('success'))
-                MLSAKOAlert.fire({
-                    icon: 'success',
-                    title: {!! json_encode(session('success_title') ?? 'Success') !!},
-                    text: {!! json_encode(session('success')) !!},
-                    iconColor: '#10b981',
-                    confirmButtonText: 'Great, Thank You'
-                });
+                @if(session('success_title') === 'Funds Released')
+                    MLSAKOAlert.fire({
+                        title: 'Disbursing & Finalizing Release...',
+                        html: `
+                            <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                <div class="relative w-16 h-16 flex items-center justify-center mx-auto">
+                                    <div class="w-16 h-16 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+                                    <span class="absolute text-2xl text-emerald-600 dark:text-emerald-400 animate-bounce">
+                                        <i class="fa-solid fa-money-bill-transfer"></i>
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 text-center">
+                                    <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                        Disbursing savings payout &amp; updating ledger...
+                                    </p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                        Recording audit verification and delivering automated email confirmation to the requestor.
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1500,
+                        timerProgressBar: true
+                    }).then(() => {
+                        MLSAKOAlert.fire({
+                            icon: 'success',
+                            title: {!! json_encode(session('success_title') ?? 'Success') !!},
+                            text: {!! json_encode(session('success')) !!},
+                            iconColor: '#10b981',
+                            confirmButtonText: 'Great, Thank You'
+                        });
+                    });
+                @elseif(session('success_title') === 'Request Rejected')
+                    MLSAKOAlert.fire({
+                        title: 'Declining Request & Logging Remarks...',
+                        html: `
+                            <div class="flex flex-col items-center justify-center p-4 space-y-4">
+                                <div class="relative w-16 h-16 flex items-center justify-center mx-auto">
+                                    <div class="w-16 h-16 rounded-full border-4 border-rose-500/20 border-t-rose-500 animate-spin"></div>
+                                    <span class="absolute text-2xl text-rose-600 dark:text-rose-400 animate-bounce">
+                                        <i class="fa-solid fa-file-circle-xmark"></i>
+                                    </span>
+                                </div>
+                                <div class="space-y-1.5 text-center">
+                                    <p class="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                        Recording audit reason &amp; synchronizing request...
+                                    </p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                                        Preserving member savings balance and delivering decline notice email to the requestor.
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1500,
+                        timerProgressBar: true
+                    }).then(() => {
+                        MLSAKOAlert.fire({
+                            icon: 'info',
+                            title: {!! json_encode(session('success_title') ?? 'Request Rejected') !!},
+                            text: {!! json_encode(session('success')) !!},
+                            iconColor: '#f43f5e',
+                            confirmButtonText: 'Acknowledge'
+                        });
+                    });
+                @else
+                    MLSAKOAlert.fire({
+                        icon: 'success',
+                        title: {!! json_encode(session('success_title') ?? 'Success') !!},
+                        text: {!! json_encode(session('success')) !!},
+                        iconColor: '#10b981',
+                        confirmButtonText: 'Great, Thank You'
+                    });
+                @endif
             @endif
 
             @if(session('error'))

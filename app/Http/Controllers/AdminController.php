@@ -7,8 +7,11 @@ use App\Models\Role;
 use App\Models\Loan;
 use App\Models\LoanApplication;
 use App\Services\AuditLogger;
+use App\Mail\WithdrawalReleasedMail;
+use App\Mail\WithdrawalRejectedMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -1244,22 +1247,67 @@ class AdminController extends Controller
     }
 
     /**
-     * Display the Admin Withdrawals Queue.
+     * Display the Admin Withdrawals Queue with interactive filtering.
      */
     public function withdrawals(Request $request)
     {
-        $withdrawals = \App\Models\WithdrawalRequest::with('user')
-            ->latest()
-            ->paginate(15);
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $channel = $request->input('channel');
 
-        // Metrics for the withdrawal requests
+        $query = \App\Models\WithdrawalRequest::with('user')->latest();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $cleanSearch = ltrim($search, '#');
+                if (stripos($cleanSearch, 'wd-') === 0) {
+                    $cleanId = ltrim(substr($cleanSearch, 3), '0');
+                    if ($cleanId !== '') {
+                        $q->orWhere('id', (int) $cleanId);
+                    }
+                } elseif (is_numeric($cleanSearch)) {
+                    $q->orWhere('id', (int) $cleanSearch);
+                }
+
+                $q->orWhere('channel', 'like', "%{$search}%")
+                  ->orWhere('reason', 'like', "%{$search}%")
+                  ->orWhere('remarks', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%")
+                         ->orWhere('email', 'like', "%{$search}%")
+                         ->orWhere('company_id', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($status && $status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        if ($channel && $channel !== 'all') {
+            $query->where('channel', 'like', "%{$channel}%");
+        }
+
+        $withdrawals = $query->paginate(15)->withQueryString();
+
+        // Metrics for all withdrawal requests
         $metrics = [
             'pending' => \App\Models\WithdrawalRequest::where('status', 'pending')->count(),
             'processing' => \App\Models\WithdrawalRequest::where('status', 'processing')->count(),
             'released' => \App\Models\WithdrawalRequest::where('status', 'released')->count(),
+            'rejected' => \App\Models\WithdrawalRequest::where('status', 'rejected')->count(),
+            'total' => \App\Models\WithdrawalRequest::count(),
         ];
 
-        return view('admin.withdrawals', compact('withdrawals', 'metrics'));
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.partials.withdrawals-table-rows', compact('withdrawals'))->render(),
+                'pagination_html' => $withdrawals->hasPages() ? $withdrawals->links()->render() : '',
+                'total_count' => $withdrawals->total(),
+            ]);
+        }
+
+        return view('admin.withdrawals', compact('withdrawals', 'metrics', 'search', 'status', 'channel'));
     }
 
     /**
@@ -1270,35 +1318,94 @@ class AdminController extends Controller
         $action = $request->input('action');
 
         if ($action === 'acknowledge' && $withdrawal->status === 'pending') {
-            $request->validate([
-                'transaction_id' => 'required|string|max:255',
-            ]);
-
             $oldValues = $withdrawal->toArray();
 
             $withdrawal->update([
                 'status' => 'processing',
-                'transaction_id' => $request->input('transaction_id'),
             ]);
 
             AuditLogger::log('withdrawal_status_updated', "Admin " . auth()->user()->name . " acknowledged withdrawal request REF #WD-" . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . " for user {$withdrawal->user->name}.", 'info', $withdrawal, $oldValues, $withdrawal->fresh()->toArray());
 
             return redirect()->route('admin.withdrawals')->with([
-                'success' => 'Withdrawal request REF #WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . ' has been acknowledged with Transaction ID ' . $request->input('transaction_id') . ' and is now processing.',
+                'success' => 'Withdrawal request REF #WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . ' has been acknowledged and is now processing.',
                 'success_title' => 'Request Acknowledged'
             ]);
         }
 
         if ($action === 'release' && $withdrawal->status === 'processing') {
+            $request->validate([
+                'remarks' => 'required|string|max:1000',
+            ]);
+
             $oldValues = $withdrawal->toArray();
+            $remarks = $request->input('remarks');
 
-            $withdrawal->update(['status' => 'released']);
+            $withdrawal->update([
+                'status' => 'released',
+                'remarks' => $remarks,
+                'transaction_id' => $remarks,
+            ]);
 
-            AuditLogger::log('withdrawal_status_updated', "Admin " . auth()->user()->name . " released funds for withdrawal request REF #WD-" . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . " for user {$withdrawal->user->name}.", 'info', $withdrawal, $oldValues, $withdrawal->fresh()->toArray());
+            AuditLogger::log('withdrawal_status_updated', "Admin " . auth()->user()->name . " released funds for withdrawal request REF #WD-" . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . " for user {$withdrawal->user->name}. Remarks: {$remarks}", 'info', $withdrawal, $oldValues, $withdrawal->fresh()->toArray());
+
+            // Dispatch notification email to member
+            if ($withdrawal->user && !empty($withdrawal->user->email)) {
+                try {
+                    $referenceNo = '#WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
+                    Mail::to($withdrawal->user->email)->send(new WithdrawalReleasedMail(
+                        $withdrawal->user->name,
+                        $referenceNo,
+                        (float) $withdrawal->amount,
+                        $withdrawal->channel,
+                        $remarks,
+                        auth()->user()->name
+                    ));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Failed to send withdrawal released email for ID {$withdrawal->id}: " . $e->getMessage());
+                }
+            }
 
             return redirect()->route('admin.withdrawals')->with([
-                'success' => 'Withdrawal request REF #WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . ' has been marked as released / completed.',
+                'success' => 'Withdrawal request REF #WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . ' has been marked as released and notification email sent.',
                 'success_title' => 'Funds Released'
+            ]);
+        }
+
+        if ($action === 'reject' && in_array($withdrawal->status, ['pending', 'processing'])) {
+            $request->validate([
+                'remarks' => 'required|string|max:1000',
+            ]);
+
+            $oldValues = $withdrawal->toArray();
+            $remarks = $request->input('remarks');
+
+            $withdrawal->update([
+                'status' => 'rejected',
+                'remarks' => $remarks,
+            ]);
+
+            AuditLogger::log('withdrawal_status_updated', "Admin " . auth()->user()->name . " rejected withdrawal request REF #WD-" . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . " for user {$withdrawal->user->name}. Reason: {$remarks}", 'warning', $withdrawal, $oldValues, $withdrawal->fresh()->toArray());
+
+            // Dispatch notification email to member
+            if ($withdrawal->user && !empty($withdrawal->user->email)) {
+                try {
+                    $referenceNo = '#WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT);
+                    Mail::to($withdrawal->user->email)->send(new WithdrawalRejectedMail(
+                        $withdrawal->user->name,
+                        $referenceNo,
+                        (float) $withdrawal->amount,
+                        $withdrawal->channel,
+                        $remarks,
+                        auth()->user()->name
+                    ));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Failed to send withdrawal rejected email for ID {$withdrawal->id}: " . $e->getMessage());
+                }
+            }
+
+            return redirect()->route('admin.withdrawals')->with([
+                'success' => 'Withdrawal request REF #WD-' . str_pad($withdrawal->id, 5, '0', STR_PAD_LEFT) . ' has been rejected and notice email dispatched.',
+                'success_title' => 'Request Rejected'
             ]);
         }
 

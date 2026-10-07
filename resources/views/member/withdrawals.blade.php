@@ -272,6 +272,7 @@
                             <th class="py-2.5 px-3.5">Date Filed</th>
                             <th class="py-2.5 px-3.5">Disbursement Channel</th>
                             <th class="py-2.5 px-3.5">Amount Requested</th>
+                            <th class="py-2.5 px-3.5">Admin Remarks</th>
                             <th class="py-2.5 px-3.5 text-right rounded-r-lg">Status &amp; Action</th>
                         </tr>
                     </thead>
@@ -308,6 +309,17 @@
                                 <!-- Amount Requested -->
                                 <td class="py-3 px-3.5 font-mono font-extrabold text-slate-900 dark:text-white text-xs">
                                     ₱{{ number_format($w->amount, 2) }}
+                                </td>
+
+                                <!-- Admin Remarks -->
+                                <td class="py-3 px-3.5 text-xs">
+                                    @if($w->remarks || $w->transaction_id)
+                                        <span class="text-slate-700 dark:text-slate-300 font-medium block max-w-[200px] truncate" title="{{ $w->remarks ?: $w->transaction_id }}">
+                                            {{ $w->remarks ?: $w->transaction_id }}
+                                        </span>
+                                    @else
+                                        <span class="text-slate-400 dark:text-slate-500 italic text-[11px]">—</span>
+                                    @endif
                                 </td>
 
                                 <!-- Status & Action -->
@@ -348,7 +360,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-10 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
+                                <td colspan="6" class="py-10 text-center text-slate-400 dark:text-slate-500 font-medium italic text-xs">
                                     <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center mx-auto text-slate-400 mb-2">
                                         <i class="fa-solid fa-receipt text-sm"></i>
                                     </div>
@@ -423,6 +435,16 @@
                         @if($w->reason)
                             <div class="pt-1 text-[11px] text-slate-500 dark:text-slate-400 italic">
                                 "{{ $w->reason }}"
+                            </div>
+                        @endif
+
+                        <!-- Admin Remarks -->
+                        @if($w->remarks || $w->transaction_id)
+                            <div class="p-2.5 rounded-xl bg-slate-100/70 dark:bg-slate-900/90 border border-slate-200/60 dark:border-slate-800 text-[11px]">
+                                <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Admin Remarks</span>
+                                <p class="text-slate-700 dark:text-slate-300 font-medium mt-0.5 leading-relaxed break-words">
+                                    {{ $w->remarks ?: $w->transaction_id }}
+                                </p>
                             </div>
                         @endif
 

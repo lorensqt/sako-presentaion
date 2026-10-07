@@ -263,7 +263,6 @@ class AdminPortalTest extends TestCase
 
         $response = $this->actingAs($admin)->post("/admin/withdrawals/{$withdrawal->id}/status", [
             'action' => 'acknowledge',
-            'transaction_id' => 'TXN-987654321',
         ]);
 
         $response->assertRedirect('/admin/withdrawals');
@@ -272,14 +271,13 @@ class AdminPortalTest extends TestCase
         $this->assertDatabaseHas('withdrawal_requests', [
             'id' => $withdrawal->id,
             'status' => 'processing',
-            'transaction_id' => 'TXN-987654321',
         ]);
     }
 
     /**
-     * Test that acknowledging a withdrawal fails without supplying a transaction ID.
+     * Test that releasing a withdrawal fails without supplying remarks.
      */
-    public function test_admins_cannot_acknowledge_withdrawal_without_transaction_id(): void
+    public function test_admins_cannot_release_withdrawal_without_remarks(): void
     {
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
@@ -304,22 +302,22 @@ class AdminPortalTest extends TestCase
             'amount' => 5000.00,
             'channel' => 'GCash',
             'reason' => 'Emergency expenses',
-            'status' => 'pending',
+            'status' => 'processing',
         ]);
 
         $response = $this->actingAs($admin)->post("/admin/withdrawals/{$withdrawal->id}/status", [
-            'action' => 'acknowledge',
+            'action' => 'release',
         ]);
 
-        $response->assertSessionHasErrors('transaction_id');
+        $response->assertSessionHasErrors('remarks');
         $this->assertDatabaseHas('withdrawal_requests', [
             'id' => $withdrawal->id,
-            'status' => 'pending',
+            'status' => 'processing',
         ]);
     }
 
     /**
-     * Test that administrators can successfully release/complete an in-processing withdrawal request.
+     * Test that administrators can successfully release/complete an in-processing withdrawal request with remarks.
      */
     public function test_admins_can_release_withdrawal(): void
     {
@@ -347,11 +345,11 @@ class AdminPortalTest extends TestCase
             'channel' => 'GCash',
             'reason' => 'Emergency expenses',
             'status' => 'processing',
-            'transaction_id' => 'TXN-987654321',
         ]);
 
         $response = $this->actingAs($admin)->post("/admin/withdrawals/{$withdrawal->id}/status", [
             'action' => 'release',
+            'remarks' => 'Disbursed via GCash Express Send',
         ]);
 
         $response->assertRedirect('/admin/withdrawals');
@@ -360,6 +358,53 @@ class AdminPortalTest extends TestCase
         $this->assertDatabaseHas('withdrawal_requests', [
             'id' => $withdrawal->id,
             'status' => 'released',
+            'remarks' => 'Disbursed via GCash Express Send',
+        ]);
+    }
+
+    /**
+     * Test that administrators can successfully reject a withdrawal request with remarks.
+     */
+    public function test_admins_can_reject_withdrawal(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
+        $admin = User::create([
+            'name' => 'Sako Admin',
+            'email' => 'admin@mlsako.com',
+            'role' => 'admin',
+            'company_id' => '10001000',
+            'password' => Hash::make('password'),
+        ]);
+
+        $member = User::create([
+            'name' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'company_id' => '20241112',
+            'role' => 'member',
+            'password' => Hash::make('password'),
+        ]);
+
+        $withdrawal = \App\Models\WithdrawalRequest::create([
+            'user_id' => $member->id,
+            'amount' => 5000.00,
+            'channel' => 'GCash',
+            'reason' => 'Emergency expenses',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($admin)->post("/admin/withdrawals/{$withdrawal->id}/status", [
+            'action' => 'reject',
+            'remarks' => 'Insufficient liquid balance above maintaining reserve',
+        ]);
+
+        $response->assertRedirect('/admin/withdrawals');
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('withdrawal_requests', [
+            'id' => $withdrawal->id,
+            'status' => 'rejected',
+            'remarks' => 'Insufficient liquid balance above maintaining reserve',
         ]);
     }
 
