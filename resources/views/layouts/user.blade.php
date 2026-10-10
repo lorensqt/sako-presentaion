@@ -37,7 +37,6 @@
 
     @php
         $pendingComakerCount = 0;
-        $activeUnvotedElectionsCount = 0;
         $rejectedComakersLoansCount = 0;
         if (auth()->check()) {
             $userId = auth()->id();
@@ -61,19 +60,6 @@
                         ->exists();
 
                     return !$hasActioned;
-                })
-                ->count();
-
-            // Calculate active unvoted elections
-            $now = \Carbon\Carbon::now();
-            $activeUnvotedElectionsCount = \App\Models\Election::where('start_time', '<=', $now)
-                ->where('end_time', '>=', $now)
-                ->get()
-                ->filter(function($election) use ($userId) {
-                    $hasVoted = \App\Models\Vote::where('election_id', $election->id)
-                        ->where('user_id', $userId)
-                        ->exists();
-                    return !$hasVoted;
                 })
                 ->count();
 
@@ -308,25 +294,6 @@
                         <span class="sidebar-tooltip hidden lg:block">My Withdrawals</span>
                     </a>
                 </div>
-
-                <!-- GROUP 3: GOVERNANCE -->
-                <div class="space-y-1">
-                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-3 pt-2 pb-1 select-none">
-                        Cooperative Governance
-                    </p>
-
-                    <!-- Elections -->
-                    <a href="{{ route('member.elections.index') }}"
-                        class="nav-feedback-link group relative w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
-                        <span class="w-1 h-4 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.elections.*') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
-                        <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
-                        <span class="sidebar-text flex-1 truncate">Elections &amp; Voting</span>
-                        @if ($activeUnvotedElectionsCount > 0)
-                            <span class="sidebar-text bg-rose-500 dark:bg-rose-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-xs animate-pulse">Vote Now!</span>
-                        @endif
-                        <span class="sidebar-tooltip hidden lg:block">Elections &amp; Voting</span>
-                    </a>
-                </div>
             </nav>
 
             <!-- Sidebar Footer -->
@@ -460,29 +427,6 @@
                             <i class="fa-solid fa-arrow-up-from-bracket w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.withdrawals') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
                             <span class="flex-1 truncate">My Withdrawals</span>
                             @if(request()->routeIs('member.withdrawals'))
-                                <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                                    Active
-                                </span>
-                            @endif
-                        </a>
-                    </div>
-
-                    <!-- GROUP 3: GOVERNANCE -->
-                    <div class="space-y-1">
-                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-3 pt-2 pb-1 select-none">
-                            Cooperative Governance
-                        </p>
-
-                        <!-- Elections -->
-                        <a href="{{ route('member.elections.index') }}"
-                            class="nav-feedback-link group w-full flex items-center gap-2.5 px-3 py-3 text-xs rounded-xl transition-all duration-200 text-left {{ request()->routeIs('member.elections.*') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20 font-bold ring-1 ring-emerald-500/30' : 'text-slate-600 dark:text-slate-400 font-semibold hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
-                            <span class="w-1 h-5 rounded-full flex-shrink-0 transition-all {{ request()->routeIs('member.elections.*') ? 'bg-white shadow-xs' : 'bg-transparent group-hover:bg-emerald-500/40' }}"></span>
-                            <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 {{ request()->routeIs('member.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
-                            <span class="flex-1 truncate">Elections &amp; Voting</span>
-                            @if ($activeUnvotedElectionsCount > 0)
-                                <span class="bg-rose-500 dark:bg-rose-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-xs animate-pulse">Vote Now!</span>
-                            @elseif(request()->routeIs('member.elections.*'))
                                 <span class="nav-active-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">
                                     <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                                     Active

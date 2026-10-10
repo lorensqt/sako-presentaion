@@ -116,13 +116,6 @@ class User extends Authenticatable
                 'group' => 'Treasury',
                 'route' => 'admin.deductions',
             ],
-            'elections' => [
-                'label' => 'Governance & Elections',
-                'description' => 'Create elections, manage positions, candidates, and live results.',
-                'icon' => 'fa-solid fa-check-to-slot',
-                'group' => 'Governance',
-                'route' => 'admin.elections.index',
-            ],
             'audit_logs' => [
                 'label' => 'Audit & Security Logs',
                 'description' => 'Monitor immutable security event logs and system audit trails.',

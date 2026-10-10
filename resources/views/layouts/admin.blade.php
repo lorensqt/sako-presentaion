@@ -172,7 +172,6 @@
         $canWithdrawals = $authUser ? $authUser->canAccessAdminPage('withdrawals') : false;
         $canDeductions = $authUser ? $authUser->canAccessAdminPage('deductions') : false;
         $canTreasuryGroup = $canWithdrawals || $canDeductions;
-        $canElections = $authUser ? $authUser->canAccessAdminPage('elections') : false;
         $canAuditLogs = $authUser ? $authUser->canAccessAdminPage('audit_logs') : false;
         $firstAdminRoute = $authUser ? $authUser->firstAccessibleAdminRoute() : 'admin.dashboard';
     @endphp
@@ -376,21 +375,6 @@
                         </a>
                         @endif
                     </div>
-                </div>
-                @endif
-
-                @if($canElections)
-                <!-- Group: Governance -->
-                <div class="space-y-1">
-                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 sidebar-text px-2.5 pt-2 pb-1 select-none">
-                        Governance &amp; Elections
-                    </p>
-                    <a href="{{ route('admin.elections.index') }}"
-                        class="group relative w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
-                        <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5 {{ request()->routeIs('admin.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
-                        <span class="sidebar-text flex-1 truncate">Elections</span>
-                        <span class="sidebar-tooltip hidden lg:block">Elections</span>
-                    </a>
                 </div>
                 @endif
 
@@ -606,20 +590,6 @@
                             </a>
                             @endif
                         </div>
-                    </div>
-                    @endif
-
-                    @if($canElections)
-                    <!-- Group: Governance -->
-                    <div class="space-y-1">
-                        <p class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2.5 pt-2 pb-1 select-none">
-                            Governance &amp; Elections
-                        </p>
-                        <a href="{{ route('admin.elections.index') }}"
-                            class="group w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 text-left {{ request()->routeIs('admin.elections.*') ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-emerald-500/10 dark:hover:bg-slate-700/60 hover:text-emerald-700 dark:hover:text-emerald-300' }}">
-                            <i class="fa-solid fa-check-to-slot w-5 text-center flex-shrink-0 text-sm {{ request()->routeIs('admin.elections.*') ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 dark:text-slate-400 dark:group-hover:text-emerald-400' }}"></i>
-                            <span>Elections</span>
-                        </a>
                     </div>
                     @endif
 

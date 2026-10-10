@@ -1,11 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminElectionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MemberController;
-use App\Http\Controllers\MemberElectionController;
 use App\Http\Controllers\LoanApprovalController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,12 +72,6 @@ Route::middleware('auth')->group(function () {
         // Member Loan Applications
         Route::post('/loans/apply', [MemberController::class, 'applyLoan'])->name('member.loans.apply');
         Route::patch('/loans/{application}/replace-comaker', [MemberController::class, 'replaceCoMaker'])->name('member.loans.replace_comaker');
-
-        // Member Election & Voting
-        Route::get('/elections', [MemberElectionController::class, 'index'])->name('member.elections.index');
-        Route::get('/elections/{election}', [MemberElectionController::class, 'show'])->name('member.elections.show');
-        Route::post('/elections/{election}/vote', [MemberElectionController::class, 'store'])->name('member.elections.vote');
-        Route::get('/elections/{election}/results', [MemberElectionController::class, 'results'])->name('member.elections.results');
     });
 });
 
@@ -140,22 +132,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/deductions', [AdminController::class, 'deductions'])->name('admin.deductions');
         Route::post('/deductions/{deductionRequest}/status', [AdminController::class, 'updateDeductionRequestStatus'])->name('admin.deductions.status');
         Route::get('/deductions/{deductionRequest}/pdf', [AdminController::class, 'exportDeductionPdf'])->name('admin.deductions.pdf');
-    });
-
-    // Admin Election Management & Positions/Candidates
-    Route::middleware('admin.page:elections')->group(function () {
-        Route::get('/elections', [AdminElectionController::class, 'index'])->name('admin.elections.index');
-        Route::get('/elections/create', [AdminElectionController::class, 'create'])->name('admin.elections.create');
-        Route::post('/elections', [AdminElectionController::class, 'store'])->name('admin.elections.store');
-        Route::get('/elections/{election}', [AdminElectionController::class, 'show'])->name('admin.elections.show');
-        Route::get('/elections/{election}/edit', [AdminElectionController::class, 'edit'])->name('admin.elections.edit');
-        Route::put('/elections/{election}', [AdminElectionController::class, 'update'])->name('admin.elections.update');
-        Route::delete('/elections/{election}', [AdminElectionController::class, 'destroy'])->name('admin.elections.destroy');
-        Route::get('/elections/{election}/results', [AdminElectionController::class, 'results'])->name('admin.elections.results');
-
-        Route::post('/elections/{election}/positions', [AdminElectionController::class, 'storePosition'])->name('admin.elections.positions.store');
-        Route::delete('/positions/{position}', [AdminElectionController::class, 'destroyPosition'])->name('admin.positions.destroy');
-        Route::post('/positions/{position}/candidates', [AdminElectionController::class, 'storeCandidate'])->name('admin.positions.candidates.store');
-        Route::delete('/candidates/{candidate}', [AdminElectionController::class, 'destroyCandidate'])->name('admin.candidates.destroy');
     });
 });
