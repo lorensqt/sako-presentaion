@@ -4,6 +4,66 @@
 @section('page_title', 'Withdrawals Decision Board')
 @section('page_subtitle', 'Review savings payout requests, acknowledge processing tasks, release completed disbursements, or reject with audit remarks.')
 
+@push('styles')
+<style>
+    /* Withdrawal Pipeline Queue Table Custom Horizontal Scrollbar */
+    .table-responsive-scroll,
+    #withdrawals-table-container {
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+    }
+    .table-responsive-scroll::-webkit-scrollbar,
+    #withdrawals-table-container::-webkit-scrollbar {
+        height: 7px;
+        width: 7px;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-track,
+    #withdrawals-table-container::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 9999px;
+        margin: 0 10px 4px 10px;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-thumb,
+    #withdrawals-table-container::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 9999px;
+        border: 1.5px solid #f1f5f9;
+        transition: background-color 0.2s ease;
+    }
+    .table-responsive-scroll::-webkit-scrollbar-thumb:hover,
+    #withdrawals-table-container::-webkit-scrollbar-thumb:hover {
+        background-color: #94a3b8;
+    }
+
+    /* Dark Mode */
+    html.dark .table-responsive-scroll,
+    .dark .table-responsive-scroll,
+    html.dark #withdrawals-table-container,
+    .dark #withdrawals-table-container {
+        scrollbar-color: #334155 transparent;
+    }
+    html.dark .table-responsive-scroll::-webkit-scrollbar-track,
+    .dark .table-responsive-scroll::-webkit-scrollbar-track,
+    html.dark #withdrawals-table-container::-webkit-scrollbar-track,
+    .dark #withdrawals-table-container::-webkit-scrollbar-track {
+        background: #090d16;
+    }
+    html.dark .table-responsive-scroll::-webkit-scrollbar-thumb,
+    .dark .table-responsive-scroll::-webkit-scrollbar-thumb,
+    html.dark #withdrawals-table-container::-webkit-scrollbar-thumb,
+    .dark #withdrawals-table-container::-webkit-scrollbar-thumb {
+        background-color: #334155;
+        border: 1.5px solid #090d16;
+    }
+    html.dark .table-responsive-scroll::-webkit-scrollbar-thumb:hover,
+    .dark .table-responsive-scroll::-webkit-scrollbar-thumb:hover,
+    html.dark #withdrawals-table-container::-webkit-scrollbar-thumb:hover,
+    .dark #withdrawals-table-container::-webkit-scrollbar-thumb:hover {
+        background-color: #475569;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-6 animate-fade-in">
 
@@ -219,7 +279,7 @@
             </span>
         </div>
 
-        <div class="overflow-x-auto relative">
+        <div id="withdrawals-table-container" class="overflow-x-auto relative table-responsive-scroll">
             <!-- Table Loading Overlay -->
             <div id="table-loading" class="absolute inset-0 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xs flex items-center justify-center z-20 hidden transition-opacity duration-200">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg text-xs font-bold text-slate-700 dark:text-slate-300">

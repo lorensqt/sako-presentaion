@@ -11,16 +11,10 @@
         cursor: pointer !important;
     }
 
-    /* Dark Mode SweetAlert Validation Message & PIN Completion Styles */
-    .dark .swal2-validation-message {
-        background: #0f172a !important; /* slate-900 */
-        color: #f87171 !important; /* rose-400 */
-        border: 1px solid #334155 !important; /* slate-700 */
-        border-radius: 0.875rem !important;
-        font-size: 0.75rem !important;
-        font-weight: 700 !important;
-        padding: 0.75rem 1rem !important;
-        margin-top: 0.75rem !important;
+    /* Modal Backdrop Filter Enhancement */
+    .swal2-container {
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
     }
 
     /* SweetAlert Action Buttons Spacing & Separation */
@@ -28,20 +22,47 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 1rem !important; /* Clean breathing room between Authorize and Cancel buttons */
+        gap: 0.875rem !important;
         margin-top: 1.5rem !important;
         width: 100% !important;
     }
 
     .swal2-actions button {
-        margin: 0 !important; /* Eliminate cramped default Swal margins */
+        margin: 0 !important;
     }
 
+    /* SweetAlert Validation Message (Both Themes) */
+    .swal2-validation-message {
+        background: #fff1f2 !important; /* rose-50 */
+        color: #e11d48 !important; /* rose-600 */
+        border: 1px solid #fecdd3 !important; /* rose-200 */
+        border-radius: 0.875rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        padding: 0.75rem 1rem !important;
+        margin-top: 0.75rem !important;
+    }
+
+    .dark .swal2-validation-message {
+        background: #1e1b4b !important; /* deep slate-900 / indigo */
+        color: #fda4af !important; /* rose-300 */
+        border: 1px solid #9f1239 !important; /* rose-800 */
+    }
+
+    /* PIN Input Completion State */
     .swal-pin-complete {
         border-color: #10b981 !important;
         background-color: rgba(16, 185, 129, 0.12) !important;
-        color: #10b981 !important;
-        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3) !important;
+        color: #059669 !important;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+        transform: scale(1.04);
+    }
+
+    .dark .swal-pin-complete {
+        border-color: #34d399 !important;
+        background-color: rgba(16, 185, 129, 0.22) !important;
+        color: #34d399 !important;
+        box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.35) !important;
         transform: scale(1.04);
     }
 
@@ -625,20 +646,20 @@
                         html: `
                             <div class="space-y-4 text-center">
                                 <!-- Payout Details Inset Box -->
-                                <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 space-y-2 text-center shadow-xs">
-                                    <div class="flex items-center justify-between text-xs pb-1.5 border-b border-slate-200/60 dark:border-slate-700/60">
-                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">Payout Request</span>
-                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/50 font-mono">
+                                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 space-y-2.5 text-center shadow-xs">
+                                    <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Payout Request</span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 font-mono">
                                             <i class="fa-solid fa-wallet text-[9px]"></i>
                                             Savings Pool
                                         </span>
                                     </div>
-                                    <div class="flex items-baseline justify-center gap-1 text-slate-900 dark:text-white">
+                                    <div class="flex items-baseline justify-center gap-1 text-slate-900 dark:text-white py-0.5">
                                         <span class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">₱</span>
-                                        <span class="text-2xl font-black font-mono tracking-tight">${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                        <span class="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900 dark:text-white">${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
                                     </div>
-                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-semibold bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-300">
-                                        <i class="fa-solid fa-route text-slate-400 text-[10px]"></i>
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-semibold bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 shadow-2xs">
+                                        <i class="fa-solid fa-route text-slate-400 dark:text-slate-500 text-[10px]"></i>
                                         <span>Channel:</span>
                                         <strong class="text-slate-900 dark:text-white font-bold">${channelDisplay}</strong>
                                     </div>
@@ -647,22 +668,22 @@
                                 <!-- Security PIN Verification Dock -->
                                 <div class="space-y-2 pt-1">
                                     <div class="flex items-center justify-between px-1">
-                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                                             <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400 text-[10px]"></i>
                                             <span>Security PIN Verification</span>
                                         </span>
-                                        <span id="swal-pin-status-hint" class="text-[10px] font-bold text-slate-400 dark:text-slate-500 transition-colors">
+                                        <span id="swal-pin-status-hint" class="text-[10px] font-bold text-slate-500 dark:text-slate-400 transition-colors">
                                             6 digits required
                                         </span>
                                     </div>
 
                                     <div class="flex justify-center gap-1.5 sm:gap-2" id="swal-pin-inputs-container">
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
-                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
+                                        <input type="password" maxlength="1" pattern="[0-9]" inputmode="numeric" class="swal-pin-digit-input w-9 sm:w-10 h-12 text-center text-xl font-bold bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-2 border-slate-300 dark:border-slate-700 rounded-xl focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-150 caret-emerald-500 shadow-2xs" required>
                                     </div>
                                     <input type="hidden" id="swal-hidden-pin">
                                 </div>

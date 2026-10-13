@@ -453,6 +453,51 @@ class AdminPortalTest extends TestCase
     }
 
     /**
+     * Test that the withdrawal PDF template renders the single-form format with all required fields.
+     */
+    public function test_withdrawal_pdf_template_renders_expected_structure(): void
+    {
+        $member = User::create([
+            'name' => 'John Doe',
+            'email' => 'john.withdraw.layout@example.com',
+            'company_id' => '20241199',
+            'role' => 'member',
+            'password' => Hash::make('password'),
+        ]);
+
+        $withdrawal = \App\Models\WithdrawalRequest::create([
+            'user_id' => $member->id,
+            'amount' => 5000.00,
+            'channel' => 'GCash',
+            'reason' => 'Emergency expenses',
+            'status' => 'processing',
+        ]);
+
+        $view = view('pdf-templates.withdrawals', ['withdrawals' => collect([$withdrawal])])->render();
+
+        $this->assertStringContainsString('SAVINGS ACCOUNT WITHDRAWAL FORM', $view);
+        $this->assertStringContainsString('Date Applied :', $view);
+        $this->assertStringContainsString('Member Name :', $view);
+        $this->assertStringContainsString('Chapter / Region :', $view);
+        $this->assertStringContainsString('Not Found', $view);
+        $this->assertStringContainsString('Payment Method :', $view);
+        $this->assertStringContainsString('Amount to be withdrawn :', $view);
+        $this->assertStringContainsString('In Word :', $view);
+        $this->assertStringContainsString('Five Thousand Pesos Only', $view);
+        $this->assertStringContainsString('In Figure :', $view);
+        $this->assertStringContainsString('PHP 5,000.00', $view);
+        $this->assertStringContainsString('Maker / Depositor', $view);
+        $this->assertStringContainsString('Republic Act No. 8792', $view);
+
+        // Verify removed sections
+        $this->assertStringNotContainsString('Manifest Summary', $view);
+        $this->assertStringNotContainsString('Export Metadata', $view);
+        $this->assertStringNotContainsString('Prepared By:', $view);
+        $this->assertStringNotContainsString('Checked By:', $view);
+        $this->assertStringNotContainsString('Approved By:', $view);
+    }
+
+    /**
      * Test that administrators can successfully view the deductions adjustments page.
      */
     public function test_admins_can_access_deductions_queue(): void

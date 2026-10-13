@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Withdrawal Requests Manifest</title>
+    <title>Savings Account Withdrawal Form</title>
     <style>
         @page {
             margin: 1.5cm;
         }
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 9pt;
+            font-size: 9.5pt;
             color: #1e293b;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .header-table {
             width: 100%;
@@ -49,20 +49,14 @@
             padding: 0;
             font-weight: normal;
         }
-        .coop-contact {
-            font-size: 7pt;
-            color: #64748b;
-            margin: 1px 0 0 0;
-            padding: 0;
-        }
         .header-line {
             border: 0;
             border-top: 2px double #059669;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         .doc-title-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .doc-title {
             display: inline-block;
@@ -74,273 +68,245 @@
             text-transform: uppercase;
             letter-spacing: 1.2px;
         }
-        
-        /* Summary Cards */
-        .summary-table {
+
+        /* Form Table Layout */
+        .details-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-bottom: 35px;
         }
-        .summary-card {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px 15px;
-            width: 48%;
+        .details-table td {
+            padding: 6px 0;
             vertical-align: top;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 9.5pt;
+            color: #1e293b;
         }
-        .summary-label {
-            font-size: 7.5pt;
+        .field-label {
+            width: 170px;
+            font-weight: normal;
+        }
+        .field-value {
+            font-weight: normal;
+        }
+        .sub-field-label {
+            width: 170px;
+            padding-left: 18px !important;
+            font-weight: normal;
+        }
+        .section-header-row td {
+            padding-top: 14px;
+            padding-bottom: 4px;
+        }
+        .section-header-title {
+            font-size: 9.5pt;
             font-weight: bold;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        .summary-value {
-            font-size: 13pt;
-            font-weight: 900;
-            color: #0f172a;
-        }
-        .meta-text {
-            font-size: 8pt;
-            color: #475569;
-            line-height: 1.4;
-        }
-        .meta-bold {
-            font-weight: bold;
-            color: #0f172a;
+            color: #1e293b;
         }
 
-        /* Requests Table */
-        .requests-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .requests-table th {
-            background-color: #065f46;
-            color: #ffffff;
-            font-size: 7.5pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 8px 10px;
-            text-align: left;
-            border: 1px solid #059669;
-        }
-        .requests-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 8.5pt;
-            vertical-align: middle;
-        }
-        .requests-table tr:nth-child(even) {
-            background-color: #f8fafc;
-        }
-        .ref-code {
-            font-family: monospace;
-            font-weight: bold;
-            color: #0f172a;
-        }
-        .amount-val {
-            font-weight: bold;
-            color: #0f172a;
-            font-family: monospace;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            font-size: 7pt;
-            font-weight: bold;
-            border-radius: 4px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-        .badge-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        .badge-processing {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-        .badge-released {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        .badge-fallback {
-            background-color: #f1f5f9;
-            color: #334155;
-        }
-
-        /* Sign-off signatures */
+        /* Signature block */
         .signoff-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 40px;
-            page-break-inside: avoid;
+            margin-bottom: 35px;
         }
-        .signoff-box {
-            width: 30%;
-            vertical-align: bottom;
-        }
-        .signoff-spacer {
-            width: 5%;
-        }
-        .signoff-line {
-            border-bottom: 1px solid #94a3b8;
-            margin-top: 35px;
-            margin-bottom: 5px;
-            width: 100%;
-        }
-        .signoff-caption {
-            font-size: 7.5pt;
-            color: #64748b;
-            text-align: center;
+        .signature-name {
+            font-weight: bold;
+            color: #0f172a;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            font-size: 10pt;
+            padding-bottom: 3px;
         }
-        
-        .footer {
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            right: 0;
+        .signature-line {
+            border-top: 1px solid #0f172a;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .signature-title {
+            font-size: 9pt;
+            font-weight: 600;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Legal Notice */
+        .legal-notice {
             text-align: center;
-            font-size: 7pt;
-            color: #94a3b8;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 6px;
+            font-size: 8pt;
+            color: #64748b;
+            line-height: 1.5;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Logo and Cooperative Header -->
-    <table class="header-table">
-        <tr>
-            <td class="header-logo">
-                @if(extension_loaded('gd') && file_exists(public_path('img/sako-logo-nobg.png')))
-                    <img src="{{ public_path('img/sako-logo-nobg.png') }}" alt="Coop Logo">
-                @else
-                    <span style="font-size: 24pt; line-height: 1; color: #065f46; font-weight: bold;">🏢</span>
-                @endif
-            </td>
-            <td class="header-text">
-                <h1 class="coop-title">M Lhuillier Sako Cooperative</h1>
-                <h2 class="coop-subtitle">Mutual Benefit Association & Savings Program</h2>
-                <p class="coop-contact">Cebu City, Philippines | Email: support@mlsako.com | Tel: (032) 123-4567</p>
-            </td>
-        </tr>
-    </table>
+@php
+    if (!function_exists('amountToWordsPesos')) {
+        function amountToWordsPesos($amount) {
+            $amount = round((float)$amount, 2);
+            $whole = floor($amount);
+            $fraction = round(($amount - $whole) * 100);
 
-    <div class="header-line"></div>
+            $ones = [
+                0 => '', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four',
+                5 => 'Five', 6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+                10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen',
+                15 => 'Fifteen', 16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
+            ];
+            $tens = [
+                2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 5 => 'Fifty',
+                6 => 'Sixty', 7 => 'Seventy', 8 => 'Eighty', 9 => 'Ninety'
+            ];
 
-    <!-- Document Title -->
-    <div class="doc-title-container">
-        <div class="doc-title">Withdrawal Requests Manifest</div>
-    </div>
+            $convertChunk = function($n) use ($ones, $tens) {
+                $chunkStr = '';
+                if ($n >= 100) {
+                    $hundreds = floor($n / 100);
+                    $chunkStr .= $ones[$hundreds] . ' Hundred ';
+                    $n %= 100;
+                }
+                if ($n >= 20) {
+                    $t = floor($n / 10);
+                    $chunkStr .= $tens[$t] . ' ';
+                    $n %= 10;
+                }
+                if ($n > 0) {
+                    $chunkStr .= $ones[$n] . ' ';
+                }
+                return trim($chunkStr);
+            };
 
-    <!-- Summary of Exported Data -->
-    <table class="summary-table">
-        <tr>
-            <td class="summary-card" style="margin-right: 4%;">
-                <div class="summary-label">Manifest Summary</div>
-                <div style="margin-top: 5px;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td class="meta-text" style="padding: 2px 0; border: none;">Selected Requests:</td>
-                            <td class="meta-text meta-bold" style="padding: 2px 0; border: none; text-align: right;">{{ $withdrawals->count() }}</td>
-                        </tr>
-                        <tr>
-                            <td class="meta-text" style="padding: 2px 0; border: none;">Aggregated Total Amount:</td>
-                            <td class="meta-text meta-bold" style="padding: 2px 0; border: none; text-align: right; font-family: monospace; color: #065f46;">{{ number_format($withdrawals->sum('amount'), 2) }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-            <td class="summary-spacer" style="width: 4%;"></td>
-            <td class="summary-card">
-                <div class="summary-label">Export Metadata</div>
-                <div style="margin-top: 5px;" class="meta-text">
-                    Generated By: <span class="meta-bold">{{ auth()->user()->name }}</span><br>
-                    Date Generated: <span class="meta-bold">{{ now()->format('M d, Y h:i A') }}</span><br>
-                    Scope: <span class="meta-bold">Selected Queue Items</span>
-                </div>
-            </td>
-        </tr>
-    </table>
+            if ($whole == 0) {
+                $words = 'Zero';
+            } else {
+                $words = '';
+                $billions = floor($whole / 1000000000);
+                $whole %= 1000000000;
+                $millions = floor($whole / 1000000);
+                $whole %= 1000000;
+                $thousands = floor($whole / 1000);
+                $whole %= 1000;
 
-    <!-- Requests Table -->
-    <table class="requests-table">
-        <thead>
+                if ($billions > 0) {
+                    $words .= $convertChunk($billions) . ' Billion ';
+                }
+                if ($millions > 0) {
+                    $words .= $convertChunk($millions) . ' Million ';
+                }
+                if ($thousands > 0) {
+                    $words .= $convertChunk($thousands) . ' Thousand ';
+                }
+                if ($whole > 0) {
+                    $words .= $convertChunk($whole) . ' ';
+                }
+                $words = trim($words);
+            }
+
+            $currency = 'Pesos';
+            if ($fraction > 0) {
+                return $words . ' ' . $currency . ' and ' . str_pad($fraction, 2, '0', STR_PAD_RIGHT) . '/100 Only';
+            }
+
+            return $words . ' ' . $currency . ' Only';
+        }
+    }
+
+    $items = isset($withdrawals) ? $withdrawals : (isset($withdrawal) ? collect([$withdrawal]) : collect());
+@endphp
+
+@foreach($items as $w)
+    <div class="page-container" @if(!$loop->last) style="page-break-after: always;" @endif>
+        <!-- Logo and Cooperative Header -->
+        <table class="header-table">
             <tr>
-                <th style="width: 12%;">Ref ID</th>
-                <th style="width: 25%;">Member Details</th>
-                <th style="width: 15%; text-align: right;">Amount</th>
-                <th style="width: 15%;">Channel</th>
-                <th style="width: 15%;">Status</th>
-                <th style="width: 18%;">Remarks</th>
+                <td class="header-logo">
+                    @if(extension_loaded('gd') && file_exists(public_path('img/sako-logo-nobg.png')))
+                        <img src="{{ public_path('img/sako-logo-nobg.png') }}" alt="Coop Logo">
+                    @else
+                        <span style="font-size: 24pt; line-height: 1; color: #065f46; font-weight: bold;">🏢</span>
+                    @endif
+                </td>
+                <td class="header-text">
+                    <h1 class="coop-title">SAMAHANG KOOPERATIBA NG M.LHUILLIER</h1>
+                    <h2 class="coop-subtitle">Room 201, ML Borromeo Bldg. Borromeo St. Pahina Central Cebu City, 6000</h2>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach($withdrawals as $w)
-                <tr>
-                    <td class="ref-code">#WD-{{ str_pad($w->id, 5, '0', STR_PAD_LEFT) }}</td>
-                    <td>
-                        <div style="font-weight: bold; color: #0f172a;">{{ $w->user->name }}</div>
-                        <div style="font-size: 7.5pt; color: #64748b;">ID: {{ $w->user->company_id ?: 'N/A' }}</div>
-                    </td>
-                    <td class="amount-val" style="text-align: right;">{{ number_format($w->amount, 2) }}</td>
-                    <td>{{ $w->channel }}</td>
-                    <td>
-                        @if($w->status === 'pending')
-                            <span class="badge badge-pending">Pending</span>
-                        @elseif($w->status === 'processing')
-                            <span class="badge badge-processing">Processing</span>
-                        @elseif($w->status === 'released')
-                            <span class="badge badge-released">Released</span>
-                        @else
-                            <span class="badge badge-fallback">{{ strtoupper($w->status) }}</span>
-                        @endif
-                    </td>
-                    <td style="font-size: 8pt; color: #0f172a; font-weight: 500;">
-                        {{ $w->remarks ?: ($w->transaction_id ?: '—') }}
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        </table>
 
-    <!-- Verification / Sign-off Block -->
-    <table class="signoff-table">
-        <tr>
-            <td class="signoff-box">
-                <div class="signoff-label">Prepared By:</div>
-                <div class="signoff-line"></div>
-                <div class="signoff-caption">{{ auth()->user()->name }}</div>
-            </td>
-            <td class="signoff-spacer"></td>
-            <td class="signoff-box">
-                <div class="signoff-label">Checked By:</div>
-                <div class="signoff-line"></div>
-                <div class="signoff-caption">Finance Department</div>
-            </td>
-            <td class="signoff-spacer"></td>
-            <td class="signoff-box">
-                <div class="signoff-label">Approved By:</div>
-                <div class="signoff-line"></div>
-                <div class="signoff-caption">Cooperative Board</div>
-            </td>
-        </tr>
-    </table>
+        <div class="header-line"></div>
 
-    <!-- Bottom Footer -->
-    <div class="footer">
-        M Lhuillier Sako Cooperative • Confidental Administrative Output • Page 1 of 1
+        <!-- Document Title -->
+        <div class="doc-title-container">
+            <div class="doc-title">SAVINGS ACCOUNT WITHDRAWAL FORM</div>
+        </div>
+
+        <!-- Left-Aligned Withdrawal Details -->
+        <table class="details-table">
+            <tr>
+                <td class="field-label">Date Applied :</td>
+                <td class="field-value">{{ $w->created_at ? $w->created_at->format('F d, Y') : now()->format('F d, Y') }}</td>
+            </tr>
+            <tr>
+                <td class="field-label">Member Name :</td>
+                <td class="field-value">{{ $w->user->name ?? '—' }}</td>
+            </tr>
+            <tr>
+                <td class="field-label">Chapter / Region :</td>
+                <td class="field-value">{{ $w->user->chapter ?? ($w->user->region ?? 'Not Found') }}</td>
+            </tr>
+            <tr>
+                <td class="field-label">Payment Method :</td>
+                <td class="field-value">{{ $w->channel ?? 'Cash' }}</td>
+            </tr>
+            <tr class="section-header-row">
+                <td colspan="2">
+                    <span class="section-header-title">Amount to be withdrawn :</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="sub-field-label">In Word :</td>
+                <td class="field-value">{{ amountToWordsPesos($w->amount) }}</td>
+            </tr>
+            <tr>
+                <td class="sub-field-label">In Figure :</td>
+                <td class="field-value">PHP {{ number_format($w->amount, 2) }}</td>
+            </tr>
+            <tr class="section-header-row">
+                <td colspan="2">
+                    <span class="section-header-title">Remarks :</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-left: 18px; padding-top: 2px;">
+                    {{ $w->remarks ?: ($w->reason ?: '—') }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Bottom Right Maker / Depositor Block -->
+        <table class="signoff-table">
+            <tr>
+                <td style="width: 55%;"></td>
+                <td style="width: 45%; text-align: center;">
+                    <div class="signature-name">{{ $w->user->name ?? '—' }}</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-title">Maker / Depositor</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Centered Bottom Legal Notice -->
+        <div class="legal-notice">
+            "This is a computer-generated document and does not require a physical signature. Pursuant to Republic Act No. 8792 (Electronic Commerce Act of 2000) and its implementing Rules and Regulations, electronic documens are legally recognized and enforceable under Philippine law."
+        </div>
     </div>
+@endforeach
 
 </body>
 </html>

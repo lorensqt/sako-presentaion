@@ -155,6 +155,144 @@
         #sidebar.collapsed .menu-collapse-trigger {
             display: none !important;
         }
+
+        /* Custom Horizontal Table Scrollbars (Light and Dark Mode Compatible) */
+        .overflow-x-auto,
+        .table-responsive-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+        .overflow-x-auto::-webkit-scrollbar,
+        .table-responsive-scroll::-webkit-scrollbar {
+            height: 7px;
+            width: 7px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track,
+        .table-responsive-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9; /* slate-100 */
+            border-radius: 9999px;
+            margin: 0 10px 4px 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb,
+        .table-responsive-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1; /* slate-300 */
+            border-radius: 9999px;
+            border: 1.5px solid #f1f5f9;
+            transition: background-color 0.2s ease;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover,
+        .table-responsive-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8; /* slate-400 */
+        }
+
+        /* Dark Mode Scrollbars */
+        html.dark .overflow-x-auto,
+        .dark .overflow-x-auto,
+        html.dark .table-responsive-scroll,
+        .dark .table-responsive-scroll {
+            scrollbar-color: #334155 transparent;
+        }
+        html.dark .overflow-x-auto::-webkit-scrollbar-track,
+        .dark .overflow-x-auto::-webkit-scrollbar-track,
+        html.dark .table-responsive-scroll::-webkit-scrollbar-track,
+        .dark .table-responsive-scroll::-webkit-scrollbar-track {
+            background: #090d16; /* deep dark slate */
+        }
+        html.dark .overflow-x-auto::-webkit-scrollbar-thumb,
+        .dark .overflow-x-auto::-webkit-scrollbar-thumb,
+        html.dark .table-responsive-scroll::-webkit-scrollbar-thumb,
+        .dark .table-responsive-scroll::-webkit-scrollbar-thumb {
+            background-color: #334155; /* slate-700 */
+            border: 1.5px solid #090d16;
+        }
+        html.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover,
+        .dark .overflow-x-auto::-webkit-scrollbar-thumb:hover,
+        html.dark .table-responsive-scroll::-webkit-scrollbar-thumb:hover,
+        .dark .table-responsive-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: #475569; /* slate-600 */
+        }
+
+        /* Global SweetAlert2 Theme Adjustments */
+        .swal2-container {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .swal2-popup {
+            font-family: inherit !important;
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15) !important;
+        }
+        .swal2-title {
+            color: #0f172a !important;
+        }
+        .swal2-html-container {
+            color: #475569 !important;
+        }
+        .swal2-icon.swal2-question {
+            border-color: #10b981 !important;
+            color: #059669 !important;
+        }
+
+        /* Dark Mode SweetAlert2 Overrides */
+        html.dark .swal2-container,
+        .dark .swal2-container {
+            background-color: rgba(2, 6, 23, 0.72) !important;
+        }
+        html.dark .swal2-popup,
+        .dark .swal2-popup {
+            background-color: #0f172a !important; /* slate-900 */
+            color: #f1f5f9 !important; /* slate-100 */
+            border: 1px solid #334155 !important; /* slate-700 */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+        }
+        html.dark .swal2-title,
+        .dark .swal2-title {
+            color: #f8fafc !important; /* slate-50 */
+        }
+        html.dark .swal2-html-container,
+        .dark .swal2-html-container {
+            color: #94a3b8 !important; /* slate-400 */
+        }
+        html.dark .swal2-icon.swal2-question,
+        .dark .swal2-icon.swal2-question {
+            border-color: #059669 !important;
+            color: #34d399 !important;
+            background-color: rgba(6, 95, 70, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-warning,
+        .dark .swal2-icon.swal2-warning {
+            border-color: #d97706 !important;
+            color: #fbbf24 !important;
+            background-color: rgba(180, 83, 9, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-success,
+        .dark .swal2-icon.swal2-success {
+            border-color: #059669 !important;
+            color: #34d399 !important;
+            background-color: rgba(6, 95, 70, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-error,
+        .dark .swal2-icon.swal2-error {
+            border-color: #dc2626 !important;
+            color: #f87171 !important;
+            background-color: rgba(185, 28, 28, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-info,
+        .dark .swal2-icon.swal2-info {
+            border-color: #2563eb !important;
+            color: #60a5fa !important;
+            background-color: rgba(29, 78, 216, 0.2) !important;
+        }
+        html.dark .swal2-close,
+        .dark .swal2-close {
+            color: #94a3b8 !important;
+        }
+        html.dark .swal2-close:hover,
+        .dark .swal2-close:hover {
+            color: #ffffff !important;
+        }
     </style>
     @stack('styles')
 </head>

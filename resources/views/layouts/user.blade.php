@@ -176,6 +176,88 @@
         .nav-progress-animating #page-nav-progress-bar {
             animation: navProgressGlow 2s cubic-bezier(0.1, 0.45, 0.1, 1) forwards !important;
         }
+
+        /* Global SweetAlert2 Theme Adjustments */
+        .swal2-container {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .swal2-popup {
+            font-family: inherit !important;
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15) !important;
+        }
+        .swal2-title {
+            color: #0f172a !important;
+        }
+        .swal2-html-container {
+            color: #475569 !important;
+        }
+        .swal2-icon.swal2-question {
+            border-color: #10b981 !important;
+            color: #059669 !important;
+        }
+
+        /* Dark Mode SweetAlert2 Overrides */
+        html.dark .swal2-container,
+        .dark .swal2-container {
+            background-color: rgba(2, 6, 23, 0.72) !important;
+        }
+        html.dark .swal2-popup,
+        .dark .swal2-popup {
+            background-color: #0f172a !important; /* slate-900 */
+            color: #f1f5f9 !important; /* slate-100 */
+            border: 1px solid #334155 !important; /* slate-700 */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+        }
+        html.dark .swal2-title,
+        .dark .swal2-title {
+            color: #f8fafc !important; /* slate-50 */
+        }
+        html.dark .swal2-html-container,
+        .dark .swal2-html-container {
+            color: #94a3b8 !important; /* slate-400 */
+        }
+        html.dark .swal2-icon.swal2-question,
+        .dark .swal2-icon.swal2-question {
+            border-color: #059669 !important;
+            color: #34d399 !important;
+            background-color: rgba(6, 95, 70, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-warning,
+        .dark .swal2-icon.swal2-warning {
+            border-color: #d97706 !important;
+            color: #fbbf24 !important;
+            background-color: rgba(180, 83, 9, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-success,
+        .dark .swal2-icon.swal2-success {
+            border-color: #059669 !important;
+            color: #34d399 !important;
+            background-color: rgba(6, 95, 70, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-error,
+        .dark .swal2-icon.swal2-error {
+            border-color: #dc2626 !important;
+            color: #f87171 !important;
+            background-color: rgba(185, 28, 28, 0.2) !important;
+        }
+        html.dark .swal2-icon.swal2-info,
+        .dark .swal2-icon.swal2-info {
+            border-color: #2563eb !important;
+            color: #60a5fa !important;
+            background-color: rgba(29, 78, 216, 0.2) !important;
+        }
+        html.dark .swal2-close,
+        .dark .swal2-close {
+            color: #94a3b8 !important;
+        }
+        html.dark .swal2-close:hover,
+        .dark .swal2-close:hover {
+            color: #ffffff !important;
+        }
     </style>
     @stack('styles')
 </head>
